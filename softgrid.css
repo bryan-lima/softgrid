@@ -1,0 +1,238 @@
+
+.softgrid-display{
+    -webkit-transition: top 2s ease-in-out;
+    transition: top 2s ease-in-out;
+}
+
+.softgrid-display-fullscreen{
+    position: fixed;
+    top: 0px;
+    left:0px;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-top: 79px;
+    -webkit-transition: top 2s ease-in-out;
+    transition: top 2s ease-in-out;
+    z-index:999;
+}
+
+.softgrid-display-fullscreen .grid-controles{
+    position: fixed;
+    top:0px;
+    left:0px;
+    width: 99%;
+    padding: 4px 10px 0px 10px;
+    background-color: white;
+    z-index: 1000;
+}
+
+
+.softgrid-container{
+    width: 100%;
+    overflow-x: auto;
+}
+
+.softgrid-container .dropdown-menu {
+    position: fixed;
+}
+
+.softgrid{
+    font-size: 12px;
+    width: 100%;
+}
+
+.softgrid .pop-icon{
+    font-size: 9px;
+}
+
+.softgrid th{
+    padding: 5px;
+    color: black;
+    border-bottom: 2px solid black;
+    border-top: 2px solid black;
+}
+
+.softgrid .title{
+    cursor: pointer;
+}
+
+.softgrid tr{
+    background-color: #fff;
+}
+
+.soft-row-striped{
+    background-color: #f9f9f9 !important;
+}
+
+.softgrid td{
+    vertical-align: middle;
+    padding: 5px;
+    border-left: 1px solid  #ccc;
+}
+
+.softgrid td label{
+    font-weight: normal;
+}
+
+.softgrid td a{
+    color: black;
+}
+
+/* ESTILO PARA GRID ANTIGA */
+
+.old-grid thead{
+    border: 1px solid #ccc;
+}
+.old-grid th{
+    background-color: #8c8c8c !important;
+    color: white;
+    border: none;
+}
+
+.old-grid tr{
+    background-color: #eee;
+}
+
+
+
+
+.old-grid .soft-row-striped{
+    background-color: #ccc !important;
+}
+
+.old-grid td{
+    border: none;
+}
+/* FIM ESTILO PARA GRID ANTIGA */
+
+.form-control, .btn{
+    border-radius: 0px !important;
+}
+
+.grid-controles .input-group-addon{
+    border-radius: 0px;
+}
+
+.sub-table-column{
+    padding: 0px !important;
+    text-align: center;
+}
+
+.pagination li{
+    display: inline !important;
+}
+
+.softgrid .btn-open{
+    display: block;
+    margin: auto;
+    margin-top: -12px;
+    font-size: 8px;
+}
+
+.softgrid-compact{
+    border: 1px solid #FA6938;
+    float: left;
+    width: 90%;
+    margin-top: -20px;
+}
+
+/* efeito para show da subtabela  */
+
+.soft-subgrid-container{
+    padding: 20px;
+    overflow: hidden;
+    max-height: 500px;
+    -webkit-transition: max-height 0.15s ease-in-out;
+    transition: max-height 0.15s ease-in-out;
+}
+
+
+.soft-subgrid-container.ng-hide {
+    max-height: 0px;
+}
+
+.soft-subgrid th{
+    background-color: #f5f5f5 !important;
+    color: black !important;
+}
+
+.soft-subgrid tr{
+    background-color: #ffffff;
+    border-bottom: 1px solid #ccc;
+}
+
+.soft-subgrid .soft-row-striped{
+    background-color: #ffffff !important;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    top: 5px;
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 16px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.old-grid .slider{
+    background-color: orange;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 10px;
+    width: 10px;
+    left: 2px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
+
+
+

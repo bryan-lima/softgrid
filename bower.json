@@ -1,0 +1,22 @@
+{
+  "name": "softgrid",
+  "authors": [
+    "Joao Paulo Oliveira"
+  ],
+  "description": "Grid directive with angular and bootstrap",
+  "main": "softgrid.directive.js",
+  "keywords": [
+    "soft",
+    "grid"
+  ],
+  "license": "MIT",
+  "homepage": "none",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
