@@ -1,2 +1,2 @@
 # Softgrid
-Diretiva de Grid para angularjs
+Diretiva de grid para angularjs (com Bootstrap e Font Awesome).
