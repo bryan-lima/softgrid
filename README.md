@@ -3,7 +3,7 @@ Diretiva de grid para Angularjs com Bootstrap e Font Awesome.
 
 ## Utilização
 
-< softgrid cols="" actions="" data="" > </ softgrid >
+`<softgrid cols="vm.colunas" actions="vm.actions" data="vm.data"> </softgrid>`
 
 ## Atributos
 
