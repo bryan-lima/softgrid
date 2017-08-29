@@ -2,10 +2,24 @@
 Diretiva de grid para angularjs (com Bootstrap e Font Awesome).
 
 ## Utilização
-{::nomarkdown}
-<code><softgrid cols="" actions="" data=""></softgrid></code>
 
-### Cols
+< softgrid cols="" actions="" data="" > </ softgrid >
+
+## Atributos
+
+### cols
+
+### actions
+
+### data
+
+### width
+
+### hide
+
+### template
+
+### subgrid
 
 
 
