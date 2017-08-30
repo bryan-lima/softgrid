@@ -26,17 +26,31 @@ function _gerarGridUsuario() {
 
 ### cols
 
+Define as colunas da grid.
+
 ### actions
+
+Cria um botão de menu (hamburguer) em cada linha da grid contendo a ação desejada. 
 
 ### data
 
+Um array contendo os objetos que deverão ser carregados na grid.
+
 ### width
+
+Define um tamanho fixo de largura para a grid.
 
 ### hide
 
+Um objeto passado como atributo da diretiva informando os controles que deverão ser escondidos.
+
 ### template
 
+Define uma classe CSS customizada para a grid.
+
 ### subgrid
+
+Define uma sub-grid em cada linha da grid para mostrar objetos-filhos de algum item do array.
 
 
 
