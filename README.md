@@ -3,7 +3,11 @@ Diretiva de grid para Angularjs com Bootstrap e Font Awesome.
 
 ## Utilização
 
+//HTML
+
 `<softgrid cols="vm.colunas" actions="vm.acoes" data="vm.data"> </softgrid>`
+
+// JAVASCRIPT
 
 function _gerarGridUsuario() {
      
