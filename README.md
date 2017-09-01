@@ -1,6 +1,10 @@
 # Softgrid
 Diretiva de grid para Angularjs com Bootstrap e Font Awesome.
 
+# Instalação
+
+bower install softgrid
+
 ## Utilização
 
 //HTML
