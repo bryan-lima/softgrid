@@ -1,15 +1,13 @@
 
 <div class="softgrid-display" ng-class="{'softgrid-display-fullscreen': softgrid.fullscreen}">
 
-    <!-- CONTROLES E PAGINACAO -->
-
     <div class="grid-controles">
 
-        <div class="row">
+        <div class="row" ng-hide="hide.all">
 
             <!-- Controle de Filtro -->
 
-            <div class="col-md-4">
+            <div class="col-md-3">
 
                 <div ng-hide="hide.filter || hide.all">
 
@@ -25,6 +23,34 @@
 
             <!-- Fim Controle de Filtro
 
+            <!-- Controle de Linhas por Página -->
+
+            <div class="col-md-2">
+
+                <div class="form-group" ng-hide="hide.linesPage || hide.all">
+
+                    <label>Linhas por página</label>
+
+                    <div class="input-group" style="width: 120px;">
+
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="linesPerPage = linesPerPage - 10">-</button>
+                        </span>
+
+                        <input type="text" class="form-control" value="{{linesPerPage}}">
+
+                        <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="linesPerPage = linesPerPage + 10">+</button>
+                            </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Fim Controle de Linhas por Página -->
+
             <!-- Controle de Contagem e Menu -->
 
             <div class="col-md-2">
@@ -37,12 +63,17 @@
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a ng-click="softGridToExcel()">Gerar Excel</a></li>
+                                <li ng-repeat="item in menu">
+                                    <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>
+                                </li>
+                                <li role="separator" class="divider" ng-show="menu"></li>
+                                <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>
+                                <li><a ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-arrows-alt"></span> Tela Cheia</a></li>
                             </ul>
                         </div>
                     </div>
 
-                    <div ng-if="subgrid">
+                    <div ng-if="!subgrid">
                     <a href="#" ng-show="false"  id="softDownload"></a>
                     </div>
                 </div>
@@ -51,87 +82,26 @@
 
             <!-- Fim Controle de Contagem e Menu-->
 
-            <!-- Controle de Linhas por Página -->
-
-            <div class="col-md-2">
-
-                <div class="form-group" ng-hide="hide.linesPage || hide.all">
-
-                        <label>Linhas por página</label>
-
-                        <div class="input-group" style="width: 120px;">
-
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" ng-click="linhaMax = linhaMax - 10">-</button>
-                        </span>
-
-                            <input type="text" class="form-control" value="{{linhaMax}}">
-
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-click="linhaMax = linhaMax + 10">+</button>
-                            </span>
-
-                        </div>
-
-                </div>
-
-            </div>
-
-            <!-- Fim Controle de Linhas por Página -->
-
-            <!-- Controle Fullscreen -->
-
-            <div class="col-md-1">
-
-                <div class="form-group" ng-hide="hide.fullscreen || hide.all" style="text-align: center">
-
-                    <label>Tela Cheia</label>
-
-                    <button class="btn btn-default" type="button" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true">
-                        <span class="fa fa-arrows-alt"></span>
-                    </button>
-
-                </div>
-
-            </div>
-
-            <!-- Fim Controle Fullscreen -->
-
             <!-- Controle de Paginacao -->
 
-            <div class="col-md-3">
+            <div class="col-md-5">
 
                 <nav aria-label="Page navigation" class="pull-right" ng-hide="hide.pagination || hide.all">
                     <label>Paginação</label>
-                        <ul class="pagination" ng-init="sgTotalPaginas = data.length / softLimite">
-                            <li>
-                                <a href="javascript:void(0);" target="_self" aria-label="Previous" ng-click="softPagina = softPagina == 1 ? 1 : softPagina - 1">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li ng-class="{'active': softPagina == 1}"><a href="javascript:void(0);" target="_self" ng-click="softPagina = softPagina < 3 ? 1 : softPagina - 2">{{ softPagina <= 3 ? 1 : softPagina - 2 }}</a></li>
-                            <li ng-class="{'active': softPagina == 2}"><a href="javascript:void(0);" target="_self" ng-click="softPagina = softPagina < 3 ? 2 : softPagina - 1">{{ softPagina <= 3 ? 2 : softPagina - 1 }}</a></li>
-                            <li ng-class="{'active': softPagina >= 3}"><a href="javascript:void(0);" target="_self" ng-click="softPagina = softPagina < 3 ? 3 : softPagina">{{ softPagina <= 3 ? 3 : softPagina     }}</a></li>
-                            <li><a href="javascript:void(0);" target="_self" ng-click="softPagina = softPagina < 3 ? 4 : softPagina + 1">{{ softPagina <= 3 ? 4 : softPagina + 1 }}</a></li>
-                            <li><a href="javascript:void(0);" target="_self" ng-click="softPagina = softPagina < 3 ? 5 : softPagina + 2">{{ softPagina <= 3 ? 5 : softPagina + 2 }}</a></li>
-                            <li>
-                                <a href="javascript:void(0);" target="_self" aria-label="Next" ng-click="softPagina = softPagina + 1">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
+                        <ul class="pagination">
+                            <li ng-repeat="soft_page in soft_pages" ng-class="{'active': soft_page.active}">
+                                <a ng-click="soft_ChangePage(soft_page.value)" ng-bind-html="soft_page.text"></a>
                             </li>
                         </ul>
-
                 </nav>
 
             </div>
 
             <!-- Fim Controle Paginacao -->
 
-    </div>
+        </div>
 
     </div>
-
-    <!-- FIM CONTROLES E PAGINACAO -->
 
     <div class="row">
 
@@ -142,35 +112,33 @@
                     <div ng-style=" width ? { 'width': width + 'px' } : { 'width': '100%' }">
 
                         <table ng-attr-id="{{!subgrid ? 'none': 'softgrid'}}" class="softgrid {{template}}" >
+
                             <thead>
 
-                                <th ng-show="actions.length > 0">
+                                <th ng-show="actions.length > 0 || subgrid || options.selectable" style="text-align:center;">
+                                    Ações
                                 </th>
-
-                                <th ng-show="subgrid"></th>
-
-                                <th ng-show="options.selectable"></th>
 
                                 <th ng-repeat="col in cols" ng-show="!col.hide" style="text-align:center;">
 
-                                  <span class="title" ng-click="$parent.softOrdem = col.item">{{col.title}}  <span class="fa fa-sort"></span></span>
-
+                                  <span class="title" ng-click="$parent.softOrdem = col.item">{{col.title}}</span>
+                                  <span class="fa fa-sort-alpha-asc"></span>
                                 </th>
 
                             </thead>
 
                             <tbody>
 
-                                <tr   ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: softFiltro | limitTo: linhaMax : ((softPagina * linhaMax) - linhaMax) | orderBy: softOrdem))">
+                                <tr ng-init="$last ? softHook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: softFiltro | limitTo: linesPerPage : ((soft_pagina_atual * linesPerPage) - linesPerPage) | orderBy: softOrdem)) track by $index">
 
-                                    <td ng-show="subgrid">
+                                    <td  ng-show="subgrid || actions.length > 0">
 
                                         <div class="input-group">
 
-                                            <div class="input-group-btn">
+                                            <div class="input-group-btn" >
 
                                                 <!-- botão para exibir sub tabela -->
-                                                <button type="button" class="btn btn-default btn-sm" ng-click="showSubGrid = showSubGrid ? false : true">
+                                                <button ng-show="subgrid" type="button" class="btn btn-default btn-sm" ng-click="showSubGrid = showSubGrid ? false : true">
                                                     <span class="fa fa-expand"></span>
                                                 </button>
 
@@ -194,13 +162,6 @@
 
                                     </td>
 
-                                    <!-- Coluna com ações da linha -->
-                                    <td ng-show="actions.length > 0" style="text-align:center;">
-
-
-
-                                    </td>
-
                                     <!-- Coluna para checkbox -->
                                     <td style="text-align: center;" ng-show="options.selectable">
                                         <label class="switch">
@@ -214,14 +175,18 @@
 
                                         <div ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }"> <!--div para controlar o alinhamento-->
 
-                                            <!-- Busca o item da linha com base no nome do item salvo na coluna, ou item com subitem ; E filtra a string caso haja um limite definido na propriedade maxLength-->
                                             <label ng-hide="col.popOver">
-                                                {{
-                                                temp = (col.item ? row[col.item] : row[col.subitem.a][col.subitem.b] | limitTo: (col.maxLength ? col.maxLength : 999));
-                                                }}
+                                                <div ng-if="col.item(row)">
+
+                                                    <span ng-bind-html="temp = softMask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))"></span>
+
+                                                </div>
+                                                <div ng-if="!col.item(row)">
+                                                    <font color="red">x</font>
+                                                </div>
                                             </label>
 
-                                            <label style="text-decoration: underline; cursor: pointer" ng-show="col.popOver"   popover data-toggle="popover" data-trigger="hover" data-content="{{(col.item ? row[col.item] : row[col.subitem.a][col.subitem.b])}}">{{temp}}</label>
+                                            <label style="text-decoration: underline; cursor: pointer" ng-show="col.popOver"   popover data-toggle="popover" data-trigger="hover" data-content="{{col.item(row)}}">{{(col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999))}}</label>
 
                                         </div>
 
@@ -247,7 +212,7 @@
                                 </tr>
 
                                 <!-- Exibe uma linha caso não haja dados -->
-                                <tr ng-show="dataFiltered.length <= 0" style="text-align: center;">
+                                <tr ng-show="!data || data.length <= 0" style="text-align: center;">
 
                                     <td colspan="{{cols.length + 3}} ">
                                     Não há dados a serem exibidos.
@@ -273,8 +238,8 @@
 
             <nav aria-label="...">
                 <ul class="pager" style="margin-top: 5px;">
-                    <li class="previous"><button class="btn btn-default pull-left" ng-click="softPagina = softPagina - 1" ng-disabled="softPagina == 1"><span aria-hidden="true">&larr;</span> Página anterior</button></li>
-                    <li class="next"><button class="btn btn-default pull-right" ng-click="softPagina = softPagina + 1" ng-disabled="(data.length / linhaMax).toFixed() <= softPagina">Próxima página <span aria-hidden="true">&rarr;</span></button></li>
+                    <li class="previous"><button class="btn btn-default pull-left" ng-click="soft_ChangePage(-1)"><span aria-hidden="true">&larr;</span> Página anterior</button></li>
+                    <li class="next"><button class="btn btn-default pull-right" ng-click="soft_ChangePage(0)">Próxima página <span aria-hidden="true">&rarr;</span></button></li>
                 </ul>
             </nav>
 
@@ -283,11 +248,3 @@
     </div>
 
 </div>
-
-
-
-
-
-
-
-

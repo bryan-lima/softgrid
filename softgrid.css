@@ -29,7 +29,6 @@
     z-index: 1000;
 }
 
-
 .softgrid-container{
     width: 100%;
     overflow-x: auto;
@@ -42,6 +41,7 @@
 .softgrid{
     font-size: 12px;
     width: 100%;
+    border-bottom: 1px inset #ccc;
 }
 
 .softgrid .pop-icon{
@@ -95,9 +95,6 @@
 .old-grid tr{
     background-color: #eee;
 }
-
-
-
 
 .old-grid .soft-row-striped{
     background-color: #ccc !important;
@@ -230,6 +227,10 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.softgrid-display .pagination li a{
+    text-align: center;
 }
 
 

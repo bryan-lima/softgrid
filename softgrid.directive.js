@@ -28,18 +28,16 @@
             scope.linhaMin = 0;
 
             //controla o maximo de linhas por pagina
-            scope.linhaMax = 10;
+            scope.linesPerPage = 10;
 
             //controla a ordenacao da grid
             scope.softOrdem = '';
 
             //controla paginacao da grid
-            scope.softPagina = 1;
+            scope.soft_pagina_atual = 1;
 
             //controla o limite de linhas por pagina
             scope.softLimite = 10;
-
-           // scope.acoes = scope[attrs.acoes];
 
             scope.softGridToExcel = function() {
 
@@ -91,10 +89,100 @@
                 return table;
             }
 
-            $(".softgrid-container .dropdown").on('click', function() {
-                $(this).find('.dropdown-menu').css('top',$(this).offset().top + 28);
-                $(this).find('.dropdown-menu').css('left',$(this).offset().left);
-            });
+            scope.softHook = function(){
+
+                _atualizarPaginacao();
+                _hookDropDown();
+
+            }
+
+            //**----- PAGINAÇÃO -----**
+
+            function _atualizarPaginacao(){
+
+                scope.totalPages = scope.data.length / scope.linesPerPage;
+                scope.totalPages = scope.totalPages > parseInt(scope.totalPages) ? parseInt(scope.totalPages) + 1 : scope.totalPages;
+
+                scope.soft_pages = [];
+
+                scope.soft_pages.push({"text": "<span class='fa fa-chevron-left'></span>", "value": -1, "active": false});
+
+                if(scope.totalPages > 1)
+                    scope.soft_pages.push({"text": 1 + "..", "value": 1, "active": scope.soft_pagina_atual == 1});
+
+                var _pg = scope.soft_pagina_atual;
+
+                for(var i = 2; i < scope.totalPages; i++){
+
+                    var _active = i == _pg ? true : false;
+
+                    if((i < _pg + 3) || (_pg <= 3 && i <= 6))
+                    {
+                        if( (_pg >= 3 && i > _pg - 3) || (_pg <= 3 && i <= 5) || (_pg >= 3 && i >= _pg && i <= _pg - 3) || (_pg >= scope.totalPages - 3 && i >= scope.totalPages - 5) || (_pg <=  3 && i <=  6))
+                        {
+                            scope.soft_pages.push({"text": i, "value": i, "active": _active});
+                        }
+
+                    }
+                }
+
+                scope.soft_pages.push({"text": ".." + scope.totalPages, "value": scope.totalPages, "active": scope.soft_pagina_atual == scope.totalPages});
+
+                scope.soft_pages.push({"text": "<span class='fa fa-chevron-right'></span>", "value": 0, "active": false});
+
+            }
+
+            scope.soft_ChangePage = function(value){
+
+                if(value == -1 && scope.soft_pagina_atual > 1)
+                    scope.soft_pagina_atual = scope.soft_pagina_atual - 1;
+                else if(value == -1 && scope.soft_pagina_atual == 1)
+                    scope.soft_pagina_atual = scope.totalPages;
+                else if(value == 0 && scope.soft_pagina_atual == scope.totalPages)
+                    scope.soft_pagina_atual = 1;
+                else if(value == 0 && scope.soft_pagina_atual < scope.totalPages)
+                    scope.soft_pagina_atual = scope.soft_pagina_atual + 1;
+                else
+                    scope.soft_pagina_atual = value;
+
+                _atualizarPaginacao();
+
+            };
+
+            //**----- END PAGINATION -----**
+
+            //**----- MASKS -----**
+            scope.softMask = function(colType, text){
+
+                if(colType == "phone")
+                    return maskPhone(text);
+                else if(colType == "mail")
+                    return maskEmail(text);
+                else
+                    return text;
+            }
+
+            function maskEmail(text){
+                return "<a href='mailto:" + text + "'><span class='fa fa-envelope-o'></span> " + text + "</a>";
+            }
+
+            function maskPhone(text){
+
+                text = text.replace(/\D/g,"");
+                text = text.replace(/^(\d{2})(\d)/g,"($1) $2");
+                text = text.replace(/(\d)(\d{4})$/,"$1-$2");
+
+                return text
+            }
+            //**----- END MASKS -----**
+
+            function _hookDropDown(){
+
+                $(".softgrid-container .dropdown").on('click', function() {
+                    $(this).find('.dropdown-menu').css('top',$(this).offset().top + 28);
+                    $(this).find('.dropdown-menu').css('left',$(this).offset().left);
+                });
+            }
 
         }
     };
