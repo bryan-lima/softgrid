@@ -4,11 +4,8 @@
     "Joao Paulo Oliveira"
   ],
   "description": "Grid directive with angular and bootstrap",
-  "main": "softgrid.directive.js",
-  "keywords": [
-    "soft",
-    "grid"
-  ],
+  "main": ["softgrid.js", "softgrid.css"],
+  "keywords": ["soft", "grid" ],
   "license": "MIT",
   "homepage": "none",
   "private": false,

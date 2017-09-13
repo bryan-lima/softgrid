@@ -19,7 +19,7 @@
             subgrid: "=",
             template: "="
         },
-        templateUrl: 'app/components/softgrid/softgrid.html',
+        templateUrl: '../bower_components/softgrid/softgrid.html',
         link: function(scope, element, attrs){
 
            // scope.dados = scope[attrs.dados];
