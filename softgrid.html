@@ -67,7 +67,7 @@
                                     <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>
                                 </li>
                                 <li role="separator" class="divider" ng-show="menu"></li>
-                                <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>
+                                <!--<li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>-->
                                 <li><a ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-arrows-alt"></span> Tela Cheia</a></li>
                             </ul>
                         </div>
@@ -122,7 +122,7 @@
                                 <th ng-repeat="col in cols" ng-show="!col.hide" style="text-align:center;">
 
                                   <span class="title" ng-click="$parent.softOrdem = col.item">{{col.title}}</span>
-                                  <span class="fa fa-sort-alpha-asc"></span>
+
                                 </th>
 
                             </thead>
