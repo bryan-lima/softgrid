@@ -38,6 +38,10 @@
     position: fixed;
 }
 
+.softgrid-display .dropwdown-menu li a{
+	text-align: left !important;
+}
+
 .softgrid{
     font-size: 12px;
     width: 100%;
@@ -64,7 +68,7 @@
 }
 
 .soft-row-striped{
-    background-color: #f9f9f9 !important;
+    background-color: #f9f9f9;
 }
 
 .softgrid td{
@@ -87,6 +91,7 @@
 .old-grid thead{
     border: 1px solid #ccc;
 }
+
 .old-grid th{
     background-color: #8c8c8c !important;
     color: white;
@@ -98,12 +103,13 @@
 }
 
 .old-grid .soft-row-striped{
-    background-color: #ccc !important;
+    background-color: #ccc;
 }
 
 .old-grid td{
     border: none;
 }
+
 /* FIM ESTILO PARA GRID ANTIGA */
 
 .softgrid-display .form-control, .btn{
@@ -147,7 +153,6 @@
     transition: max-height 0.15s ease-in-out;
 }
 
-
 .soft-subgrid-container.ng-hide {
     max-height: 0px;
 }
@@ -163,12 +168,12 @@
 }
 
 .soft-subgrid .soft-row-striped{
-    background-color: #ffffff !important;
+    background-color: #ffffff;
 }
 
 /* The switch - the box around the slider */
 .softgrid-display .switch {
-    top: 5px;
+	top: 1px;
     position: relative;
     display: inline-block;
     width: 30px;
@@ -192,7 +197,7 @@
 }
 
 .old-grid .slider{
-    background-color: orange;
+    background-color: #e74c3c;
 }
 
 .softgrid-display .slider:before {
@@ -208,7 +213,7 @@
 }
 
 .softgrid-display input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #bdc3c7;
 }
 
 .softgrid-display input:focus + .slider {
@@ -234,9 +239,10 @@
     text-align: center;
 }
 
-.softgrid .input-group-btn .btn{
-	font-size: 10px;
+.softgrid .btn{
+	font-size: 12px;
 	width: 50px;
+	padding: 3px;
 }
 
 

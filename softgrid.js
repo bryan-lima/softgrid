@@ -17,7 +17,8 @@
             actions: "=",
             hide: "=",
             subgrid: "=",
-            template: "="
+            template: "=",
+			controls: "="
         },
         templateUrl: '../bower_components/softgrid/softgrid.html',
         link: function(scope, element, attrs){
@@ -93,10 +94,9 @@
 
                 _atualizarPaginacao();
                 _hookDropDown();
-
             }
 
-            //**----- PAGINAÇÃO -----**
+            //**----- PAGINATION -----**
 
             function _atualizarPaginacao(){
 
@@ -150,6 +150,15 @@
             };
 
             //**----- END PAGINATION -----**
+
+			//lines per page
+			scope.updateLinesPerPage = function(value){
+
+				console.log(value);
+				if((value == -1 && scope.linesPerPage > 10) || value == 1)
+					scope.linesPerPage = scope.linesPerPage + (value * 10);
+
+			}
 
             //**----- MASKS -----**
             scope.softMask = function(colType, text){

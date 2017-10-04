@@ -34,13 +34,13 @@
                     <div class="input-group" style="width: 120px;">
 
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" ng-click="linesPerPage = linesPerPage - 10">-</button>
+                            <button class="btn btn-default" type="button" ng-click="updateLinesPerPage(-1)">-</button>
                         </span>
 
                         <input type="text" class="form-control" value="{{linesPerPage}}">
 
                         <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-click="linesPerPage = linesPerPage + 10">+</button>
+                                <button class="btn btn-default" type="button" ng-click="updateLinesPerPage(1)">+</button>
                             </span>
 
                     </div>
@@ -115,9 +115,13 @@
 
                             <thead>
 
-                                <th ng-show="actions.length > 0 || subgrid || options.selectable" style="text-align:center; width: 120px;">
-                                    Ações
+                                <th ng-show="actions.length > 0 || subgrid" style="text-align:center; width: 120px;">
+
                                 </th>
+
+								<th ng-show="controls.delete" style="text-align: center;">
+									Ações
+								</th>
 
                                 <th ng-repeat="col in cols" ng-show="!col.hide" style="text-align:center;">
 
@@ -125,11 +129,15 @@
 
                                 </th>
 
+								<th ng-show="controls.active">
+									{{controls.activeTitle}}
+								</th>
+
                             </thead>
 
                             <tbody>
 
-                                <tr ng-init="$last ? softHook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: softFiltro | limitTo: linesPerPage : ((soft_pagina_atual * linesPerPage) - linesPerPage) | orderBy: softOrdem)) track by $index">
+                                <tr ng-init="$last ? softHook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: softFiltro | limitTo: linesPerPage : ((soft_pagina_atual * linesPerPage) - linesPerPage) | orderBy: softOrdem)) track by $index" ng-style="controls.changeRowColor(row) === true && {'background-color': (controls.rowColor ? controls.rowColor :'#e59482')}" >
 
                                     <td  ng-show="subgrid || actions.length > 0" style="width: 200px; text-align:center;">
 
@@ -162,13 +170,11 @@
 
                                     </td>
 
-                                    <!-- Coluna para checkbox -->
-                                    <td style="text-align: center;" ng-show="options.selectable">
-                                        <label class="switch">
-                                            <input type="checkbox">
-                                            <div class="slider round"></div>
-                                        </label>
-                                    </td>
+									<td ng-show="controls.delete" style="text-align:center;">
+										<button type="button" class="btn btn-default btn-sm" ng-click="controls.delete(row)" title="Deletar">
+											<span class="fa fa-trash"></span>
+										</button>
+									</td>
 
                                     <!-- Colunas com os Dados da Grid -->
                                     <td ng-repeat="col in cols">
@@ -176,14 +182,19 @@
                                         <div ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }"> <!--div para controlar o alinhamento-->
 
                                             <label ng-hide="col.popOver">
+
                                                 <div ng-if="col.item(row)">
 
                                                     <span ng-bind-html="temp = softMask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))"></span>
 
                                                 </div>
+
                                                 <div ng-if="!col.item(row)">
+
                                                     <font color="red">x</font>
+
                                                 </div>
+
                                             </label>
 
                                             <label style="text-decoration: underline; cursor: pointer" ng-show="col.popOver"   popover data-toggle="popover" data-trigger="hover" data-content="{{col.item(row)}}">{{(col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999))}}</label>
@@ -191,6 +202,16 @@
                                         </div>
 
                                     </td>
+
+									<!-- Coluna para checkbox -->
+									<td style="text-align: center;" ng-show="controls.active">
+										<label class="switch">
+											<input type="checkbox" ng-checked="controls.activeCol(row)" ng-click="controls.activeFunction(row)">
+											<div class="slider round"></div>
+										</label>
+									</td>
+
+
 
                                 </tr>
                                 <tr ng-repeat-end="" ng-show="subgrid" ng-hide="!showSubGrid" ng-class="{'soft-row-striped': ($index%2)}"> <!-- Linha para Subtabela -->
@@ -201,7 +222,7 @@
 
                                             <div ng-if="subgrid">
 
-                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="'soft-subgrid'"></softgrid>
+                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="'soft-subgrid'" controls="subgrid.controls"></softgrid>
 
                                             </div>
 
