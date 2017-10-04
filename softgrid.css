@@ -69,7 +69,8 @@
 
 .softgrid td{
     vertical-align: middle;
-    padding: 5px;
+    padding: 2px;
+	padding-left: 7px;
     border-left: 1px solid  #ccc;
 }
 
@@ -105,7 +106,7 @@
 }
 /* FIM ESTILO PARA GRID ANTIGA */
 
-.form-control, .btn{
+.softgrid-display .form-control, .btn{
     border-radius: 0px !important;
 }
 
@@ -118,7 +119,7 @@
     text-align: center;
 }
 
-.pagination li{
+.softgrid-display .pagination li{
     display: inline !important;
 }
 
@@ -166,7 +167,7 @@
 }
 
 /* The switch - the box around the slider */
-.switch {
+.softgrid-display .switch {
     top: 5px;
     position: relative;
     display: inline-block;
@@ -175,10 +176,10 @@
 }
 
 /* Hide default HTML checkbox */
-.switch input {display:none;}
+.softgrid-display .switch input {display:none;}
 
 /* The slider */
-.slider {
+.softgrid-display .slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -194,7 +195,7 @@
     background-color: orange;
 }
 
-.slider:before {
+.softgrid-display .slider:before {
     position: absolute;
     content: "";
     height: 10px;
@@ -206,31 +207,36 @@
     transition: .4s;
 }
 
-input:checked + .slider {
+.softgrid-display input:checked + .slider {
     background-color: #2196F3;
 }
 
-input:focus + .slider {
+.softgrid-display input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
 }
 
-input:checked + .slider:before {
+.softgrid-display input:checked + .slider:before {
     -webkit-transform: translateX(16px);
     -ms-transform: translateX(16px);
     transform: translateX(16px);
 }
 
 /* Rounded sliders */
-.slider.round {
+.softgrid-display .slider.round {
     border-radius: 34px;
 }
 
-.slider.round:before {
+.softgrid-display .slider.round:before {
     border-radius: 50%;
 }
 
 .softgrid-display .pagination li a{
     text-align: center;
+}
+
+.softgrid .input-group-btn .btn{
+	font-size: 10px;
+	width: 50px;
 }
 
 

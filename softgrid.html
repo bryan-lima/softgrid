@@ -115,7 +115,7 @@
 
                             <thead>
 
-                                <th ng-show="actions.length > 0 || subgrid || options.selectable" style="text-align:center;">
+                                <th ng-show="actions.length > 0 || subgrid || options.selectable" style="text-align:center; width: 120px;">
                                     Ações
                                 </th>
 
@@ -131,9 +131,9 @@
 
                                 <tr ng-init="$last ? softHook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: softFiltro | limitTo: linesPerPage : ((soft_pagina_atual * linesPerPage) - linesPerPage) | orderBy: softOrdem)) track by $index">
 
-                                    <td  ng-show="subgrid || actions.length > 0">
+                                    <td  ng-show="subgrid || actions.length > 0" style="width: 200px; text-align:center;">
 
-                                        <div class="input-group">
+                                        <div class="input-group" style="width: 120px;">
 
                                             <div class="input-group-btn" >
 
@@ -201,7 +201,7 @@
 
                                             <div ng-if="subgrid">
 
-                                                <softgrid  cols="subgrid.cols" data="row[subgrid.object]" hide="subgrid.hide" template="'soft-subgrid'"></softgrid>
+                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="'soft-subgrid'"></softgrid>
 
                                             </div>
 
