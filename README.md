@@ -5,6 +5,10 @@ Diretiva de grid para Angularjs com Bootstrap e Font Awesome.
 
 bower install softgrid
 
+bower install softgrid --save
+
+**Importante**: Injetar modulo 'softgrid.directive' no projeto.
+
 ## Utilização
 
 //HTML
@@ -13,7 +17,7 @@ bower install softgrid
 
 // JAVASCRIPT
 
-function _gerarGridUsuario() {
+function _gerarGrid() {
      
     vm.colunas = [
         {title: "Nome",     item: function(item){return item.nome}},
@@ -22,9 +26,9 @@ function _gerarGridUsuario() {
     ];
 
     vm.acoes = [
-        {title: "Editar",   icon: "fa fa-info-circle", function: _editarUsuario},
-        {title: "Excluir",  icon: "fa fa-wrench",      function: _excluirUsuario},
-        {title: "Bloquear", icon: "fa fa-calculator",  function: _bloquearUsuario}
+        {title: "Editar",   icon: "fa fa-info-circle", function: _teste},
+        {title: "Excluir",  icon: "fa fa-wrench",      function: _teste},
+        {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
     ];
     
     vm.data = [
@@ -33,6 +37,10 @@ function _gerarGridUsuario() {
                  {nome: "Peixoto", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0404"}}
                ];
 }
+
+     function _teste(item){
+          alert(item);
+     }
 
 ## Atributos
 
