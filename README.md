@@ -27,7 +27,11 @@ function _gerarGridUsuario() {
         {title: "Bloquear", icon: "fa fa-calculator",  function: _bloquearUsuario}
     ];
     
-    vm.data = _listaPessoas;
+    vm.data = [
+                 {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}},
+                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}},
+                 {nome: "Peixoto", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0404"}}
+               ];
 }
 
 ## Atributos
