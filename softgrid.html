@@ -5,8 +5,6 @@
 
         <div class="row" ng-hide="hide.all">
 
-            <!-- Controle de Filtro -->
-
             <div class="col-md-3">
 
                 <div ng-hide="hide.filter || hide.all">
@@ -14,16 +12,12 @@
                     <label>Filtrar</label>
                     <div class="input-group">
                         <span class="input-group-addon" id="filtro-addon"><span class="fa fa-search"></span></span>
-                        <input type="text" class="form-control" ng-model="softFiltro" placeholder="Palavra-chave" aria-describedby="filtro-addon">
+                        <input type="text" class="form-control" ng-model="sg_filter" placeholder="Palavra-chave" aria-describedby="filtro-addon">
                     </div>
 
                 </div>
 
             </div>
-
-            <!-- Fim Controle de Filtro
-
-            <!-- Controle de Linhas por Página -->
 
             <div class="col-md-2">
 
@@ -34,24 +28,20 @@
                     <div class="input-group" style="width: 120px;">
 
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" ng-click="updateLinesPerPage(-1)">-</button>
+                            <button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(-1)">-</button>
                         </span>
 
-                        <input type="text" class="form-control" value="{{linesPerPage}}">
+                        <input class="form-control" value="{{sg_linesPerPage}}">
 
                         <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-click="updateLinesPerPage(1)">+</button>
-                            </span>
+							<button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(1)">+</button>
+						</span>
 
                     </div>
 
                 </div>
 
             </div>
-
-            <!-- Fim Controle de Linhas por Página -->
-
-            <!-- Controle de Contagem e Menu -->
 
             <div class="col-md-2">
 
@@ -80,24 +70,23 @@
 
             </div>
 
-            <!-- Fim Controle de Contagem e Menu-->
-
-            <!-- Controle de Paginacao -->
-
             <div class="col-md-5">
 
                 <nav aria-label="Page navigation" class="pull-right" ng-hide="hide.pagination || hide.all">
+
                     <label>Paginação</label>
+
                         <ul class="pagination">
+
                             <li ng-repeat="soft_page in soft_pages" ng-class="{'active': soft_page.active}">
-                                <a ng-click="soft_ChangePage(soft_page.value)" ng-bind-html="soft_page.text"></a>
+                                <a ng-click="sg_changePage(soft_page.value)" ng-bind-html="soft_page.text"></a>
                             </li>
+
                         </ul>
+
                 </nav>
 
             </div>
-
-            <!-- Fim Controle Paginacao -->
 
         </div>
 
@@ -119,17 +108,23 @@
 
                                 </th>
 
-								<th ng-show="controls.delete" style="text-align: center;">
+								<th ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align: center;">
 									Ações
 								</th>
 
                                 <th ng-repeat="col in cols" ng-show="!col.hide" style="text-align:center;">
 
-                                  <span class="title" ng-click="$parent.softOrdem = col.item">{{col.title}}</span>
+                                  <span class="title" ng-click="sg_sort(col.item)">
+
+									  {{col.title}}
+
+									  <span ng-show="col.item == sg_orderBy" class="fa fa-sort-amount-asc" ng-class="{'fa-sort-amount-desc' : reverse}"></span>
+
+								  </span>
 
                                 </th>
 
-								<th ng-show="controls.active">
+								<th ng-show="controls.active" style="text-align: center;">
 									{{controls.activeTitle}}
 								</th>
 
@@ -137,7 +132,7 @@
 
                             <tbody>
 
-                                <tr ng-init="$last ? softHook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: softFiltro | limitTo: linesPerPage : ((soft_pagina_atual * linesPerPage) - linesPerPage) | orderBy: softOrdem)) track by $index" ng-style="controls.changeRowColor(row) === true && {'background-color': (controls.rowColor ? controls.rowColor :'#e59482')}" >
+                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="controls.changeRowColor(row) === true && {'background-color': (controls.rowColor ? controls.rowColor :'#e59482')}" >
 
                                     <td  ng-show="subgrid || actions.length > 0" style="width: 200px; text-align:center;">
 
@@ -147,7 +142,7 @@
 
                                                 <!-- botão para exibir sub tabela -->
                                                 <button ng-show="subgrid" type="button" class="btn btn-default btn-sm" ng-click="showSubGrid = showSubGrid ? false : true">
-                                                    <span class="fa fa-expand"></span>
+                                                    <span class="fa fa-expand" ng-class="{'fa-compress': showSubGrid}"></span>
                                                 </button>
 
                                             </div>
@@ -170,13 +165,28 @@
 
                                     </td>
 
-									<td ng-show="controls.delete" style="text-align:center;">
-										<button type="button" class="btn btn-default btn-sm" ng-click="controls.delete(row)" title="Deletar">
-											<span class="fa fa-trash"></span>
+									<!-- column to actions -->
+									<td ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align:center;">
+
+										<button ng-show="controls.create" type="button" class="btn btn-default btn-sm" ng-click="controls.create.action(row)" title="{{ controls.create.title ? controls.create.title : 'Criar' }}">
+											<span class="fa fa-plus"></span>   {{ controls.create.title }}
 										</button>
+
+										<button ng-show="controls.read" type="button" class="btn btn-default btn-sm"   ng-click="controls.read.action(row)" title="{{ controls.read.title ? controls.read.title : 'Ver' }}">
+											<span class="fa fa-search"></span> {{ controls.read.title }}
+										</button>
+
+										<button ng-show="controls.update" type="button" class="btn btn-default btn-sm" ng-click="controls.update.action(row)" title="{{ controls.update.title ? controls.update.title : 'Atualizar' }}">
+											<span class="fa fa-pencil"></span> {{ controls.update.title }}
+										</button>
+
+										<button ng-show="controls.delete" type="button" class="btn btn-default btn-sm" ng-click="controls.delete.action(row)" title="{{ controls.delete.title ? controls.delete.title : 'Deletar' }}">
+											<span class="fa fa-trash"></span>  {{ controls.delete.title }}
+										</button>
+
 									</td>
 
-                                    <!-- Colunas com os Dados da Grid -->
+                                    <!-- data columns-->
                                     <td ng-repeat="col in cols">
 
                                         <div ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }"> <!--div para controlar o alinhamento-->
@@ -185,7 +195,7 @@
 
                                                 <div ng-if="col.item(row)">
 
-                                                    <span ng-bind-html="temp = softMask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))"></span>
+                                                    <span ng-bind-html="temp = sg_mask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))"></span>
 
                                                 </div>
 
@@ -210,8 +220,6 @@
 											<div class="slider round"></div>
 										</label>
 									</td>
-
-
 
                                 </tr>
                                 <tr ng-repeat-end="" ng-show="subgrid" ng-hide="!showSubGrid" ng-class="{'soft-row-striped': ($index%2)}"> <!-- Linha para Subtabela -->

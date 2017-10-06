@@ -241,8 +241,8 @@
 
 .softgrid .btn{
 	font-size: 12px;
-	width: 50px;
-	padding: 3px;
+	padding: 2px 8px 2px 8px;
+	min-width: 50px;
 }
 
 

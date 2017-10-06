@@ -5,7 +5,7 @@
         .directive('softgrid', softGrid);
 
     /** @ngInject */
-    function softGrid(){
+    function softGrid($filter){
 
     return {
         restrict: 'E',
@@ -23,24 +23,59 @@
         templateUrl: '../bower_components/softgrid/softgrid.html',
         link: function(scope, element, attrs){
 
-           // scope.dados = scope[attrs.dados];
-           // scope.colunas = scope[attrs.colunas];
+			scope.sg_currentPage = 1;   //controla paginacao da grid
+            scope.sg_linesPerPage = 10; //controla o maximo de linhas por pagina
+            scope.sg_orderBy = '';         //controla a ordenacao da grid
+			scope.sg_filter = '';
 
-            scope.linhaMin = 0;
+			//change page
+			scope.sg_changePage = function(value){
 
-            //controla o maximo de linhas por pagina
-            scope.linesPerPage = 10;
+				if(value == -1 && scope.sg_currentPage > 1)
+					scope.sg_currentPage = scope.sg_currentPage - 1;
+				else if(value == -1 && scope.sg_currentPage == 1)
+					scope.sg_currentPage = scope.totalPages;
+				else if(value == 0 && scope.sg_currentPage == scope.totalPages)
+					scope.sg_currentPage = 1;
+				else if(value == 0 && scope.sg_currentPage < scope.totalPages)
+					scope.sg_currentPage = scope.sg_currentPage + 1;
+				else
+					scope.sg_currentPage = value;
 
-            //controla a ordenacao da grid
-            scope.softOrdem = '';
+				_atualizarPaginacao();
 
-            //controla paginacao da grid
-            scope.soft_pagina_atual = 1;
+			};
 
-            //controla o limite de linhas por pagina
-            scope.softLimite = 10;
+			//change lines per page
+			scope.sg_changeLinesPerPage = function(value){
 
-            scope.softGridToExcel = function() {
+				if((value == -1 && scope.sg_linesPerPage > 10) || value == 1)
+					scope.sg_linesPerPage = scope.sg_linesPerPage + (value * 10);
+
+			}
+
+			//sort rows of the grid
+			scope.sg_sort = function(item){
+
+				scope.reverse = (scope.sg_orderBy !== null && scope.sg_orderBy === item) ? !scope.reverse : false;
+				scope.data = $filter('orderBy')(scope.data, item, scope.reverse);
+				scope.sg_orderBy = item;
+
+			}
+
+			//apply mask to column
+			scope.sg_mask = function(colType, text){
+
+				if(colType == "phone")
+					return maskPhone(text);
+				else if(colType == "mail")
+					return maskEmail(text);
+				else
+					return text;
+			}
+
+			//export grid data to excel
+            scope.sg_excel = function() {
 
                 var html = createTable();
                 var downloadLink = document.getElementById("softDownload");
@@ -53,7 +88,14 @@
 
             }
 
-            function createTable(){
+            //control some shit
+			scope.sg_hook = function(){
+
+				_atualizarPaginacao();
+				_hookDropDown();
+			}
+
+			function createTable(){
 
                 var table = "<table>";
 
@@ -90,17 +132,9 @@
                 return table;
             }
 
-            scope.softHook = function(){
-
-                _atualizarPaginacao();
-                _hookDropDown();
-            }
-
-            //**----- PAGINATION -----**
-
             function _atualizarPaginacao(){
 
-                scope.totalPages = scope.data.length / scope.linesPerPage;
+                scope.totalPages = scope.data.length / scope.sg_linesPerPage;
                 scope.totalPages = scope.totalPages > parseInt(scope.totalPages) ? parseInt(scope.totalPages) + 1 : scope.totalPages;
 
                 scope.soft_pages = [];
@@ -108,9 +142,9 @@
                 scope.soft_pages.push({"text": "<span class='fa fa-chevron-left'></span>", "value": -1, "active": false});
 
                 if(scope.totalPages > 1)
-                    scope.soft_pages.push({"text": 1 + "..", "value": 1, "active": scope.soft_pagina_atual == 1});
+                    scope.soft_pages.push({"text": 1 + "..", "value": 1, "active": scope.sg_currentPage == 1});
 
-                var _pg = scope.soft_pagina_atual;
+                var _pg = scope.sg_currentPage;
 
                 for(var i = 2; i < scope.totalPages; i++){
 
@@ -122,53 +156,13 @@
                         {
                             scope.soft_pages.push({"text": i, "value": i, "active": _active});
                         }
-
                     }
                 }
 
-                scope.soft_pages.push({"text": ".." + scope.totalPages, "value": scope.totalPages, "active": scope.soft_pagina_atual == scope.totalPages});
+                scope.soft_pages.push({"text": ".." + scope.totalPages, "value": scope.totalPages, "active": scope.sg_currentPage == scope.totalPages});
 
                 scope.soft_pages.push({"text": "<span class='fa fa-chevron-right'></span>", "value": 0, "active": false});
 
-            }
-
-            scope.soft_ChangePage = function(value){
-
-                if(value == -1 && scope.soft_pagina_atual > 1)
-                    scope.soft_pagina_atual = scope.soft_pagina_atual - 1;
-                else if(value == -1 && scope.soft_pagina_atual == 1)
-                    scope.soft_pagina_atual = scope.totalPages;
-                else if(value == 0 && scope.soft_pagina_atual == scope.totalPages)
-                    scope.soft_pagina_atual = 1;
-                else if(value == 0 && scope.soft_pagina_atual < scope.totalPages)
-                    scope.soft_pagina_atual = scope.soft_pagina_atual + 1;
-                else
-                    scope.soft_pagina_atual = value;
-
-                _atualizarPaginacao();
-
-            };
-
-            //**----- END PAGINATION -----**
-
-			//lines per page
-			scope.updateLinesPerPage = function(value){
-
-				console.log(value);
-				if((value == -1 && scope.linesPerPage > 10) || value == 1)
-					scope.linesPerPage = scope.linesPerPage + (value * 10);
-
-			}
-
-            //**----- MASKS -----**
-            scope.softMask = function(colType, text){
-
-                if(colType == "phone")
-                    return maskPhone(text);
-                else if(colType == "mail")
-                    return maskEmail(text);
-                else
-                    return text;
             }
 
             function maskEmail(text){
@@ -183,7 +177,6 @@
 
                 return text
             }
-            //**----- END MASKS -----**
 
             function _hookDropDown(){
 
@@ -192,7 +185,6 @@
                     $(this).find('.dropdown-menu').css('left',$(this).offset().left);
                 });
             }
-
         }
     };
 
