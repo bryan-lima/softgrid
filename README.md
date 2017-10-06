@@ -90,6 +90,15 @@ Um array contendo os objetos que deverão ser carregados na grid.
                  {nome: "Peixoto", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0404"}}
                ];
 
+### controls
+
+Botões CRUD:
+     
+     vm.controls.create =  { title: "Criar Novo", function: _funcaoCriar }; //title opcional
+     vm.controls.read =    { function: _funcaoLer };
+     vm.controls.update  = { function: _funcaoAtualizar };
+     vm.controls.delete =  { title: "Deletar este item", function: _funcaoDeletar }; //title opcional
+     
 ### width
 
 Define um tamanho fixo de largura para a grid.
