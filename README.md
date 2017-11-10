@@ -5,6 +5,10 @@ Diretiva de grid para Angularjs com Bootstrap e Font Awesome.
 
 bower install softgrid
 
+bower install softgrid --save
+
+**Importante**: Injetar modulo 'softgrid.directive' no projeto.
+
 ## Utilização
 
 //HTML
@@ -13,26 +17,30 @@ bower install softgrid
 
 // JAVASCRIPT
 
-function _gerarGridUsuario() {
-     
-    vm.colunas = [
-        {title: "Nome",     item: function(item){return item.nome}},
-        {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
-        {title: "Telefone", item: function(item){return item.contato.telefone}}
-    ];
+     function _gerarGrid() {
 
-    vm.acoes = [
-        {title: "Editar",   icon: "fa fa-info-circle", function: _editarUsuario},
-        {title: "Excluir",  icon: "fa fa-wrench",      function: _excluirUsuario},
-        {title: "Bloquear", icon: "fa fa-calculator",  function: _bloquearUsuario}
-    ];
-    
-    vm.data = [
-                 {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}},
-                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}},
-                 {nome: "Peixoto", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0404"}}
-               ];
-}
+         vm.colunas = [
+             {title: "Nome",     item: function(item){return item.nome}},
+             {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
+             {title: "Telefone", item: function(item){return item.contato.telefone}}
+         ];
+
+         vm.acoes = [
+             {title: "Editar",   icon: "fa fa-info-circle", function: _teste},
+             {title: "Excluir",  icon: "fa fa-wrench",      function: _teste},
+             {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
+         ];
+
+         vm.data = [
+                      {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}},
+                      {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}},
+                      {nome: "Peixoto", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0404"}}
+                    ];
+     }
+
+     function _teste(item){
+          alert(item);
+     }
 
 ## Atributos
 
@@ -82,6 +90,15 @@ Um array contendo os objetos que deverão ser carregados na grid.
                  {nome: "Peixoto", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0404"}}
                ];
 
+### controls
+
+Botões CRUD:
+     
+     vm.controls.create =  { title: "Criar Novo", function: _funcaoCriar }; //title opcional
+     vm.controls.read =    { function: _funcaoLer };
+     vm.controls.update  = { function: _funcaoAtualizar };
+     vm.controls.delete =  { title: "Deletar este item", function: _funcaoDeletar }; //title opcional
+     
 ### width
 
 Define um tamanho fixo de largura para a grid.
