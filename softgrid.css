@@ -16,7 +16,7 @@
     padding-top: 79px;
     -webkit-transition: top 2s ease-in-out;
     transition: top 2s ease-in-out;
-    z-index:999;
+    z-index: 1060;
 }
 
 .softgrid-display-fullscreen .grid-controles{
