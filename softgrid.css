@@ -54,28 +54,34 @@
 
 .softgrid th{
     padding: 5px;
-    color: black;
-    border-bottom: 2px solid black;
-    border-top: 2px solid black;
+    background-color: #8c8c8c !important;
+    color: white;
+    border: none;
+    border-right: 1px solid white;
+    cursor: col-resize;
 }
 
 .softgrid .title{
     cursor: pointer;
 }
 
-.softgrid tr{
-    background-color: #fff;
+.softgrid thead{
+    border: 1px solid #ccc;
 }
 
-.soft-row-striped{
-    background-color: #f9f9f9;
+.softgrid tr{
+    background-color: #eee;
+}
+
+.softgrid .soft-row-striped{
+    background-color: #ccc;
 }
 
 .softgrid td{
     vertical-align: middle;
     padding: 2px;
 	padding-left: 7px;
-    border-left: 1px solid  #ccc;
+    border: none;
 }
 
 .softgrid td label{
@@ -85,32 +91,6 @@
 .softgrid td a{
     color: black;
 }
-
-/* ESTILO PARA GRID ANTIGA */
-
-.old-grid thead{
-    border: 1px solid #ccc;
-}
-
-.old-grid th{
-    background-color: #8c8c8c !important;
-    color: white;
-    border: none;
-}
-
-.old-grid tr{
-    background-color: #eee;
-}
-
-.old-grid .soft-row-striped{
-    background-color: #ccc;
-}
-
-.old-grid td{
-    border: none;
-}
-
-/* FIM ESTILO PARA GRID ANTIGA */
 
 .softgrid-display .form-control, .btn{
     border-radius: 0px !important;
