@@ -27,7 +27,7 @@
 				scope.sg_currentPage = 1;   //controla paginacao da grid
 				scope.sg_linesPerPage = 10; //controla o maximo de linhas por pagina
 				scope.sg_orderBy = '';         //controla a ordenacao da grid
-				scope.sg_filter = '';
+				scope.sg_filterSearch = '';
 
 				//change page
 				scope.sg_changePage = function (value) {
@@ -370,7 +370,7 @@ var _template = '\n' +
     '                    <label>Filtrar</label>\n' +
     '                    <div class="input-group">\n' +
     '                        <span class="input-group-addon" id="filtro-addon"><span class="fa fa-search"></span></span>\n' +
-    '                        <input type="text" class="form-control" ng-model="sg_filter" placeholder="Palavra-chave" aria-describedby="filtro-addon">\n' +
+    '                        <input type="text" class="form-control" ng-model="sg_filterSearch" placeholder="Palavra-chave" aria-describedby="filtro-addon">\n' +
     '                    </div>\n' +
     '\n' +
     '                </div>\n' +
@@ -515,7 +515,7 @@ var _template = '\n' +
     '\n' +
     '                            <tbody>\n' +
     '\n' +
-    '                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{\'soft-row-striped\': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="controls.changeRowColor(row) === true && {\'background-color\': (controls.rowColor ? controls.rowColor :\'#e59482\')}" >\n' +
+    '                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{\'soft-row-striped\': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filterSearch | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="controls.changeRowColor(row) === true && {\'background-color\': (controls.rowColor ? controls.rowColor :\'#e59482\')}" >\n' +
     '\n' +
     '                                    <td  ng-show="subgrid || actions.length > 0" style="width: 200px; text-align:center;">\n' +
     '\n' +
