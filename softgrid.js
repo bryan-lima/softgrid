@@ -18,7 +18,7 @@
 				hide: "=",
 				subgrid: "=",
 				template: "=",
-				controls: "=",
+				sgControls: "=",
 				fullscreen: "="
 			},
 			template: _template,
@@ -442,7 +442,7 @@ var _template = '\n' +
     '\n' +
     '                        <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true">\n' +
     '\n' +
-    '                            <span class="fa fa-arrows-alt"></span> {{controls.fullscreenTitle ? controls.fullscreenTitle : "Tela Cheia"}}\n' +
+    '                            <span class="fa fa-arrows-alt"></span> {{sgControls.fullscreenTitle ? sgControls.fullscreenTitle : "Tela Cheia"}}\n' +
     '\n' +
     '                        </button>\n' +
     '\n' +
@@ -491,7 +491,7 @@ var _template = '\n' +
     '\n' +
     '                                </th>\n' +
     '\n' +
-    '\t\t\t\t\t\t\t\t<th ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align: center;">\n' +
+    '\t\t\t\t\t\t\t\t<th ng-show="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align: center;">\n' +
     '\t\t\t\t\t\t\t\t\tAções\n' +
     '\t\t\t\t\t\t\t\t</th>\n' +
     '\n' +
@@ -507,15 +507,15 @@ var _template = '\n' +
     '\n' +
     '                                </th>\n' +
     '\n' +
-    '\t\t\t\t\t\t\t\t<th ng-show="controls.active" style="text-align: center;">\n' +
-    '\t\t\t\t\t\t\t\t\t{{controls.activeTitle}}\n' +
+    '\t\t\t\t\t\t\t\t<th ng-show="sgControls.active" style="text-align: center;">\n' +
+    '\t\t\t\t\t\t\t\t\t{{sgControls.activeTitle}}\n' +
     '\t\t\t\t\t\t\t\t</th>\n' +
     '\n' +
     '                            </thead>\n' +
     '\n' +
     '                            <tbody>\n' +
     '\n' +
-    '                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{\'soft-row-striped\': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filterSearch | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="controls.changeRowColor(row) === true && {\'background-color\': (controls.rowColor ? controls.rowColor :\'#e59482\')}" >\n' +
+    '                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{\'soft-row-striped\': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filterSearch | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="sgControls.changeRowColor(row) === true && {\'background-color\': (sgControls.rowColor ? sgControls.rowColor :\'#e59482\')}" >\n' +
     '\n' +
     '                                    <td  ng-show="subgrid || actions.length > 0" style="width: 200px; text-align:center;">\n' +
     '\n' +
@@ -549,21 +549,21 @@ var _template = '\n' +
     '                                    </td>\n' +
     '\n' +
     '\t\t\t\t\t\t\t\t\t<!-- column to actions -->\n' +
-    '\t\t\t\t\t\t\t\t\t<td ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align:center;">\n' +
+    '\t\t\t\t\t\t\t\t\t<td ng-show="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align:center;">\n' +
     '\n' +
-    '\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.create" type="button" class="btn btn-default btn-sm" ng-click="controls.create.action(row)" title="{{ controls.create.title ? controls.create.title : \'Criar\' }}">\n' +
+    '\t\t\t\t\t\t\t\t\t\t<button ng-show="sgControls.create" type="button" class="btn btn-default btn-sm" ng-click="sgControls.create.action(row)" title="{{ sgControls.create.title ? sgControls.create.title : \'Criar\' }}">\n' +
     '\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-plus"></span>\n' +
     '\t\t\t\t\t\t\t\t\t\t</button>\n' +
     '\n' +
-    '\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.read" type="button" class="btn btn-default btn-sm"   ng-click="controls.read.action(row)" title="{{ controls.read.title ? controls.read.title : \'Ver\' }}">\n' +
+    '\t\t\t\t\t\t\t\t\t\t<button ng-show="sgControls.read" type="button" class="btn btn-default btn-sm"   ng-click="sgControls.read.action(row)" title="{{ sgControls.read.title ? sgControls.read.title : \'Ver\' }}">\n' +
     '\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-search"></span>\n' +
     '\t\t\t\t\t\t\t\t\t\t</button>\n' +
     '\n' +
-    '\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.update" type="button" class="btn btn-default btn-sm" ng-click="controls.update.action(row)" title="{{ controls.update.title ? controls.update.title : \'Atualizar\' }}">\n' +
+    '\t\t\t\t\t\t\t\t\t\t<button ng-show="sgControls.update" type="button" class="btn btn-default btn-sm" ng-click="sgControls.update.action(row)" title="{{ sgControls.update.title ? sgControls.update.title : \'Atualizar\' }}">\n' +
     '\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-pencil"></span>\n' +
     '\t\t\t\t\t\t\t\t\t\t</button>\n' +
     '\n' +
-    '\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.delete" type="button" class="btn btn-default btn-sm" ng-click="controls.delete.action(row)" title="{{ controls.delete.title ? controls.delete.title : \'Deletar\' }}">\n' +
+    '\t\t\t\t\t\t\t\t\t\t<button ng-show="sgControls.delete" type="button" class="btn btn-default btn-sm" ng-click="sgControls.delete.action(row)" title="{{ sgControls.delete.title ? sgControls.delete.title : \'Deletar\' }}">\n' +
     '\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-trash"></span>\n' +
     '\t\t\t\t\t\t\t\t\t\t</button>\n' +
     '\n' +
@@ -591,9 +591,9 @@ var _template = '\n' +
     '                                    </td>\n' +
     '\n' +
     '\t\t\t\t\t\t\t\t\t<!-- Coluna para checkbox -->\n' +
-    '\t\t\t\t\t\t\t\t\t<td style="text-align: center;" ng-show="controls.active">\n' +
+    '\t\t\t\t\t\t\t\t\t<td style="text-align: center;" ng-show="sgControls.active">\n' +
     '\t\t\t\t\t\t\t\t\t\t<label class="switch">\n' +
-    '\t\t\t\t\t\t\t\t\t\t\t<input type="checkbox" ng-checked="controls.activeCol(row)" ng-click="controls.activeFunction(row)">\n' +
+    '\t\t\t\t\t\t\t\t\t\t\t<input type="checkbox" ng-checked="sgControls.activeCol(row)" ng-click="sgControls.activeFunction(row)">\n' +
     '\t\t\t\t\t\t\t\t\t\t\t<div class="slider round"></div>\n' +
     '\t\t\t\t\t\t\t\t\t\t</label>\n' +
     '\t\t\t\t\t\t\t\t\t</td>\n' +
@@ -607,7 +607,7 @@ var _template = '\n' +
     '\n' +
     '                                            <div ng-if="subgrid">\n' +
     '\n' +
-    '                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="\'soft-subgrid\'" controls="subgrid.controls"></softgrid>\n' +
+    '                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="\'soft-subgrid\'" sg-controls="subgrid.controls"></softgrid>\n' +
     '\n' +
     '                                            </div>\n' +
     '\n' +
