@@ -5,7 +5,7 @@
 		.directive('softgrid', softGrid);
 
 	/** @ngInject */
-	function softGrid($filter, $base64) {
+	function softGrid($filter, $base64, $timeout) {
 
 		return {
 			restrict: 'E',
@@ -28,7 +28,7 @@
 				scope.sg_linesPerPage = 10; //controla o maximo de linhas por pagina
 				scope.sg_orderBy = '';         //controla a ordenacao da grid
 				scope.sg_filter = '';
-				
+
 				//change page
 				scope.sg_changePage = function (value) {
 
@@ -180,6 +180,8 @@
 					return text
 				}
 
+                // *** FUNÇÕES PARA EXPORTAR EXCEL
+
 				scope.softGridToExcel = function () {
 					var _corCabecalhoFundo = '#FA6938';
 					var _corCabecalhoFonte = '#FFFFFF';
@@ -200,7 +202,7 @@
 					var encodedUri = 'data:application/vnd.ms-excel;base64,' + $base64.encode(html);
 					var link = document.createElement("a");
 					link.setAttribute("href", encodedUri);
-					link.setAttribute("download", ('teste.xls'));
+					link.setAttribute("download", (new Date()).toLocaleString());
 					document.body.appendChild(link); // Required for FF
 					link.click();
 					document.body.removeChild(link);
@@ -285,14 +287,59 @@
 					return valor;
 				};
 
-				function _hookDropDown() {
+				// *** FIM FUNÇÕES PARA EXPORTAR EXCEL
 
-					$(".softgrid-container .dropdown").on('click', function () {
-						$(this).find('.dropdown-menu').css('top', $(this).offset().top + 28);
-						$(this).find('.dropdown-menu').css('left', $(this).offset().left);
-					});
-				}
-			}
+				// *** FUNÇÕES PARA REDIMENSIONAR COLUNA ***
+
+                scope.redimensionandoColuna = false;
+				scope.elementoRedimensionado = undefined;
+				scope.posicaoElementoX = 0;
+				scope.larguraElementoX = 0;
+
+				function _configurarRedimensionarColuna(){
+
+                    $(".softgrid th").mousedown(function(e) {
+
+                        scope.elementoRedimensionado = $(this);
+                        scope.redimensionandoColuna = true;
+                        scope.posicaoElementoX = e.pageX;
+                        scope.larguraElementoX = $(this).width();
+
+                    });
+
+                    $(document).mousemove(function(e) {
+
+                        if(scope.redimensionandoColuna) {
+                            $(scope.elementoRedimensionado).width(scope.larguraElementoX + (e.pageX - scope.posicaoElementoX));
+                        }
+
+                    });
+
+                    $(document).mouseup(function() {
+
+                        if(scope.redimensionandoColuna) {
+                            scope.redimensionandoColuna = false;
+                            scope.$apply();
+                        }
+
+                    });
+
+                }
+
+                // *** FIM FUNÇÕES PARA REDIMENSIONAR COLUNA ***
+
+                function _hookDropDown() {
+
+                    $(".softgrid-container .dropdown").on('click', function () {
+                        $(this).find('.dropdown-menu').css('top', $(this).offset().top + 28);
+                        $(this).find('.dropdown-menu').css('left', $(this).offset().left);
+                    });
+
+                }
+
+                $timeout(_configurarRedimensionarColuna, 500);
+
+            }
 		};
 
 	}
@@ -309,295 +356,301 @@
 })();
 
 var _template = '\n' +
-	'<div class="softgrid-display" ng-class="{\'softgrid-display-fullscreen\': softgrid.fullscreen}">\n' +
-	'\n' +
-	'    <div class="grid-controles">\n' +
-	'\n' +
-	'        <div class="row" ng-hide="hide.all">\n' +
-	'\n' +
-	'            <div class="col-md-3">\n' +
-	'\n' +
-	'                <div ng-hide="hide.filter || hide.all">\n' +
-	'\n' +
-	'                    <label>Filtrar</label>\n' +
-	'                    <div class="input-group">\n' +
-	'                        <span class="input-group-addon" id="filtro-addon"><span class="fa fa-search"></span></span>\n' +
-	'                        <input type="text" class="form-control" ng-model="sg_filter" placeholder="Palavra-chave" aria-describedby="filtro-addon">\n' +
-	'                    </div>\n' +
-	'\n' +
-	'                </div>\n' +
-	'\n' +
-	'            </div>\n' +
-	'\n' +
-	'            <div class="col-md-2">\n' +
-	'\n' +
-	'                <div class="form-group" ng-hide="hide.linesPage || hide.all">\n' +
-	'\n' +
-	'                    <label>Linhas por página</label>\n' +
-	'\n' +
-	'                    <div class="input-group" style="width: 120px;">\n' +
-	'\n' +
-	'                        <span class="input-group-btn">\n' +
-	'                            <button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(-1)">-</button>\n' +
-	'                        </span>\n' +
-	'\n' +
-	'                        <input class="form-control" value="{{sg_linesPerPage}}">\n' +
-	'\n' +
-	'                        <span class="input-group-btn">\n' +
-	'\t\t\t\t\t\t\t<button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(1)">+</button>\n' +
-	'\t\t\t\t\t\t</span>\n' +
-	'\n' +
-	'                    </div>\n' +
-	'\n' +
-	'                </div>\n' +
-	'\n' +
-	'            </div>\n' +
-	'\n' +
-	'            <div class="col-md-2">\n' +
-	'\n' +
-	'                <div ng-hide="hide.options || hide.all">\n' +
-	'\n' +	
-	'                    <label>Opções</label>\n' +
-	'                    <div class="input-group">\n' +
-	'                        <input type="text" class="form-control" aria-label="..." value="{{data.length}} encontrado(s)" disabled="true">\n' +
-	'                        <div class="input-group-btn">\n' +
-	'                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>\n' +
-	'                            <ul class="dropdown-menu dropdown-menu-right">\n' +
-	'                                <li ng-repeat="item in menu">\n' +
-	'                                    <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>\n' +
-	'                                </li>\n' +
-	'                                <li role="separator" class="divider" ng-show="menu"></li>\n' +
-	'                                <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>\n' +
-	'                                <!--<li><a ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-arrows-alt"></span> Tela Cheia</a></li>-->\n' +
-	'                            </ul>\n' +
-	'                        </div>\n' +
-	'                    </div>\n' +
-	'\n' +
-	'                    <div ng-if="!subgrid">\n' +
-	'                    <a href="#" ng-show="false"  id="softDownload"></a>\n' +
-	'                    </div>\n' +
-	'                </div>\n' +
-	'\n' +
-	'            </div>\n' +
-	'\n' +
-	'            <div class="col-md-2" ng-show="fullscreen">\n' +
-	'\n' +
-	'            <label ng-show="softgrid.fullscreen">Mostrar Filtro</label>' +
-	'            <label ng-hide="softgrid.fullscreen">Esconder Filtro</label><br/>\n' +
-	'\n' +
-	' 				<button class="btn btn-default" ng-show="softgrid.fullscreen"><a style="color: black" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true" ><span class="fa fa-arrows-alt"></span> Mostrar Filtro</a></button>\n' +
-	' 				<button class="btn btn-default" ng-hide="softgrid.fullscreen"><a style="color: black" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true" ><span class="fa fa-arrows-alt"></span> Esconder Filtro</a></button>\n' +
-	'            </div>\n' +
-	'\n' +
-	'            <div class="col-md-3">\n' +
-	'\n' +
-	'                <nav aria-label="Page navigation" class="pull-right" ng-hide="hide.pagination || hide.all">\n' +
-	'\n' +
-	'                    <label>Paginação</label>\n' +
-	'\n' +
-	'                        <ul class="pagination">\n' +
-	'\n' +
-	'                            <li ng-repeat="soft_page in soft_pages" ng-class="{\'active\': soft_page.active}">\n' +
-	'                                <a ng-click="sg_changePage(soft_page.value)" ng-bind-html="soft_page.text"></a>\n' +
-	'                            </li>\n' +
-	'\n' +
-	'                        </ul>\n' +
-	'\n' +
-	'                </nav>\n' +
-	'\n' +
-	'            </div>\n' +
-	'\n' +
-	'        </div>\n' +
-	'\n' +
-	'    </div>\n' +
-	'\n' +
-	'    <div class="row">\n' +
-	'\n' +
-	'        <div class="col-md-12">\n' +
-	'\n' +
-	'                <div class="softgrid-container">\n' +
-	'\n' +
-	'                    <div ng-style=" width ? { \'width\': width + \'px\' } : { \'width\': \'100%\' }">\n' +
-	'\n' +
-	'                        <table ng-attr-id="{{!subgrid ? \'none\': \'softgrid\'}}" class="softgrid {{template}}" >\n' +
-	'\n' +
-	'                            <thead>\n' +
-	'\n' +
-	'                                <th ng-show="actions.length > 0 || subgrid" style="text-align:center;">\n' +
-	'\n' +
-	'                                </th>\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t<th ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align: center;">\n' +
-	'\t\t\t\t\t\t\t\t\tAções\n' +
-	'\t\t\t\t\t\t\t\t</th>\n' +
-	'\n' +
-	'                                <th ng-repeat="col in cols" ng-show="!col.hide" style="text-align:center;">\n' +
-	'\n' +
-	'                                  <span class="title" ng-click="sg_sort(col.item)">\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t\t  {{col.title}}\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t\t  <span ng-show="col.item == sg_orderBy" class="fa fa-sort-amount-asc" ng-class="{\'fa-sort-amount-desc\' : reverse}"></span>\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t  </span>\n' +
-	'\n' +
-	'                                </th>\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t<th ng-show="controls.active" style="text-align: center;">\n' +
-	'\t\t\t\t\t\t\t\t\t{{controls.activeTitle}}\n' +
-	'\t\t\t\t\t\t\t\t</th>\n' +
-	'\n' +
-	'                            </thead>\n' +
-	'\n' +
-	'                            <tbody>\n' +
-	'\n' +
-	'                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{\'soft-row-striped\': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="controls.changeRowColor(row) === true && {\'background-color\': (controls.rowColor ? controls.rowColor :\'#e59482\')}" >\n' +
-	'\n' +
-	'                                    <td  ng-show="subgrid || actions.length > 0" style="text-align:center;">\n' +
-	'\n' +
-	'                                        <div class="input-group" style="{{controls.actionColWidth ? \'width:\' + controls.actionColWidth + \'px\' : \'\'}}">\n' +
-	'\n' +
-	'                                            <div class="input-group-btn" >\n' +
-	'\n' +
-	'                                                <!-- botão para exibir sub tabela -->\n' +
-	'                                                <button ng-show="subgrid" type="button" class="btn btn-default btn-sm" ng-click="showSubGrid = showSubGrid ? false : true">\n' +
-	'                                                    <span class="fa fa-expand" ng-class="{\'fa-compress\': showSubGrid}"></span>\n' +
-	'                                                </button>\n' +
-	'\n' +
-	'                                            </div>\n' +
-	'\n' +
-	'                                            <div class="input-group-btn" >\n' +
-	'<div ng-repeat="action in actions" class="dropdown">' +
-	'<button type="button" class="btn btn-default btn-sm">' +
-	'		<a ng-click="action.function(row)"><span class="{{action.icon}}"></span></a>' +
-	'	</button>' +
-	'</div>' +
-	// '                                                <div class="dropdown">\n' +
-	// '\n' +
-	// '                                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n' +
-	// '                                                        <span class="fa fa-bars"></span>\n' +
-	// '                                                    </button>\n' +
-	// '\n' +
-	// '                                                    <ul class="dropdown-menu dropdown-menu-left">\n' +
-	// '                                                        <li ng-repeat="action in actions"><a ng-click="action.function(row)"><span class="{{action.icon}}"></span> {{action.title}}</a></li>\n' +
-	// '                                                    </ul>\n' +
-	// '\n' +
-	// '                                                </div>\n' +
-	'                                            </div>\n' +
-	'\n' +
-	'                                        </div>\n' +
-	'\n' +
-	'                                    </td>\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t\t<!-- column to actions -->\n' +
-	'\t\t\t\t\t\t\t\t\t<td ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align:center;">\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.create" type="button" class="btn btn-default btn-sm" ng-click="controls.create.action(row)" title="{{ controls.create.title ? controls.create.title : \'Criar\' }}">\n' +
-	'\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-plus"></span>   {{ controls.create.title }}\n' +
-	'\t\t\t\t\t\t\t\t\t\t</button>\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.read" type="button" class="btn btn-default btn-sm"   ng-click="controls.read.action(row)" title="{{ controls.read.title ? controls.read.title : \'Ver\' }}">\n' +
-	'\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-search"></span> {{ controls.read.title }}\n' +
-	'\t\t\t\t\t\t\t\t\t\t</button>\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.update" type="button" class="btn btn-default btn-sm" ng-click="controls.update.action(row)" title="{{ controls.update.title ? controls.update.title : \'Atualizar\' }}">\n' +
-	'\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-pencil"></span> {{ controls.update.title }}\n' +
-	'\t\t\t\t\t\t\t\t\t\t</button>\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.delete" type="button" class="btn btn-default btn-sm" ng-click="controls.delete.action(row)" title="{{ controls.delete.title ? controls.delete.title : \'Deletar\' }}">\n' +
-	'\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-trash"></span>  {{ controls.delete.title }}\n' +
-	'\t\t\t\t\t\t\t\t\t\t</button>\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t\t</td>\n' +
-	'\n' +
-	'                                    <!-- data columns-->\n' +
-	'                                    <td ng-repeat="col in cols">\n' +
-	'\n' +
-	'                                        <div ng-style="col.align ? { \'text-align\': col.align} : { \'text-align\': \'left\' }"> <!--div para controlar o alinhamento-->\n' +
-	'\n' +
-	'                                            <label ng-hide="col.popOver">\n' +
-	'\n' +
-	'                                                <div ng-if="col.item(row)">\n' +
-	'\n' +
-	'                                                    <span ng-bind-html="temp = sg_mask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))"></span>\n' +
-	'\n' +
-	'                                                </div>\n' +
-	'\n' +
-	'                                                <div ng-if="!col.item(row)">\n' +
-	'\n' +
-	'                                                    <font color="red">x</font>\n' +
-	'\n' +
-	'                                                </div>\n' +
-	'\n' +
-	'                                            </label>\n' +
-	'\n' +
-	'                                            <label style="text-decoration: underline; cursor: pointer" ng-show="col.popOver"   popover data-toggle="popover" data-trigger="hover" data-content="{{col.item(row)}}">{{(col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999))}}</label>\n' +
-	'\n' +
-	'                                        </div>\n' +
-	'\n' +
-	'                                    </td>\n' +
-	'\n' +
-	'\t\t\t\t\t\t\t\t\t<!-- Coluna para checkbox -->\n' +
-	'\t\t\t\t\t\t\t\t\t<td style="text-align: center;" ng-show="controls.active">\n' +
-	'\t\t\t\t\t\t\t\t\t\t<label class="switch">\n' +
-	'\t\t\t\t\t\t\t\t\t\t\t<input type="checkbox" ng-checked="controls.activeCol(row)" ng-click="controls.activeFunction(row)">\n' +
-	'\t\t\t\t\t\t\t\t\t\t\t<div class="slider round"></div>\n' +
-	'\t\t\t\t\t\t\t\t\t\t</label>\n' +
-	'\t\t\t\t\t\t\t\t\t</td>\n' +
-	'\n' +
-	'                                </tr>\n' +
-	'                                <tr ng-repeat-end="" ng-show="subgrid" ng-hide="!showSubGrid" ng-class="{\'soft-row-striped\': ($index%2)}"> <!-- Linha para Subtabela -->\n' +
-	'\n' +
-	'                                    <td colspan="{{cols.length + 3}}">\n' +
-	'\n' +
-	'                                        <div class="soft-subgrid-container">\n' +
-	'\n' +
-	'                                            <div ng-if="subgrid">\n' +
-	'\n' +
-	'                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="\'soft-subgrid\'" controls="subgrid.controls"></softgrid>\n' +
-	'\n' +
-	'                                            </div>\n' +
-	'\n' +
-	'                                        </div>\n' +
-	'\n' +
-	'                                    </td>\n' +
-	'\n' +
-	'                                </tr>\n' +
-	'\n' +
-	'                                <!-- Exibe uma linha caso não haja dados -->\n' +
-	'                                <tr ng-show="!data || data.length <= 0" style="text-align: center;">\n' +
-	'\n' +
-	'                                    <td colspan="{{cols.length + 3}} ">\n' +
-	'                                    Não há dados a serem exibidos.\n' +
-	'                                    </td>\n' +
-	'                                </tr>\n' +
-	'\n' +
-	'                            </tbody>\n' +
-	'\n' +
-	'                        </table>\n' +
-	'\n' +
-	'                    </div>\n' +
-	'\n' +
-	'                </div>\n' +
-	'\n' +
-	'\n' +
-	'        </div>\n' +
-	'\n' +
-	'    </div>\n' +
-	'\n' +
-	'    <div class="row" ng-hide="hide.pagination || hide.all">\n' +
-	'\n' +
-	'        <div class="col-md-12">\n' +
-	'\n' +
-	'            <nav ng-show="mostrarBotoesPaginas" aria-label="...">\n' +
-	'                <ul class="pager" style="margin-top: 5px;">\n' +
-	'                    <li class="previous"><button class="btn btn-default pull-left" ng-click="soft_ChangePage(-1)"><span aria-hidden="true">&larr;</span> Página anterior</button></li>\n' +
-	'                    <li class="next"><button class="btn btn-default pull-right" ng-click="soft_ChangePage(0)">Próxima página <span aria-hidden="true">&rarr;</span></button></li>\n' +
-	'                </ul>\n' +
-	'            </nav>\n' +
-	'\n' +
-	'        </div>\n' +
-	'\n' +
-	'    </div>\n' +
-	'\n' +
-	'</div>\n';
+    '<div class="softgrid-display" ng-class="{\'softgrid-display-fullscreen\': softgrid.fullscreen}">\n' +
+    '\n' +
+    '    <div class="grid-controles">\n' +
+    '\n' +
+    '        <div class="row" ng-hide="hide.all">\n' +
+    '\n' +
+    '            <!-- Filtro -->\n' +
+    '            <div class="col-md-3">\n' +
+    '\n' +
+    '                <div ng-hide="hide.filter || hide.all">\n' +
+    '\n' +
+    '                    <label>Filtrar</label>\n' +
+    '                    <div class="input-group">\n' +
+    '                        <span class="input-group-addon" id="filtro-addon"><span class="fa fa-search"></span></span>\n' +
+    '                        <input type="text" class="form-control" ng-model="sg_filter" placeholder="Palavra-chave" aria-describedby="filtro-addon">\n' +
+    '                    </div>\n' +
+    '\n' +
+    '                </div>\n' +
+    '\n' +
+    '            </div>\n' +
+    '\n' +
+    '            <!-- Linhas -->\n' +
+    '            <div class="col-md-2">\n' +
+    '\n' +
+    '                <div class="form-group" ng-hide="hide.linesPage || hide.all">\n' +
+    '\n' +
+    '                    <label>Linhas por página</label>\n' +
+    '\n' +
+    '                    <div class="input-group" style="width: 120px;">\n' +
+    '\n' +
+    '                        <span class="input-group-btn">\n' +
+    '                            <button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(-1)">-</button>\n' +
+    '                        </span>\n' +
+    '\n' +
+    '                        <input class="form-control" value="{{sg_linesPerPage}}">\n' +
+    '\n' +
+    '                        <span class="input-group-btn">\n' +
+    '\t\t\t\t\t\t\t<button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(1)">+</button>\n' +
+    '\t\t\t\t\t\t</span>\n' +
+    '\n' +
+    '                    </div>\n' +
+    '\n' +
+    '                </div>\n' +
+    '\n' +
+    '            </div>\n' +
+    '\n' +
+    '            <!-- Opções -->\n' +
+    '            <div class="col-md-2">\n' +
+    '\n' +
+    '                <div ng-hide="hide.options || hide.all">\n' +
+    '\n' +
+    '                    <label>Opções</label>\n' +
+    '                    <div class="input-group">\n' +
+    '                        <input type="text" class="form-control" aria-label="..." value="{{data.length}} encontrado(s)" disabled="true">\n' +
+    '                        <div class="input-group-btn">\n' +
+    '                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>\n' +
+    '                            <ul class="dropdown-menu dropdown-menu-right">\n' +
+    '                                <li ng-repeat="item in menu">\n' +
+    '                                    <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>\n' +
+    '                                </li>\n' +
+    '                                <li role="separator" class="divider" ng-show="menu"></li>\n' +
+    '                                <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>\n' +
+    '                            </ul>\n' +
+    '                        </div>\n' +
+    '                    </div>\n' +
+    '\n' +
+    '                    <div ng-if="!subgrid">\n' +
+    '                    <a href="#" ng-show="false"  id="softDownload"></a>\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '\n' +
+    '            </div>\n' +
+    '\n' +
+    '            <!-- Controles -->\n' +
+    '            <div class="col-md-2">\n' +
+    '\n' +
+    '                <div class="form-group">\n' +
+    '\n' +
+    '                    <div class="input-group">\n' +
+    '\n' +
+    '                        <label>&nbsp;</label>\n' +
+    '\n' +
+    '                        <br>\n' +
+    '\n' +
+    '                        <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true">\n' +
+    '\n' +
+    '                            <span class="fa fa-arrows-alt"></span> {{controls.fullscreenTitle ? controls.fullscreenTitle : "Tela Cheia"}}\n' +
+    '\n' +
+    '                        </button>\n' +
+    '\n' +
+    '                    </div>\n' +
+    '\n' +
+    '                </div>\n' +
+    '\n' +
+    '            </div>\n' +
+    '\n' +
+    '            <!-- Paginação -->\n' +
+    '            <div class="col-md-3">\n' +
+    '\n' +
+    '                <nav aria-label="Page navigation" class="pull-right" ng-hide="hide.pagination || hide.all">\n' +
+    '\n' +
+    '                    <label>Paginação</label>\n' +
+    '\n' +
+    '                        <ul class="pagination">\n' +
+    '\n' +
+    '                            <li ng-repeat="soft_page in soft_pages" ng-class="{\'active\': soft_page.active}">\n' +
+    '                                <a ng-click="sg_changePage(soft_page.value)" ng-bind-html="soft_page.text"></a>\n' +
+    '                            </li>\n' +
+    '\n' +
+    '                        </ul>\n' +
+    '\n' +
+    '                </nav>\n' +
+    '\n' +
+    '            </div>\n' +
+    '\n' +
+    '        </div>\n' +
+    '\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="row">\n' +
+    '\n' +
+    '        <div class="col-md-12">\n' +
+    '\n' +
+    '                <div class="softgrid-container">\n' +
+    '\n' +
+    '                    <div ng-style=" width ? { \'width\': width + \'px\' } : { \'width\': \'100%\' }">\n' +
+    '\n' +
+    '                        <table ng-attr-id="{{!subgrid ? \'none\': \'softgrid\'}}" class="softgrid {{template}}" >\n' +
+    '\n' +
+    '                            <thead>\n' +
+    '\n' +
+    '                                <th ng-show="actions.length > 0 || subgrid" style="text-align:center; width: 120px;">\n' +
+    '\n' +
+    '                                </th>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t<th ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align: center;">\n' +
+    '\t\t\t\t\t\t\t\t\tAções\n' +
+    '\t\t\t\t\t\t\t\t</th>\n' +
+    '\n' +
+    '                                <th ng-repeat="col in cols" ng-show="!col.hide" style="text-align:center;">\n' +
+    '\n' +
+    '                                  <span class="title" ng-click="sg_sort(col.item)">\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t  {{col.title}}\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t  <span ng-show="col.item == sg_orderBy" class="fa fa-sort-amount-asc" ng-class="{\'fa-sort-amount-desc\' : reverse}"></span>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t  </span>\n' +
+    '\n' +
+    '                                </th>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t<th ng-show="controls.active" style="text-align: center;">\n' +
+    '\t\t\t\t\t\t\t\t\t{{controls.activeTitle}}\n' +
+    '\t\t\t\t\t\t\t\t</th>\n' +
+    '\n' +
+    '                            </thead>\n' +
+    '\n' +
+    '                            <tbody>\n' +
+    '\n' +
+    '                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{\'soft-row-striped\': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="controls.changeRowColor(row) === true && {\'background-color\': (controls.rowColor ? controls.rowColor :\'#e59482\')}" >\n' +
+    '\n' +
+    '                                    <td  ng-show="subgrid || actions.length > 0" style="width: 200px; text-align:center;">\n' +
+    '\n' +
+    '                                        <div class="input-group" style="width: 120px;">\n' +
+    '\n' +
+    '                                            <div class="input-group-btn" >\n' +
+    '\n' +
+    '                                                <!-- botão para exibir sub tabela -->\n' +
+    '                                                <button ng-show="subgrid" type="button" class="btn btn-default btn-sm" ng-click="showSubGrid = showSubGrid ? false : true">\n' +
+    '                                                    <span class="fa fa-expand" ng-class="{\'fa-compress\': showSubGrid}"></span>\n' +
+    '                                                </button>\n' +
+    '\n' +
+    '                                            </div>\n' +
+    '\n' +
+    '                                            <div class="input-group-btn" >\n' +
+    '                                                <div class="dropdown">\n' +
+    '\n' +
+    '                                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n' +
+    '                                                        <span class="fa fa-bars"></span>\n' +
+    '                                                    </button>\n' +
+    '\n' +
+    '                                                    <ul class="dropdown-menu dropdown-menu-left">\n' +
+    '                                                        <li ng-repeat="action in actions"><a ng-click="action.function(row)"><span class="{{action.icon}}"></span> {{action.title}}</a></li>\n' +
+    '                                                    </ul>\n' +
+    '\n' +
+    '                                                </div>\n' +
+    '                                            </div>\n' +
+    '\n' +
+    '                                        </div>\n' +
+    '\n' +
+    '                                    </td>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t<!-- column to actions -->\n' +
+    '\t\t\t\t\t\t\t\t\t<td ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align:center;">\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.create" type="button" class="btn btn-default btn-sm" ng-click="controls.create.action(row)" title="{{ controls.create.title ? controls.create.title : \'Criar\' }}">\n' +
+    '\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-plus"></span>\n' +
+    '\t\t\t\t\t\t\t\t\t\t</button>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.read" type="button" class="btn btn-default btn-sm"   ng-click="controls.read.action(row)" title="{{ controls.read.title ? controls.read.title : \'Ver\' }}">\n' +
+    '\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-search"></span>\n' +
+    '\t\t\t\t\t\t\t\t\t\t</button>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.update" type="button" class="btn btn-default btn-sm" ng-click="controls.update.action(row)" title="{{ controls.update.title ? controls.update.title : \'Atualizar\' }}">\n' +
+    '\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-pencil"></span>\n' +
+    '\t\t\t\t\t\t\t\t\t\t</button>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t\t<button ng-show="controls.delete" type="button" class="btn btn-default btn-sm" ng-click="controls.delete.action(row)" title="{{ controls.delete.title ? controls.delete.title : \'Deletar\' }}">\n' +
+    '\t\t\t\t\t\t\t\t\t\t\t<span class="fa fa-trash"></span>\n' +
+    '\t\t\t\t\t\t\t\t\t\t</button>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t</td>\n' +
+    '\n' +
+    '                                    <!-- data columns-->\n' +
+    '                                    <td ng-repeat="col in cols">\n' +
+    '\n' +
+    '                                        <div ng-style="col.align ? { \'text-align\': col.align} : { \'text-align\': \'left\' }"> <!--div para controlar o alinhamento-->\n' +
+    '\n' +
+    '                                            <label ng-hide="col.popOver">\n' +
+    '\n' +
+    '                                                <div ng-if="col.item(row)">\n' +
+    '\n' +
+    '                                                    <span ng-bind-html="temp = sg_mask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))"></span>\n' +
+    '\n' +
+    '                                                </div>\n' +
+    '\n' +
+    '                                            </label>\n' +
+    '\n' +
+    '                                            <label style="text-decoration: underline; cursor: pointer" ng-show="col.popOver"   popover data-toggle="popover" data-trigger="hover" data-content="{{col.item(row)}}">{{(col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999))}}</label>\n' +
+    '\n' +
+    '                                        </div>\n' +
+    '\n' +
+    '                                    </td>\n' +
+    '\n' +
+    '\t\t\t\t\t\t\t\t\t<!-- Coluna para checkbox -->\n' +
+    '\t\t\t\t\t\t\t\t\t<td style="text-align: center;" ng-show="controls.active">\n' +
+    '\t\t\t\t\t\t\t\t\t\t<label class="switch">\n' +
+    '\t\t\t\t\t\t\t\t\t\t\t<input type="checkbox" ng-checked="controls.activeCol(row)" ng-click="controls.activeFunction(row)">\n' +
+    '\t\t\t\t\t\t\t\t\t\t\t<div class="slider round"></div>\n' +
+    '\t\t\t\t\t\t\t\t\t\t</label>\n' +
+    '\t\t\t\t\t\t\t\t\t</td>\n' +
+    '\n' +
+    '                                </tr>\n' +
+    '                                <tr ng-repeat-end="" ng-show="subgrid" ng-hide="!showSubGrid" ng-class="{\'soft-row-striped\': ($index%2)}"> <!-- Linha para Subtabela -->\n' +
+    '\n' +
+    '                                    <td colspan="{{cols.length + 3}}">\n' +
+    '\n' +
+    '                                        <div class="soft-subgrid-container">\n' +
+    '\n' +
+    '                                            <div ng-if="subgrid">\n' +
+    '\n' +
+    '                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="\'soft-subgrid\'" controls="subgrid.controls"></softgrid>\n' +
+    '\n' +
+    '                                            </div>\n' +
+    '\n' +
+    '                                        </div>\n' +
+    '\n' +
+    '                                    </td>\n' +
+    '\n' +
+    '                                </tr>\n' +
+    '\n' +
+    '                                <!-- Exibe uma linha caso não haja dados -->\n' +
+    '                                <tr ng-show="!data || data.length <= 0" style="text-align: center;">\n' +
+    '\n' +
+    '                                    <td colspan="{{cols.length + 3}} ">\n' +
+    '                                    Não há dados a serem exibidos.\n' +
+    '                                    </td>\n' +
+    '                                </tr>\n' +
+    '\n' +
+    '                            </tbody>\n' +
+    '\n' +
+    '                        </table>\n' +
+    '\n' +
+    '                    </div>\n' +
+    '\n' +
+    '                </div>\n' +
+    '\n' +
+    '\n' +
+    '        </div>\n' +
+    '\n' +
+    '    </div>\n' +
+    '\n' +
+    '    <div class="row" ng-hide="hide.pagination || hide.all">\n' +
+    '\n' +
+    '        <div class="col-md-12">\n' +
+    '\n' +
+    '            <nav aria-label="...">\n' +
+    '                <ul class="pager" style="margin-top: 5px;">\n' +
+    '                    <li class="previous"><button class="btn btn-default pull-left" ng-click="soft_ChangePage(-1)"><span aria-hidden="true">&larr;</span> Página anterior</button></li>\n' +
+    '                    <li class="next"><button class="btn btn-default pull-right" ng-click="soft_ChangePage(0)">Próxima página <span aria-hidden="true">&rarr;</span></button></li>\n' +
+    '                </ul>\n' +
+    '            </nav>\n' +
+    '\n' +
+    '        </div>\n' +
+    '\n' +
+    '    </div>\n' +
+    '\n' +
+    '</div>\n';
