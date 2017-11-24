@@ -8,7 +8,6 @@
 
 	/** @ngInject */
 	function softGrid($filter, $timeout) {
-        console.log('foi porra')
 		return {
 			restrict: 'E',
 			replace: true,
