@@ -48,6 +48,7 @@
                 <div ng-hide="hide.options || hide.all">
 
                     <label>Opções</label>
+
                     <div class="input-group">
                         <input type="text" class="form-control" aria-label="..." value="{{data.length}} encontrado(s)" disabled="true">
                         <div class="input-group-btn">
@@ -57,8 +58,7 @@
                                     <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>
                                 </li>
                                 <li role="separator" class="divider" ng-show="menu"></li>
-                                <!--<li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>-->
-                                <li><a ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-arrows-alt"></span> Tela Cheia</a></li>
+                                <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>
                             </ul>
                         </div>
                     </div>
@@ -66,11 +66,20 @@
                     <div ng-if="!subgrid">
                     <a href="#" ng-show="false"  id="softDownload"></a>
                     </div>
+
                 </div>
 
             </div>
 
-            <div class="col-md-5">
+            <div class="col-md-2">
+
+                <label>&nbsp;</label><br>
+                <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-arrows-alt"></span> {{ sgControls.fullScreenTitle ? sgControls.fullScreenTitle : 'Tela Cheia'}}</button>
+
+
+            </div>
+
+            <div class="col-md-3">
 
                 <nav aria-label="Page navigation" class="pull-right" ng-hide="hide.pagination || hide.all">
 

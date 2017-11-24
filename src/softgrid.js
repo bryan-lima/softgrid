@@ -1,13 +1,13 @@
 (function () {
 	'use strict';
 
-	angular.module('softgrid.directive', [])
+	angular.module('softgrid.directive', ['base64'])
 		.directive('softgrid', softGrid);
 
-	softGrid.$injector = ['$filter', '$timeout'];
+	softGrid.$injector = ['$filter', '$base64','$timeout'];
 
 	/** @ngInject */
-	function softGrid($filter, $timeout) {
+	function softGrid($filter, $base64, $timeout) {
 		return {
 			restrict: 'E',
 			replace: true,
@@ -81,7 +81,7 @@
 
 					var html = createTable();
 					var downloadLink = document.getElementById("softDownload");
-					//downloadLink.href = 'data:application/vnd.ms-excel;base64,' + $base64.encode(html);
+					downloadLink.href = 'data:application/vnd.ms-excel;base64,' + $base64.encode(html);
 
 
 					downloadLink.download = 'Planilha_' + new Date().toLocaleDateString() + '.xls';
@@ -211,9 +211,9 @@
 
 				function gerarHTML(lista) {
 					var table = '<table border="3" cellpadding="3" cellspacing="3"><tbody>';
-					angular.element(lista).each(function (iLV1, level1) {
+					lista.forEach(function (level1) {
 						var tr = '<tr>';
-						angular.element(level1).each(function (iLV2, level2) {
+						level1.forEach(function (level2) {
 							if (level2) {
 								tr += '<td style="color:' + level2.corFonte + ';background-color:' + level2.corFundo + ';font-weight:' + level2.grossuraFonte + '; ">' + level2.valor + '</td>';
 							}
@@ -243,7 +243,16 @@
 				function gerarCabecalho(colunas, totalCelulas, celulaInicial) {
 					var _retorno = [];
 					var _celulas = new Array(totalCelulas);
-					angular.element(colunas).each(function (iC, coluna) {
+					colunas.forEach(function(coluna){
+                        _celulas[celulaInicial] = {
+                            valor: coluna.title,
+                            corFundo: '#FA6938',
+                            corFonte: '#FFFFFF',
+                            grossuraFonte: 800
+                        };
+                        celulaInicial++;
+					});
+					/*angular.element(colunas).each(function (iC, coluna) {
 						_celulas[celulaInicial] = {
 							valor: coluna.title,
 							corFundo: '#FA6938',
@@ -251,7 +260,7 @@
 							grossuraFonte: 800,
 						};
 						celulaInicial++;
-					});
+					});*/
 					_retorno.push(_celulas);
 					return _retorno;
 				};
@@ -259,10 +268,10 @@
 				function gerarLinha(colunas, subTabelas, linhasAdicionais, linhas, totalCelulas, celulaInicial) {
 					var _retorno = [];
 
-					angular.element(linhas).each(function (iL, linha) {
+					linhas.forEach(function (linha) {
 						var _celulas = new Array(totalCelulas);
 						var _celulaInicial = celulaInicial;
-						angular.element(colunas).each(function (iC, coluna) {
+						colunas.forEach(function (coluna) {
 							_celulas[_celulaInicial] = {
 								valor: obterColunaListaValor(linha, coluna),
 								corFundo: '#FFFFFF',

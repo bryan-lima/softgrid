@@ -6,12 +6,12 @@
   ],
   "description": "Grid directive with Angular, Bootstrap and Font Awesome",
   "main": [
-    "./dist/softgrid.tpl.js",
+    "./dist/softgrid.js",
     "./dist/softgrid.css"
   ],
   "dependencies": {
     "angular": ">1.5.8",
-    "angular-base64": "*",
+    "angular-base64": "^2.0.5",
     "angular-sanitize": "^1.6.6",
     "font-awesome": "^4.7.0"
   },
