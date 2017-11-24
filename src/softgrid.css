@@ -1,0 +1,231 @@
+
+.softgrid-display{
+    -webkit-transition: top 2s ease-in-out;
+    transition: top 2s ease-in-out;
+}
+
+.softgrid-display-fullscreen{
+    position: fixed;
+    top: 0px;
+    left:0px;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-top: 79px;
+    -webkit-transition: top 2s ease-in-out;
+    transition: top 2s ease-in-out;
+    z-index: 1060;
+}
+
+.softgrid-display-fullscreen .grid-controles{
+    position: fixed;
+    top:0px;
+    left:0px;
+    width: 99%;
+    padding: 4px 10px 0px 10px;
+    background-color: white;
+    z-index: 1000;
+}
+
+.softgrid-container{
+    width: 100%;
+    overflow-x: auto;
+}
+
+.softgrid-container .dropdown-menu {
+    position: fixed;
+}
+
+.softgrid-display .dropwdown-menu li a{
+	text-align: left !important;
+}
+
+.softgrid{
+    font-size: 12px;
+    width: 100%;
+    border-bottom: 1px inset #ccc;
+}
+
+.softgrid .pop-icon{
+    font-size: 9px;
+}
+
+.softgrid th{
+    padding: 5px;
+    background-color: #8c8c8c !important;
+    color: white;
+    border: none;
+    border-right: 1px solid white;
+    cursor: col-resize;
+}
+
+.softgrid .title{
+    cursor: pointer;
+}
+
+.softgrid thead{
+    border: 1px solid #ccc;
+}
+
+.softgrid tr{
+    background-color: #eee;
+}
+
+.softgrid .soft-row-striped{
+    background-color: #ccc;
+}
+
+.softgrid td{
+    vertical-align: middle;
+    padding: 2px;
+	padding-left: 7px;
+    border: none;
+}
+
+.softgrid td label{
+    font-weight: normal;
+}
+
+.softgrid td a{
+    color: black;
+}
+
+.softgrid-display .form-control, .btn{
+    border-radius: 0px !important;
+}
+
+.grid-controles .input-group-addon{
+    border-radius: 0px;
+}
+
+.sub-table-column{
+    padding: 0px !important;
+    text-align: center;
+}
+
+.softgrid-display .pagination li{
+    display: inline !important;
+}
+
+.softgrid .btn-open{
+    display: block;
+    margin: auto;
+    margin-top: -12px;
+    font-size: 8px;
+}
+
+.softgrid-compact{
+    border: 1px solid #FA6938;
+    float: left;
+    width: 90%;
+    margin-top: -20px;
+}
+
+/* efeito para show da subtabela  */
+
+.soft-subgrid-container{
+    padding: 20px;
+    overflow: hidden;
+    max-height: 500px;
+    -webkit-transition: max-height 0.15s ease-in-out;
+    transition: max-height 0.15s ease-in-out;
+}
+
+.soft-subgrid-container.ng-hide {
+    max-height: 0px;
+}
+
+.soft-subgrid th{
+    background-color: #f5f5f5 !important;
+    color: black !important;
+}
+
+.soft-subgrid tr{
+    background-color: #ffffff;
+    border-bottom: 1px solid #ccc;
+}
+
+.soft-subgrid .soft-row-striped{
+    background-color: #ffffff;
+}
+
+/* The switch - the box around the slider */
+.softgrid-display .switch {
+	top: 1px;
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 16px;
+}
+
+/* Hide default HTML checkbox */
+.softgrid-display .switch input {display:none;}
+
+/* The slider */
+.softgrid-display .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.old-grid .slider{
+    background-color: #e74c3c;
+}
+
+.softgrid-display .slider:before {
+    position: absolute;
+    content: "";
+    height: 10px;
+    width: 10px;
+    left: 2px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.softgrid-display input:checked + .slider {
+    background-color: #bdc3c7;
+}
+
+.softgrid-display input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+.softgrid-display input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.softgrid-display .slider.round {
+    border-radius: 34px;
+}
+
+.softgrid-display .slider.round:before {
+    border-radius: 50%;
+}
+
+.softgrid-display .pagination li a{
+    text-align: center;
+}
+
+.softgrid .btn{
+	font-size: 12px;
+	padding: 2px 8px 2px 8px;
+	min-width: 50px;
+}
+
+
+
+
+

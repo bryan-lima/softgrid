@@ -108,7 +108,7 @@
 
                                 </th>
 
-								<th ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align: center;">
+								<th ng-show="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align: center;">
 									Ações
 								</th>
 
@@ -124,15 +124,15 @@
 
                                 </th>
 
-								<th ng-show="controls.active" style="text-align: center;">
-									{{controls.activeTitle}}
+								<th ng-show="sgControls.active" style="text-align: center;">
+									{{sgControls.activeTitle}}
 								</th>
 
                             </thead>
 
                             <tbody>
 
-                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="controls.changeRowColor(row) === true && {'background-color': (controls.rowColor ? controls.rowColor :'#e59482')}" >
+                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="sgControls.changeRowColor(row) === true && {'background-color': (sgControls.rowColor ? sgControls.rowColor :'#e59482')}" >
 
                                     <td  ng-show="subgrid || actions.length > 0" style="width: 200px; text-align:center;">
 
@@ -166,22 +166,22 @@
                                     </td>
 
 									<!-- column to actions -->
-									<td ng-show="controls.create || controls.read || controls.update || controls.delete" style="text-align:center;">
+									<td ng-show="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align:center;">
 
-										<button ng-show="controls.create" type="button" class="btn btn-default btn-sm" ng-click="controls.create.action(row)" title="{{ controls.create.title ? controls.create.title : 'Criar' }}">
-											<span class="fa fa-plus"></span>   {{ controls.create.title }}
+										<button ng-show="sgControls.create" type="button" class="btn btn-default btn-sm" ng-click="sgControls.create.action(row)" title="{{ sgControls.create.title ? sgControls.create.title : 'Criar' }}">
+											<span class="fa fa-plus"></span>
 										</button>
 
-										<button ng-show="controls.read" type="button" class="btn btn-default btn-sm"   ng-click="controls.read.action(row)" title="{{ controls.read.title ? controls.read.title : 'Ver' }}">
-											<span class="fa fa-search"></span> {{ controls.read.title }}
+										<button ng-show="sgControls.read" type="button" class="btn btn-default btn-sm"   ng-click="sgControls.read.action(row)" title="{{ sgControls.read.title ? sgControls.read.title : 'Ver' }}">
+											<span class="fa fa-search"></span>
 										</button>
 
-										<button ng-show="controls.update" type="button" class="btn btn-default btn-sm" ng-click="controls.update.action(row)" title="{{ controls.update.title ? controls.update.title : 'Atualizar' }}">
-											<span class="fa fa-pencil"></span> {{ controls.update.title }}
+										<button ng-show="sgControls.update" type="button" class="btn btn-default btn-sm" ng-click="sgControls.update.action(row)" title="{{ sgControls.update.title ? sgControls.update.title : 'Atualizar' }}">
+											<span class="fa fa-pencil"></span>
 										</button>
 
-										<button ng-show="controls.delete" type="button" class="btn btn-default btn-sm" ng-click="controls.delete.action(row)" title="{{ controls.delete.title ? controls.delete.title : 'Deletar' }}">
-											<span class="fa fa-trash"></span>  {{ controls.delete.title }}
+										<button ng-show="sgControls.delete" type="button" class="btn btn-default btn-sm" ng-click="sgControls.delete.action(row)" title="{{ sgControls.delete.title ? sgControls.delete.title : 'Deletar' }}">
+											<span class="fa fa-trash"></span>
 										</button>
 
 									</td>
@@ -214,9 +214,9 @@
                                     </td>
 
 									<!-- Coluna para checkbox -->
-									<td style="text-align: center;" ng-show="controls.active">
+									<td style="text-align: center;" ng-show="sgControls.active">
 										<label class="switch">
-											<input type="checkbox" ng-checked="controls.activeCol(row)" ng-click="controls.activeFunction(row)">
+											<input type="checkbox" ng-checked="sgControls.activeCol(row)" ng-click="sgControls.activeFunction(row)">
 											<div class="slider round"></div>
 										</label>
 									</td>
@@ -230,7 +230,7 @@
 
                                             <div ng-if="subgrid">
 
-                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="'soft-subgrid'" controls="subgrid.controls"></softgrid>
+                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="'soft-subgrid'" sg-controls="subgrid.controls"></softgrid>
 
                                             </div>
 
@@ -277,3 +277,4 @@
     </div>
 
 </div>
+

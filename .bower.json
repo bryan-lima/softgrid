@@ -1,0 +1,38 @@
+{
+  "name": "softgrid",
+  "authors": [
+    "Joao Paulo Oliveira"
+  ],
+  "description": "Grid directive with Angular, Bootstrap and Font Awesome",
+  "main": [
+    "softgrid.js",
+    "softgrid.css"
+  ],
+  "dependencies": {
+    "angular": "~1.5.8"
+  },
+  "keywords": [
+    "soft",
+    "grid"
+  ],
+  "license": "MIT",
+  "homepage": "none",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "version": "0.2.3",
+  "_release": "0.2.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.3",
+    "commit": "32865fe84877245d71b0f329c441eed87924c3ee"
+  },
+  "_source": "https://github.com/afpop/softgrid.git",
+  "_target": "^0.2.1",
+  "_originalSource": "softgrid"
+}
