@@ -92,6 +92,14 @@
     color: black;
 }
 
+.softgrid .edit-button{
+    cursor: pointer;
+    float: right;
+}
+
+.softgrid .edit-input{
+}
+
 .softgrid-display .form-control, .btn{
     border-radius: 0px !important;
 }

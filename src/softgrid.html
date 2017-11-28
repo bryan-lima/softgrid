@@ -54,7 +54,7 @@
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li ng-repeat="item in menu">
+                                <li ng-repeat="item in sgMenu">
                                     <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>
                                 </li>
                                 <li role="separator" class="divider" ng-show="menu"></li>
@@ -113,7 +113,7 @@
 
                             <thead>
 
-                                <th ng-show="actions.length > 0 || subgrid" style="text-align:center; width: 120px;">
+                                <th ng-show="actions.length > 0 || subgrid" style="text-align:center;   ">
 
                                 </th>
 
@@ -196,21 +196,19 @@
 									</td>
 
                                     <!-- data columns-->
-                                    <td ng-repeat="col in cols">
+                                    <td ng-repeat="col in cols track by $index" ng-init="$parent.editing = false">
 
-                                        <div ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }"> <!--div para controlar o alinhamento-->
+                                        <a class="edit-button" ng-if="col.edit" ng-click="$parent.editing = !$parent.editing" title="Editar"><span class="fa fa-edit"></span></a>
+
+                                        <input ng-if="editing" ng-init="newvalue = col.item(row)" class="edit-input" ng-model="newvalue" ng-blur="sg_edit(row, col, newvalue, $parent)">
+
+                                        <div ng-show="!editing" ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }">
 
                                             <label ng-hide="col.popOver">
 
                                                 <div ng-if="col.item(row)">
 
                                                     <span ng-bind-html="temp = sg_mask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))"></span>
-
-                                                </div>
-
-                                                <div ng-if="!col.item(row)">
-
-                                                    <font color="red">x</font>
 
                                                 </div>
 

@@ -23,6 +23,13 @@
 
     <script src="app.js"></script>
     <script src="../dist/softgrid.js"></script>
+
+    <style>
+
+        body{
+            background-color: #FA6938;
+        }
+    </style>
 </head>
 
     <body>
@@ -30,11 +37,13 @@
     <div class="container-fluid">
 
         <div class="col-md-12">
-
             <h1>Softgrid</h1>
+        </div>
+        <div class="col-md-12" style="background-color: white; padding-top: 20px">
+
             <div ng-controller="TodoListController as vm">
 
-                <softgrid cols="vm.colunas" actions="vm.acoes" data="vm.data" sg-controls="vm.controles"> </softgrid>
+                <softgrid cols="vm.colunas" actions="vm.acoes" data="vm.data" sg-controls="vm.controles" sg-menu="vm.menu"> </softgrid>
 
             </div>
 

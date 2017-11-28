@@ -8,16 +8,16 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
         function _gerarGrid() {
 
             vm.colunas = [
-                {title: "Nome",     item: function(item){return item.nome}},
+                {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar}},
                 {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
                 {title: "Telefone", item: function(item){return item.contato.telefone}}
             ];
 
-            vm.acoes = [
-                {title: "Editar",   icon: "fa fa-info-circle", function: _teste},
-                {title: "Excluir",  icon: "fa fa-wrench",      function: _teste},
-                {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
-            ];
+        //    vm.acoes = [
+          //      {title: "Editar",   icon: "fa fa-info-circle", function: _teste},
+            //    {title: "Excluir",  icon: "fa fa-wrench",      function: _teste},
+              //  {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
+            //];
 
             vm.data = [
                 {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}},
@@ -25,9 +25,16 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
                 {nome: "Peixoto", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0404"}}
             ];
 
+            vm.menu = [{title: "Cadastrar", icon: "fa fa-plus", function: _teste}];
+
             vm.controles = {};
             vm.controles.read = {title:'teste',action:_teste};
             vm.controles.fullScreenTitle = "Esconder filtros";
+        }
+
+        function _editar(item){
+
+            console.log(item);
         }
 
         function _teste(item){

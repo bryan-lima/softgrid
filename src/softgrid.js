@@ -20,6 +20,7 @@
 				subgrid: "=",
 				template: "=",
 				sgControls: "=",
+				sgMenu: "=",
 				fullscreen: "="
 			},
 			templateUrl: "softgrid.html",
@@ -337,6 +338,18 @@
                 }
 
                 // *** FIM FUNÇÕES PARA REDIMENSIONAR COLUNA ***
+
+				// *** FUNÇÃO PARA EDITAR COLUNA ***
+
+				scope.sg_edit = function(row, col, newvalue, scope){
+
+					row[col.edit.item] = newvalue;
+					scope.editing = false;
+
+					col.edit.function(row);
+				}
+
+				// *** FIM FUNÇÃO PARA EDITAR COLUNA ***
 
                 function _hookDropDown() {
 
