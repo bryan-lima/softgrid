@@ -198,11 +198,9 @@
                                     <!-- data columns-->
                                     <td ng-repeat="col in cols track by $index" ng-init="$parent.editing = false">
 
-                                        <a class="edit-button" ng-if="col.edit" ng-click="$parent.editing = !$parent.editing" title="Editar"><span class="fa fa-edit"></span></a>
-
                                         <input ng-if="editing" ng-init="newvalue = col.item(row)" class="edit-input" ng-model="newvalue" ng-blur="sg_edit(row, col, newvalue, $parent)">
 
-                                        <div ng-show="!editing" ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }">
+                                        <div ng-show="!editing" ng-dblclick="col.edit ? editing = true : editing = false" ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }">
 
                                             <label ng-hide="col.popOver">
 
