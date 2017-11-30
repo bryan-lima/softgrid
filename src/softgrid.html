@@ -205,13 +205,9 @@
 
                                         <div ng-show="!editing" ng-dblclick="sg_openEdit(this, $event)" ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }">
 
-                                            <label ng-hide="col.popOver">
+                                            <label ng-hide="col.popOver" style="width: 100%;">
 
-                                                <div ng-if="col.item(row)">
-
-                                                    <span ng-bind-html="temp = sg_mask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))"></span>
-
-                                                </div>
+                                                {{temp = sg_mask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))}}&nbsp;
 
                                             </label>
 

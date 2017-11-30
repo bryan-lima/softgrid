@@ -20,7 +20,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             //];
 
             vm.data = [
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}},
+                {nome: "", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}},
                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}},
                 {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}},
                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}},

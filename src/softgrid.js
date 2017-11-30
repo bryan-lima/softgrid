@@ -352,12 +352,17 @@
 
 					col.editing = !col.editing;
 
-					var td = angular.element(event.target).parent().parent().parent().parent(); //nao me orgulho disso
+					var td = angular.element(event.target).parent().parent(); //nao me orgulho disso
 					var inpt = td.children()[0];
 
                     $timeout(function() {
-                        inpt.select();
-                    }, 100) ;
+
+                    	if(inpt.value !== "")
+                            inpt.select();
+						else
+                        	inpt.focus();
+
+                    }, 200) ;
 
 				}
 
