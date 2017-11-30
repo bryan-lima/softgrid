@@ -73,9 +73,12 @@
 
             <div class="col-md-2">
 
-                <label>&nbsp;</label><br>
-                <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-arrows-alt"></span> {{ sgControls.fullScreenTitle ? sgControls.fullScreenTitle : 'Tela Cheia'}}</button>
+                <div ng-hide="hide.fullscreen || hide.all">
 
+                    <label>&nbsp;</label><br>
+                    <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-arrows-alt"></span> {{ sgControls.fullScreenTitle ? sgControls.fullScreenTitle : 'Tela Cheia'}}</button>
+
+                </div>
 
             </div>
 
@@ -196,11 +199,11 @@
 									</td>
 
                                     <!-- data columns-->
-                                    <td ng-repeat="col in cols track by $index" ng-init="$parent.editing = false">
+                                    <td ng-repeat="col in cols track by $index" ng-init="$parent.editing = false" class="opafion">
 
-                                        <input ng-if="editing" ng-init="newvalue = col.item(row)" class="edit-input" ng-model="newvalue" ng-blur="sg_edit(row, col, newvalue, $parent)">
+                                        <input ng-show="editing" ng-init="newvalue = col.item(row)" class="edit-input" ng-model="newvalue" ng-blur="sg_edit(row, col, newvalue, this)" style="width: {{col.edit.width}};">
 
-                                        <div ng-show="!editing" ng-dblclick="col.edit ? editing = true : editing = false" ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }">
+                                        <div ng-show="!editing" ng-dblclick="sg_openEdit(this, $event)" ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }">
 
                                             <label ng-hide="col.popOver">
 
@@ -261,7 +264,6 @@
 
                 </div>
 
-
         </div>
 
     </div>
@@ -272,8 +274,8 @@
 
             <nav aria-label="...">
                 <ul class="pager" style="margin-top: 5px;">
-                    <li class="previous"><button class="btn btn-default pull-left" ng-click="soft_ChangePage(-1)"><span aria-hidden="true">&larr;</span> Página anterior</button></li>
-                    <li class="next"><button class="btn btn-default pull-right" ng-click="soft_ChangePage(0)">Próxima página <span aria-hidden="true">&rarr;</span></button></li>
+                    <li class="previous"><button class="btn btn-default pull-left" ng-click="sg_changePage(-1)"><span aria-hidden="true">&larr;</span> Página anterior</button></li>
+                    <li class="next"><button class="btn btn-default pull-right" ng-click="sg_changePage(0)">Próxima página <span aria-hidden="true">&rarr;</span></button></li>
                 </ul>
             </nav>
 

@@ -345,8 +345,20 @@
 
 					row[col.edit.item] = newvalue;
 					scope.editing = false;
-
 					col.edit.function(row);
+				}
+
+				scope.sg_openEdit = function(col, event){
+
+					col.editing = !col.editing;
+
+					var td = angular.element(event.target).parent().parent().parent().parent(); //nao me orgulho disso
+					var inpt = td.children()[0];
+
+                    $timeout(function() {
+                        inpt.select();
+                    }, 100) ;
+
 				}
 
 				// *** FIM FUNÇÃO PARA EDITAR COLUNA ***
