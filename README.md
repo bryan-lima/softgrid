@@ -90,7 +90,7 @@ Um array contendo os objetos que deverão ser carregados na grid.
                  {nome: "Peixoto", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0404"}}
                ];
 
-### controls
+### sg-controls
 
 Botões CRUD:
      
@@ -98,6 +98,10 @@ Botões CRUD:
      vm.controls.read =    { function: _funcaoLer };
      vm.controls.update  = { function: _funcaoAtualizar };
      vm.controls.delete =  { title: "Deletar este item", function: _funcaoDeletar }; //title opcional
+     
+Controles fullscren:
+
+     vm.controls.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros", top: 60, zindex: 999}; //todos opcionais
      
 ### width
 
