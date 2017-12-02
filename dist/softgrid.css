@@ -100,7 +100,7 @@
 .softgrid .edit-input{
 }
 
-.softgrid-display .form-control, .btn{
+.softgrid-display .form-control, .softgrid-display .btn{
     border-radius: 0px !important;
 }
 
