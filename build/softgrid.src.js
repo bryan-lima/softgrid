@@ -348,9 +348,12 @@
 					col.edit.function(row);
 				}
 
-				scope.sg_openEdit = function(col, event){
+				scope.sg_openEdit = function(ngScope, event){
 
-					col.editing = !col.editing;
+					if(!ngScope.col.edit)
+						return;
+
+					ngScope.editing = !ngScope.editing;
 
 					var td = angular.element(event.target).parent().parent(); //nao me orgulho disso
 					var inpt = td.children()[0];

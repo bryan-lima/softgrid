@@ -1,7 +1,7 @@
 
-<div class="softgrid-display" ng-class="{'softgrid-display-fullscreen': softgrid.fullscreen}">
+<div class="softgrid-display" ng-class="{'softgrid-display-fullscreen': softgrid.fullscreen}" ng-style="sgControls.fullscreen && softgrid.fullscreen ? { 'z-index': sgControls.fullscreen.zindex, 'top': sgControls.fullscreen.top + 'px'} : ''">
 
-    <div class="grid-controles">
+    <div class="grid-controles" ng-style="sgControls.fullscreen && softgrid.fullscreen ? { 'z-index': (sgControls.fullscreen.zindex + 1), 'top': (sgControls.fullscreen.top) + 'px'} : ''">
 
         <div class="row" ng-hide="hide.all">
 
@@ -21,7 +21,7 @@
 
             <div class="col-md-2">
 
-                <div class="form-group" ng-hide="hide.linesPage || hide.all">
+                <div class="form-group" ng-hide="hide.linesPage || hide.all" style="margin-bottom: 0;">
 
                     <label>Linhas por página</label>
 
@@ -76,7 +76,11 @@
                 <div ng-hide="hide.fullscreen || hide.all">
 
                     <label>&nbsp;</label><br>
-                    <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-arrows-alt"></span> {{ sgControls.fullScreenTitle ? sgControls.fullScreenTitle : 'Tela Cheia'}}</button>
+                    <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-expand" ng-class="{'fa-compress': softgrid.fullscreen}"></span>
+
+                        {{ softgrid.fullscreen ? (sgControls.fullscreen.on ? sgControls.fullscreen.on : 'Tela normal') : (sgControls.fullscreen.off ? sgControls.fullscreen.off : 'Tela cheia') }}
+
+                    </button>
 
                 </div>
 

@@ -104,6 +104,10 @@
     border-radius: 0px !important;
 }
 
+.softgrid-display .grid-controles{
+    margin-bottom: 4px;
+}
+
 .grid-controles .input-group-addon{
     border-radius: 0px;
 }
@@ -221,6 +225,11 @@
 
 .softgrid-display .slider.round:before {
     border-radius: 50%;
+}
+
+.softgrid-display .pagination{
+    display: block;
+    margin: 0;
 }
 
 .softgrid-display .pagination li a{

@@ -41,7 +41,8 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
 
             vm.controles = {};
             vm.controles.read = {title:'teste',action:_teste};
-            vm.controles.fullScreenTitle = "Esconder filtros";
+            vm.controles.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros", top: 60, zindex: 999};
+
 
             vm.hide = {fullscreen: false};
         }
