@@ -27,6 +27,7 @@
 			link: function (scope, element, attrs) {
 
 				scope.sg_currentPage = 1;   //controla paginacao da grid
+                scope.sg_linesPerPageInput = 10;
 				scope.sg_linesPerPage = 10; //controla o maximo de linhas por pagina
 				scope.sg_orderBy = '';         //controla a ordenacao da grid
 				scope.sg_filterSearch = '';
@@ -54,8 +55,8 @@
 				//change lines per page
 				scope.sg_changeLinesPerPage = function (value) {
 
-					if ((value == -1 && scope.sg_linesPerPage > 10) || value == 1)
-						scope.sg_linesPerPage = scope.sg_linesPerPage + (value * 10);
+					if ((value == -1 && scope.sg_linesPerPageInput > 10) || value == 1)
+                        scope.sg_linesPerPageInput = scope.sg_linesPerPageInput + (value * 10);
 
 				}
 
@@ -133,8 +134,12 @@
 
                     //mostra todas linhas caso esconda paginacao
 
+					if(scope.hide){
+
 					if(scope.hide.pagination == true || scope.hide.all == true)
 						scope.sg_linesPerPage = 999;
+
+                    }
                 }
 
 				function createTable() {
@@ -447,6 +452,7 @@
 
                 $timeout(_configurarRedimensionarColuna, 500);
 
+				//watchers
                 scope.$watch('data', function () {
 
                     if (flag) {
@@ -456,6 +462,13 @@
 
                     if(angular.isDefined(scope.sgControls.orderBy))
                         scope.sg_sort({item: scope.sgControls.orderBy});
+                });
+
+                scope.$watch('sg_linesPerPageInput', function () {
+
+                    if(scope.sg_linesPerPageInput > 0)
+						scope.sg_linesPerPage = parseInt(scope.sg_linesPerPageInput);
+
                 });
 
                 _init();

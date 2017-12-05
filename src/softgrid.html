@@ -31,7 +31,7 @@
                             <button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(-1)">-</button>
                         </span>
 
-                        <input class="form-control" value="{{sg_linesPerPage}}">
+                        <input class="form-control" ng-model="sg_linesPerPageInput">
 
                         <span class="input-group-btn">
 							<button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(1)">+</button>

@@ -42,8 +42,6 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             vm.controles = {};
             vm.controles.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros", top: 60, zindex: 999};
 
-            vm.hide = {all: true};
-
         }
 
         function _editar(item){
