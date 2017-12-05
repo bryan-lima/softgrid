@@ -380,9 +380,36 @@
 
                 function _hookDropDown() {
 
+					//posiciona o dropdown embaixo do botao clicado
                     $(".softgrid-container .dropdown").on('click', function () {
-                        $(this).find('.dropdown-menu').css('top', $(this).offset().top + $(this).height());
-                        $(this).find('.dropdown-menu').css('left', $(this).find('.btn').offset().left);
+
+                    	var _btn = $(this);
+                    	var _btnTop = _btn.offset().top;
+                    	var _btnHeight = $(this).height();
+
+                    	var _dropdown = _btn.find('.dropdown-menu');
+
+                    	var _btnf = $(this).find('.btn');
+                    	var _btnfLeft = _btnf.offset().left;
+
+                    	var _scrollTop = $(window).scrollTop();
+
+                    	_dropdown.css('top', (_btnTop + _btnHeight) - _scrollTop);
+                        _dropdown.css('left', _btnfLeft );
+                    });
+
+                    //recalcula a posicao do dropdown de acordo com o scroll
+                    $(window).scroll(function () {
+
+                        var _button = $(".softgrid .dropdown.open");
+
+                        if (_button.length > 0) {
+
+                            var _dropdown = _button.find(".dropdown-menu");
+                            var _scrollTop = $(this).scrollTop();
+                            _dropdown.css('top', (_button.offset().top + _button.height()) - _scrollTop);
+
+                        }
                     });
 
                 }

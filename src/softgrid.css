@@ -40,6 +40,10 @@
     margin: 0;
 }
 
+.softgrid-display .dropdown-menu li{
+    cursor: pointer;
+}
+
 .softgrid-display .dropwdown-menu li a{
 	text-align: left !important;
 }
