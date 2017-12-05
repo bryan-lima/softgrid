@@ -397,7 +397,7 @@
                     }
 
                     if(angular.isDefined(scope.sgControls.orderBy))
-                        scope.sg_sort(scope.sgControls.orderBy);
+                        scope.sg_sort({item: scope.sgControls.orderBy});
                 });
             }
 		};
