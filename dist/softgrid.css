@@ -35,7 +35,9 @@
 }
 
 .softgrid-container .dropdown-menu {
+    border-top-left-radius: 0;
     position: fixed;
+    margin: 0;
 }
 
 .softgrid-display .dropwdown-menu li a{

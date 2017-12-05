@@ -130,11 +130,11 @@
 
                                 <th ng-repeat="col in cols" ng-show="!col.hide" style="text-align:center;">
 
-                                  <span class="title" ng-click="sg_sort(col.item)">
+                                  <span class="title" ng-click="sg_sort(col)">
 
 									  {{col.title}}
 
-									  <span ng-show="col.item == sg_orderBy" class="fa fa-sort-amount-asc" ng-class="{'fa-sort-amount-desc' : reverse}"></span>
+									  <span ng-show="col === sg_orderByCol" class="fa fa-sort-amount-asc" ng-class="{'fa-sort-amount-desc' : reverse}"></span>
 
 								  </span>
 

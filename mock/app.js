@@ -13,11 +13,11 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
                 {title: "Telefone", item: function(item){return item.contato.telefone}}
             ];
 
-        //    vm.acoes = [
-          //      {title: "Editar",   icon: "fa fa-info-circle", function: _teste},
-            //    {title: "Excluir",  icon: "fa fa-wrench",      function: _teste},
-              //  {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
-            //];
+            vm.acoes = [
+                {title: "Editar",   icon: "fa fa-info-circle", function: _teste},
+                {title: "Excluir",  icon: "fa fa-wrench",      function: _teste},
+                {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
+            ];
 
             vm.data = [
                 {nome: "", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}},

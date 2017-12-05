@@ -31,6 +31,8 @@
 				scope.sg_orderBy = '';         //controla a ordenacao da grid
 				scope.sg_filterSearch = '';
 
+                var flag = false;
+
 				//change page
 				scope.sg_changePage = function (value) {
 
@@ -57,14 +59,19 @@
 
 				}
 
-				//sort rows of the grid
-				scope.sg_sort = function (item) {
+                //sort rows of the grid
+                scope.sg_sort = function (col) {
 
-					scope.reverse = (scope.sg_orderBy !== null && scope.sg_orderBy === item) ? !scope.reverse : false;
-					scope.data = $filter('orderBy')(scope.data, item, scope.reverse);
-					scope.sg_orderBy = item;
+                    if(scope.data.length > 0) {
 
-				}
+                        scope.reverse = (scope.sg_orderBy !== null && scope.sg_orderBy === col.item) ? !scope.reverse : false;
+                        scope.data = $filter('orderBy')(scope.data, col.item, scope.reverse);
+                        scope.sg_orderBy = scope.sgControls.orderBy = col.item;
+						scope.sg_orderByCol = col;
+
+                        flag = true;
+                    }
+                }
 
 				//apply mask to column
 				scope.sg_mask = function (colType, text) {
@@ -374,14 +381,24 @@
                 function _hookDropDown() {
 
                     $(".softgrid-container .dropdown").on('click', function () {
-                        $(this).find('.dropdown-menu').css('top', $(this).offset().top + 28);
-                        $(this).find('.dropdown-menu').css('left', $(this).offset().left);
+                        $(this).find('.dropdown-menu').css('top', $(this).offset().top + $(this).height());
+                        $(this).find('.dropdown-menu').css('left', $(this).find('.btn').offset().left);
                     });
 
                 }
 
                 $timeout(_configurarRedimensionarColuna, 500);
 
+                scope.$watch('data', function () {
+
+                    if (flag) {
+                        flag = false;
+                        return;
+                    }
+
+                    if(angular.isDefined(scope.sgControls.orderBy))
+                        scope.sg_sort(scope.sgControls.orderBy);
+                });
             }
 		};
 
