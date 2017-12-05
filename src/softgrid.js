@@ -99,12 +99,39 @@
 
 				}
 
-				//control some shit
+				//control
 				scope.sg_hook = function () {
 
 					_atualizarPaginacao();
 					_hookDropDown();
 				}
+
+				function _init(){
+
+					//define a largura da coluna de acoes
+					scope.larguraColunaAcoes = 0;
+
+					if(scope.subgrid)
+						scope.larguraColunaAcoes += 60;
+					if(scope.actions.length > 0)
+						scope.larguraColunaAcoes += 60;
+
+					//define a largura da coluna de controles
+
+					scope.larguraColunaControles = 0;
+
+					if(scope.sgControls.create)
+                        scope.larguraColunaControles += 60;
+
+                    if(scope.sgControls.read)
+                        scope.larguraColunaControles += 60;
+
+                    if(scope.sgControls.update)
+                        scope.larguraColunaControles += 60;
+
+                    if(scope.sgControls.delete)
+                        scope.larguraColunaControles += 60;
+                }
 
 				function createTable() {
 
@@ -426,6 +453,8 @@
                     if(angular.isDefined(scope.sgControls.orderBy))
                         scope.sg_sort({item: scope.sgControls.orderBy});
                 });
+
+                _init();
             }
 		};
 

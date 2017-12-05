@@ -34,6 +34,13 @@
     overflow-x: auto;
 }
 
+.softgrid-container{}
+
+.softgrid-container .dropdown{
+    float: left;
+    margin-left: 3px;
+}
+
 .softgrid-container .dropdown-menu {
     border-top-left-radius: 0;
     position: fixed;

@@ -120,7 +120,7 @@
 
                             <thead>
 
-                                <th ng-show="actions.length > 0 || subgrid" style="text-align:center;   ">
+                                <th ng-show="actions.length > 0 || subgrid">
 
                                 </th>
 
@@ -150,20 +150,13 @@
 
                                 <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="sgControls.changeRowColor(row) === true && {'background-color': (sgControls.rowColor ? sgControls.rowColor :'#e59482')}" >
 
-                                    <td  ng-show="subgrid || actions.length > 0" style="width: 200px; text-align:center;">
-
-                                        <div class="input-group" style="width: 120px;">
-
-                                            <div class="input-group-btn" >
+                                    <td ng-show="subgrid || actions.length > 0" style="text-align:center; width: {{larguraColunaAcoes}}px">
 
                                                 <!-- botão para exibir sub tabela -->
-                                                <button ng-show="subgrid" type="button" class="btn btn-default btn-sm" ng-click="showSubGrid = showSubGrid ? false : true">
+                                                <button ng-show="subgrid" type="button" class="btn btn-default btn-sm btn-subgrid" ng-click="showSubGrid = showSubGrid ? false : true" style="float: left;">
                                                     <span class="fa fa-expand" ng-class="{'fa-compress': showSubGrid}"></span>
                                                 </button>
 
-                                            </div>
-
-                                            <div class="input-group-btn" >
                                                 <div class="dropdown">
 
                                                     <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -175,14 +168,11 @@
                                                     </ul>
 
                                                 </div>
-                                            </div>
-
-                                        </div>
 
                                     </td>
 
 									<!-- column to actions -->
-									<td ng-show="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align:center;">
+									<td ng-if="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align:center; width: {{larguraColunaControles}}px">
 
 										<button ng-show="sgControls.create" type="button" class="btn btn-default btn-sm" ng-click="sgControls.create.action(row)" title="{{ sgControls.create.title ? sgControls.create.title : 'Criar' }}">
 											<span class="fa fa-plus"></span>
