@@ -117,7 +117,6 @@
 						scope.larguraColunaAcoes += 60;
 
 					//define a largura da coluna de controles
-
 					scope.larguraColunaControles = 0;
 
 					if(scope.sgControls.create)
@@ -131,6 +130,11 @@
 
                     if(scope.sgControls.delete)
                         scope.larguraColunaControles += 60;
+
+                    //mostra todas linhas caso esconda paginacao
+
+					if(scope.hide.pagination == true || scope.hide.all == true)
+						scope.sg_linesPerPage = 999;
                 }
 
 				function createTable() {
