@@ -32,6 +32,8 @@
 				scope.sg_orderBy = '';         //controla a ordenacao da grid
 				scope.sg_filterSearch = '';
 
+                scope.larguraColunaControles = 0;
+
                 var flag = false;
 
 				//change page
@@ -106,41 +108,6 @@
 					_atualizarPaginacao();
 					_hookDropDown();
 				}
-
-				function _init(){
-
-					//define a largura da coluna de acoes
-					scope.larguraColunaAcoes = 0;
-
-					if(scope.subgrid)
-						scope.larguraColunaAcoes += 60;
-					if(scope.actions.length > 0)
-						scope.larguraColunaAcoes += 60;
-
-					//define a largura da coluna de controles
-					scope.larguraColunaControles = 0;
-
-					if(scope.sgControls.create)
-                        scope.larguraColunaControles += 60;
-
-                    if(scope.sgControls.read)
-                        scope.larguraColunaControles += 60;
-
-                    if(scope.sgControls.update)
-                        scope.larguraColunaControles += 60;
-
-                    if(scope.sgControls.delete)
-                        scope.larguraColunaControles += 60;
-
-                    //mostra todas linhas caso esconda paginacao
-
-					if(scope.hide){
-
-					if(scope.hide.pagination == true || scope.hide.all == true)
-						scope.sg_linesPerPage = 999;
-
-                    }
-                }
 
 				function createTable() {
 
@@ -460,8 +427,12 @@
                         return;
                     }
 
-                    if(angular.isDefined(scope.sgControls.orderBy))
-                        scope.sg_sort({item: scope.sgControls.orderBy});
+                    if(scope.sgControls){
+
+						if(angular.isDefined(scope.sgControls.orderBy))
+							scope.sg_sort({item: scope.sgControls.orderBy});
+
+                    }
                 });
 
                 scope.$watch('sg_linesPerPageInput', function () {
@@ -471,7 +442,57 @@
 
                 });
 
-                _init();
+                scope.$watch('sgControls', function (){
+
+                    //define a largura da coluna de controles
+
+                    if(angular.isDefined(scope.sgControls) && scope.sgControls){
+
+						if(scope.sgControls.create)
+							scope.larguraColunaControles += 60;
+
+						if(scope.sgControls.read)
+							scope.larguraColunaControles += 60;
+
+						if(scope.sgControls.update)
+							scope.larguraColunaControles += 60;
+
+						if(scope.sgControls.delete)
+							scope.larguraColunaControles += 60;
+                	}
+
+				});
+
+                scope.$watch('hide', function(){
+
+                    if(scope.hide){
+                        //mostra todas linhas caso esconda paginacao
+                        if(scope.hide.pagination == true || scope.hide.all == true)
+                            scope.sg_linesPerPage = 999;
+                    }
+
+				});
+
+                scope.$watch('subgrid', _calcularTamanhoColunaAcoes);
+
+                scope.$watch('actions', _calcularTamanhoColunaAcoes);
+
+                function _calcularTamanhoColunaAcoes(){
+
+                    //define a largura da coluna de acoes
+                    scope.larguraColunaAcoes = 0;
+
+                    if(scope.subgrid)
+                        scope.larguraColunaAcoes += 60;
+
+                    if(scope.actions){
+
+						if(scope.actions.length > 0)
+							scope.larguraColunaAcoes += 60;
+
+                    }
+                }
+
             }
 		};
 
