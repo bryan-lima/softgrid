@@ -153,7 +153,6 @@
 .soft-subgrid-container{
     padding: 20px;
     overflow: hidden;
-    max-height: 500px;
     -webkit-transition: max-height 0.15s ease-in-out;
     transition: max-height 0.15s ease-in-out;
 }
