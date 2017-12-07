@@ -103,6 +103,11 @@ Controles fullscren:
 
      vm.controls.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros", top: 60, zindex: 999}; //todos opcionais
      
+Favorito:
+
+     vm.controls.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50 };
+
+     
 ### width
 
 Define um tamanho fixo de largura para a grid.
