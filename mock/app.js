@@ -51,21 +51,19 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
                 {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
             ];
 
-            vm.data = [
-                {nome: "Opa", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, sub: _sub},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, sub: _sub},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, sub: _sub}
-            ];
+            vm.data = _sub;
 
             vm.menu = [{title: "Cadastrar", icon: "fa fa-plus", function: _teste}];
 
             vm.controles = {};
             vm.controles.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros", top: 60, zindex: 999};
 
-            vm.controles.active = true;
+            vm.controles.active = false;
             vm.controles.activeTitle = "Ativar/Desativar";
             vm.controles.activeCol = function(item){return item.ativo};
             vm.controles.activeFunction = _teste;
+
+            vm.controles.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50 };
 
             vm.subgrid = {};
             vm.subgrid.object = "sub";
@@ -74,12 +72,14 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
                 {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
                 {title: "Telefone", item: function(item){return item.contato.telefone}}
             ];
+
             vm.subgrid.hide = {all:true};
 
         }
 
         function _editar(item){
 
+            item.ativo = true;
             console.log(item);
         }
 

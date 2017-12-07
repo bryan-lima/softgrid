@@ -105,6 +105,25 @@
     color: black;
 }
 
+.softgrid td .fa-star{
+     font-size: 16px;
+     cursor: pointer;
+    color: #bdc3c7;
+}
+
+.softgrid td .fa-star:hover{
+    color: #f1c40f;
+}
+
+.softgrid td .fa-star.active{
+    color: #f1c40f;
+}
+
+.softgrid td .fa-star.active:hover{
+    color: #FFFFFF;
+}
+
+
 .softgrid .edit-button{
     cursor: pointer;
     float: right;

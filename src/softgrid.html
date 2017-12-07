@@ -144,6 +144,12 @@
 									{{sgControls.activeTitle}}
 								</th>
 
+                                <th ng-if="sgControls.favorite" style="text-align: center;">
+
+                                    {{sgControls.favorite.title ? sgControls.favorite.title : 'Favorito'}}
+
+                                </th>
+
                             </thead>
 
                             <tbody>
@@ -219,6 +225,13 @@
 										</label>
 									</td>
 
+                                    <!-- Coluna para favoritos -->
+                                    <td ng-if="sgControls.favorite" style="text-align: center; width: 50px;">
+
+                                        <span class="fa fa-star" ng-class="{'active': sgControls.favorite.item(row)}" ng-click="sgControls.favorite.function(row)"></span>
+
+                                    </td>
+
                                 </tr>
                                 <tr ng-repeat-end="" ng-show="subgrid" ng-hide="!showSubGrid" ng-class="{'soft-row-striped': ($index%2)}"> <!-- Linha para Subtabela -->
 
@@ -244,6 +257,7 @@
                                     <td colspan="{{cols.length + 3}} ">
                                     Não há dados a serem exibidos.
                                     </td>
+
                                 </tr>
 
                             </tbody>
