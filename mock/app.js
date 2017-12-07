@@ -63,7 +63,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             vm.controles.activeCol = function(item){return item.ativo};
             vm.controles.activeFunction = _teste;
 
-            vm.controles.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50 };
+            vm.controles.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50, show: function(item){ return item.ativo === false;} };
 
             vm.subgrid = {};
             vm.subgrid.object = "sub";

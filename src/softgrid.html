@@ -228,7 +228,7 @@
                                     <!-- Coluna para favoritos -->
                                     <td ng-if="sgControls.favorite" style="text-align: center; width: 50px;">
 
-                                        <span class="fa fa-star" ng-class="{'active': sgControls.favorite.item(row)}" ng-click="sgControls.favorite.function(row)"></span>
+                                        <span ng-show="sgControls.favorite.show(row)" class="fa fa-star" ng-class="{'active': sgControls.favorite.item(row)}" ng-click="sgControls.favorite.function(row)"></span>
 
                                     </td>
 
