@@ -103,7 +103,7 @@ Controles fullscren:
 
      vm.controls.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros", top: 60, zindex: 999}; //todos opcionais
      
-Favorito:
+Favorito (^v1.1.6):
 
      vm.controls.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50 };
 
