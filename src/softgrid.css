@@ -265,6 +265,7 @@
 
 .softgrid-display .pagination li a{
     text-align: center;
+    cursor: pointer;
 }
 
 .softgrid .btn{

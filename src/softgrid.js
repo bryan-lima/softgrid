@@ -21,7 +21,7 @@
 				template: "=",
 				sgControls: "=",
 				sgMenu: "=",
-				fullscreen: "="
+				sgStore: "="
 			},
 			templateUrl: "softgrid.html",
 			link: function (scope, element, attrs) {
@@ -35,6 +35,7 @@
                 scope.larguraColunaControles = 0;
 
                 var flag = false;
+				var firstLoad = true;
 
 				//change page
 				scope.sg_changePage = function (value) {
@@ -63,16 +64,19 @@
 				}
 
                 //sort rows of the grid
-                scope.sg_sort = function (col) {
+                scope.sg_sort = function (col, colIndex) {
 
                     if(scope.data.length > 0) {
 
-                        scope.reverse = (scope.sg_orderBy !== null && scope.sg_orderBy === col.item) ? !scope.reverse : false;
+                        scope.sg_orderByColIndex = colIndex;
+                        scope.reverse = (scope.sg_orderBy !== null && scope.sg_orderByColIndex === colIndex) ? !scope.reverse : false;
                         scope.data = $filter('orderBy')(scope.data, col.item, scope.reverse);
-                        scope.sg_orderBy = scope.sgControls.orderBy = col.item;
-						scope.sg_orderByCol = col;
+                        scope.sg_orderBy = col.item;
 
                         flag = true;
+
+                        if(!firstLoad)
+                        	_saveStorage();
                     }
                 }
 
@@ -150,6 +154,7 @@
 
 				function _atualizarPaginacao() {
 
+					if(scope.data){
 					scope.totalPages = scope.data.length / scope.sg_linesPerPage;
 					scope.totalPages = scope.totalPages > parseInt(scope.totalPages) ? parseInt(scope.totalPages) + 1 : scope.totalPages;
 
@@ -176,7 +181,7 @@
 					scope.soft_pages.push({ "text": ".." + scope.totalPages, "value": scope.totalPages, "active": scope.sg_currentPage == scope.totalPages });
 
 					scope.soft_pages.push({ "text": "<span class='fa fa-chevron-right'></span>", "value": 0, "active": false });
-
+                    }
 				}
 
 				function maskEmail(text) {
@@ -431,14 +436,34 @@
 
 						if(angular.isDefined(scope.sgControls.orderBy))
 							scope.sg_sort({item: scope.sgControls.orderBy});
-
                     }
+
+                    if(scope.data){
+
+                    	if(scope.data.length > 0){
+
+                    		if(firstLoad){ //primeira vez que carregou os dados
+
+								if(scope.sgStore)
+									_loadStorage();
+
+								firstLoad = false;
+                            }
+						}
+					}
+
+					_atualizarPaginacao();
                 });
 
                 scope.$watch('sg_linesPerPageInput', function () {
 
                     if(scope.sg_linesPerPageInput > 0)
+                    {
 						scope.sg_linesPerPage = parseInt(scope.sg_linesPerPageInput);
+
+						if(!firstLoad)
+							_saveStorage();
+                    }
 
                 });
 
@@ -477,6 +502,13 @@
 
                 scope.$watch('actions', _calcularTamanhoColunaAcoes);
 
+                scope.$watch('sg_currentPage', function(){
+
+                	if(!firstLoad)
+                		_saveStorage();
+
+				});
+
                 function _calcularTamanhoColunaAcoes(){
 
                     //define a largura da coluna de acoes
@@ -493,6 +525,51 @@
                     }
                 }
 
+                function _saveStorage(){
+
+                	if(!scope.sgStore)
+                		return;
+
+					if(!scope.sgStore.enabled)
+						return;
+
+					var _properties = {
+
+						linesPerPage: scope.sg_linesPerPage,
+						currentPage: scope.sg_currentPage,
+						orderBy: { item: scope.sg_orderBy.toString(), reverse: scope.reverse, index: scope.sg_orderByColIndex }
+
+					};
+
+                    localStorage.setItem("SG-STORE_" + scope.sgStore.id, angular.toJson(_properties));
+				}
+
+                function _loadStorage(){
+
+					if(!scope.sgStore)
+						return;
+
+					if(!scope.sgStore.enabled)
+						return;
+
+					var _properties = angular.fromJson(localStorage.getItem("SG-STORE_" + scope.sgStore.id));
+
+					if(!_properties)
+						return;
+
+					scope.sg_linesPerPage = scope.sg_linesPerPageInput =  _properties.linesPerPage;
+					scope.sg_currentPage = _properties.currentPage;
+
+					if(_properties.orderBy.item !== "")
+					{
+						var _item = {item: eval('(' + _properties.orderBy.item + ')')} ;
+
+                        scope.reverse = !_properties.orderBy.reverse;
+						scope.sg_sort(_item, _properties.orderBy.index);
+                    }
+
+					_atualizarPaginacao();
+				}
             }
 		};
 

@@ -56,7 +56,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             vm.menu = [{title: "Cadastrar", icon: "fa fa-plus", function: _teste}];
 
             vm.controles = {};
-            vm.controles.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros", top: 60, zindex: 999};
+            vm.controles.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros"};
 
             vm.controles.active = false;
             vm.controles.activeTitle = "Ativar/Desativar";
@@ -74,6 +74,8 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             ];
 
             vm.subgrid.hide = {all:true};
+
+            vm.store = {enabled: true, id: "GRID1" }
 
         }
 

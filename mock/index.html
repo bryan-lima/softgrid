@@ -37,13 +37,15 @@
     <div class="container-fluid">
 
         <div class="col-md-12">
-            <h1>Softgrid</h1>
+
         </div>
         <div class="col-md-12" style="background-color: white; padding-top: 20px">
 
+            <h1>Softgrid</h1>
+            <hr>
             <div ng-controller="TodoListController as vm">
 
-                <softgrid cols="vm.colunas" data="vm.data" sg-controls="vm.controles" sg-menu="vm.menu" hide="vm.hide" subgrid="vm.subgrid"> </softgrid>
+                <softgrid cols="vm.colunas" data="vm.data" sg-controls="vm.controles" sg-menu="vm.menu" hide="vm.hide" subgrid="vm.subgrid" sg-store="vm.store"> </softgrid>
 
             </div>
 

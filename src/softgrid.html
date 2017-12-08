@@ -19,52 +19,59 @@
 
             </div>
 
-            <div class="col-md-2">
+            <div class="col-md-3">
 
-                <div class="form-group" ng-hide="hide.linesPage || hide.all || hide.pagination" style="margin-bottom: 0;">
+                <div class="row">
 
-                    <label>Linhas por página</label>
+                    <div class="col-md-6">
+                        <div class="form-group" ng-hide="hide.linesPage || hide.all || hide.pagination" style="margin-bottom: 0;">
 
-                    <div class="input-group" style="width: 120px;">
+                            <label>Linhas por página</label>
+
+                            <div class="input-group" style="width: 120px;">
 
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(-1)">-</button>
                         </span>
 
-                        <input class="form-control" ng-model="sg_linesPerPageInput">
+                                <input class="form-control" ng-model="sg_linesPerPageInput">
 
-                        <span class="input-group-btn">
+                                <span class="input-group-btn">
 							<button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(1)">+</button>
 						</span>
 
-                    </div>
+                            </div>
 
-                </div>
-
-            </div>
-
-            <div class="col-md-2">
-
-                <div ng-hide="hide.options || hide.all">
-
-                    <label>Opções</label>
-
-                    <div class="input-group">
-                        <input type="text" class="form-control" aria-label="..." value="{{data.length}} encontrado(s)" disabled="true">
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li ng-repeat="item in sgMenu">
-                                    <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>
-                                </li>
-                                <li role="separator" class="divider" ng-show="menu"></li>
-                                <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>
-                            </ul>
                         </div>
+
                     </div>
 
-                    <div ng-if="!subgrid">
-                    <a href="#" ng-show="false"  id="softDownload"></a>
+                    <div class="col-md-6">
+
+                        <div ng-hide="hide.options || hide.all">
+
+                            <label>Opções</label>
+
+                            <div class="input-group">
+                                <input type="text" class="form-control" aria-label="..." value="{{data.length}} encontrado(s)" disabled="true">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li ng-repeat="item in sgMenu">
+                                            <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>
+                                        </li>
+                                        <li role="separator" class="divider" ng-show="menu"></li>
+                                        <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div ng-if="!subgrid">
+                                <a href="#" ng-show="false"  id="softDownload"></a>
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </div>
@@ -86,7 +93,7 @@
 
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4">
 
                 <nav aria-label="Page navigation" class="pull-right" ng-hide="hide.pagination || hide.all">
 
@@ -128,13 +135,13 @@
 									Ações
 								</th>
 
-                                <th ng-repeat="col in cols" ng-show="!col.hide" style="text-align:center;">
+                                <th ng-repeat="col in cols track by $index" ng-show="!col.hide" style="text-align:center;">
 
-                                  <span class="title" ng-click="sg_sort(col)">
+                                  <span class="title" ng-click="sg_sort(col, $index)">
 
 									  {{col.title}}
 
-									  <span ng-show="col === sg_orderByCol" class="fa fa-sort-amount-asc" ng-class="{'fa-sort-amount-desc' : reverse}"></span>
+									  <span ng-show="$index === sg_orderByColIndex" class="fa fa-sort-amount-asc" ng-class="{'fa-sort-amount-desc' : reverse}"></span>
 
 								  </span>
 
