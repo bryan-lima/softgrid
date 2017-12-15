@@ -106,6 +106,10 @@ Controles fullscren:
 Favorito (^v1.1.6):
 
      vm.controls.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50 };
+     
+Selecionar Todos (^v1.1.9)
+
+     vm.controls.select = {all: true, item: "ativo", callback: _teste};
 
      
 ### width
