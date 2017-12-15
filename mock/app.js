@@ -8,7 +8,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
         function _gerarGrid() {
 
             var _sub = [
-                {nome: "Opa", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false},
+                {nome: "0", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false},
                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false},
                 {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false},
                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false},
@@ -56,14 +56,16 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             vm.menu = [{title: "Cadastrar", icon: "fa fa-plus", function: _teste}];
 
             vm.controles = {};
+            vm.controles.select = {all: true, item: "ativo", callback: _teste};
+
             vm.controles.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros"};
 
-            vm.controles.active = false;
+            vm.controles.active = true;
             vm.controles.activeTitle = "Ativar/Desativar";
             vm.controles.activeCol = function(item){return item.ativo};
             vm.controles.activeFunction = _teste;
 
-            vm.controles.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50, show: function(item){ return item.ativo === false;} };
+            //vm.controles.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50, show: function(item){ return item.ativo === false;} };
 
             vm.subgrid = {};
             vm.subgrid.object = "sub";

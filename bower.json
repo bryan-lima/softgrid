@@ -10,10 +10,10 @@
     "./dist/softgrid.css"
   ],
   "dependencies": {
-    "angular": ">1.5.8",
     "angular-base64": "^2.0.5",
     "angular-sanitize": "*",
-    "font-awesome": "*"
+    "font-awesome": "*",
+    "angular": "1.5.11"
   },
   "keywords": [
     "soft",

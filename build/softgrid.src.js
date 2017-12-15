@@ -34,6 +34,8 @@
 
                 scope.larguraColunaControles = 0;
 
+                scope.sg_selected = false;
+
                 var flag = false;
 				var firstLoad = true;
 
@@ -89,6 +91,27 @@
 						return maskEmail(text);
 					else
 						return text;
+				}
+
+				//select all items of the row
+				scope.sg_selectAll = function (){
+
+					if(scope.dataFiltered){
+
+						if(scope.dataFiltered.length > 0){
+
+                            scope.sg_selected = !scope.sg_selected;
+
+                            angular.forEach(scope.dataFiltered, function(row) {
+
+                            	if(scope.sgControls.select.item)
+                                	row[scope.sgControls.select.item] = scope.sg_selected;
+                            });
+
+                            scope.sgControls.select.callback(scope.dataFiltered);
+
+						}
+                    }
 				}
 
 				//export grid data to excel
@@ -537,7 +560,7 @@
 
 						linesPerPage: scope.sg_linesPerPage,
 						currentPage: scope.sg_currentPage,
-						orderBy: { item: scope.sg_orderBy.toString(), reverse: scope.reverse, index: scope.sg_orderByColIndex }
+						orderBy: { item: scope.sg_orderBy.toString(), reverse: !scope.reverse, index: scope.sg_orderByColIndex }
 
 					};
 
@@ -564,7 +587,7 @@
 					{
 						var _item = {item: eval('(' + _properties.orderBy.item + ')')} ;
 
-                        scope.reverse = !_properties.orderBy.reverse;
+                        scope.reverse = _properties.orderBy.reverse;
 						scope.sg_sort(_item, _properties.orderBy.index);
                     }
 
