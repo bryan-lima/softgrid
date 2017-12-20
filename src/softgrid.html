@@ -188,8 +188,9 @@
 									<!-- column to actions -->
 									<td ng-if="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align:center; width: {{larguraColunaControles}}px">
 
+
 										<button ng-show="sgControls.create" type="button" class="btn btn-default btn-sm" ng-click="sgControls.create.action(row)" title="{{ sgControls.create.title ? sgControls.create.title : 'Criar' }}">
-											<span class="fa fa-plus"></span>
+											<span class="fa" ng-class="sgControls.create.icon ? sgControls.create.icon : 'fa-plus'"></span>
 										</button>
 
 										<button ng-show="sgControls.read" type="button" class="btn btn-default btn-sm"   ng-click="sgControls.read.action(row)" title="{{ sgControls.read.title ? sgControls.read.title : 'Ver' }}">
