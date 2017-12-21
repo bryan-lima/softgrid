@@ -250,7 +250,7 @@
 
                                             <div ng-if="subgrid">
 
-                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="row[subgrid.object]" hide="subgrid.hide" template="'soft-subgrid'" sg-controls="subgrid.controls"></softgrid>
+                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="subgrid.object ? row[subgrid.object] : subgrid.item(row)" hide="subgrid.hide" template="'soft-subgrid'" sg-controls="subgrid.controls" subgrid="subgrid.subgrid"></softgrid>
 
                                             </div>
 

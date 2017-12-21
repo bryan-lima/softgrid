@@ -135,7 +135,8 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             //vm.controles.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50, show: function(item){ return item.ativo === false;} };
 
             vm.subgrid = {};
-            vm.subgrid.object = "sub";
+            vm.subgrid.item = function (item) { return item.sub };
+
             vm.subgrid.cols = [
                 {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
                 {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
@@ -144,13 +145,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
 
             vm.subgrid.hide = {all:true};
 
-            vm.subgrid.subgrid = {};
-            vm.subgrid.subgrid.cols = [
-                {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
-                {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
-                {title: "Telefone", item: function(item){return item.contato.telefone}}
-            ];
-            vm.subgrid.subgrid.object = "teste";
+
 
             vm.store = {enabled: true, id: "GRID1" }
 
