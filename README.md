@@ -148,5 +148,16 @@ Define uma classe CSS customizada para a grid.
 
 Define uma sub-grid em cada linha da grid para mostrar objetos-filhos de algum item do array.
 
+       vm.subgrid = {};
+                 vm.subgrid.item = function (item) { return item.sub };
+
+                 vm.subgrid.cols = [
+                     {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
+                     {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
+                     {title: "Telefone", item: function(item){return item.contato.telefone}}
+                 ];
+
+                 vm.subgrid.hide = {all:true};
+
 
 
