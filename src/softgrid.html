@@ -214,13 +214,11 @@
 
                                         <div ng-show="!editing" ng-dblclick="sg_openEdit(this, $event)" ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }">
 
-                                            <label ng-hide="col.popOver" style="width: 100%;">
-
-                                                {{temp = sg_mask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))}}&nbsp;
+                                            <label ng-bind-html="sg_mask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))" style="width: 100%;">
 
                                             </label>
 
-                                            <label style="text-decoration: underline; cursor: pointer" ng-show="col.popOver"   popover data-toggle="popover" data-trigger="hover" data-content="{{col.item(row)}}">{{(col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999))}}</label>
+                                            <!--<label style="text-decoration: underline; cursor: pointer" ng-show="col.popOver"   popover data-toggle="popover" data-trigger="hover" data-content="{{col.item(row)}}">{{(col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999))}}</label>-->
 
                                         </div>
 

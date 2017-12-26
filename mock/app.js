@@ -73,7 +73,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             ];
 
             var _sub = [
-                {nome: "0", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, sub: _sub1},
+                {nome: "<div class='width: 10%; background-color: red; height: 10px;'></div>", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, sub: _sub1},
                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, sub: _sub1},
                 {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, sub: _sub1},
                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, sub: _sub1},
