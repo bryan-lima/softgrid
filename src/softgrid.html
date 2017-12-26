@@ -158,6 +158,12 @@
 
                                 </th>
 
+                                <th ng-if="sgControls.progress" style="text-align: center;">
+
+                                    {{sgControls.progress.title ? sgControls.progress.title : 'Progresso'}}
+
+                                </th>
+
                             </thead>
 
                             <tbody>
@@ -236,6 +242,19 @@
                                     <td ng-if="sgControls.favorite" style="text-align: center; width: 50px;">
 
                                         <span ng-show="sgControls.favorite.show(row)" class="fa fa-star" ng-class="{'active': sgControls.favorite.item(row)}" ng-click="sgControls.favorite.function(row)"></span>
+
+                                    </td>
+
+                                    <!-- Coluna para progresso -->
+                                    <td ng-if="sgControls.progress" style="text-align: center; width: 50px;">
+
+                                        <div class="progress">
+
+                                            <div class="progress-bar {{sgControls.progress.class ? sgControls.progress.class(row) : ''}}" role="progressbar" style="width: {{sgControls.progress.item(row)}}%;">
+                                                {{sgControls.progress.item(row)}}%
+                                            </div>
+
+                                        </div>
 
                                     </td>
 

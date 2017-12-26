@@ -123,6 +123,14 @@
     color: #FFFFFF;
 }
 
+.softgrid .progress{
+    margin-bottom: 0;
+    border-radius: 2px;
+}
+
+.softgrid .progress .progress-bar{
+    color: black;
+}
 
 .softgrid .edit-button{
     cursor: pointer;
