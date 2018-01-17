@@ -282,7 +282,13 @@
 	min-width: 50px;
 }
 
+/** RETIRA PROPRIEDADE QUE TORNA O ELEMENTO RELATIVO AO MODAL **/
 
+.modal.in .modal-dialog {
+    -webkit-transform: none;
+    -ms-transform: none;
+    transform: none;
+}
 
 
 
