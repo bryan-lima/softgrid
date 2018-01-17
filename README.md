@@ -110,6 +110,11 @@ Favorito (^v1.1.6):
 Selecionar Todos (^v1.1.9)
 
      vm.controls.select = {all: true, item: "ativo", callback: _teste};
+     
+Progresso (^v1.2.3)
+     
+     vm.controls.progress = { item: function (item) { return item.progresso ;}, title: "Conclusão", class: function (item){ return 'progress-bar-success'}};
+
 
      
 ### width
