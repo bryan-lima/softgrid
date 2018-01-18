@@ -69,10 +69,12 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
 
             vm.controles.progress = { item: function (item) { return item.progresso ;}, title: "Conclusão", class: function (item){ return 'progress-bar-success'}};
 
+            vm.controles.showAction = _showMenu;
+
             //vm.controles.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50, show: function(item){ return item.ativo === false;} };
 
             vm.subgrid = {};
-            vm.subgrid.item = function (item) { return item.sub };
+            vm.subgrid.item = function (item) { return item };
 
             vm.subgrid.cols = [
                 {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
@@ -84,8 +86,30 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
 
             vm.store = {enabled: true, id: "GRID1" }
 
+            vm.acoes = [
+                {title: "Editar",   icon: "fa fa-info-circle", function: _teste, show: _showItemA },
+                {title: "Excluir",  icon: "fa fa-wrench",      function: _teste, show: _showItemB},
+                {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
+            ];
 
 
+        }
+
+        function _showMenu(item){
+
+            return item.progresso > 0
+        }
+
+        function _showItemA(item){
+            return item.progresso > 10 && item.progresso < 20
+        }
+
+        function _showItemB(item){
+            return item.progresso < 10;
+        }
+
+        function _showItemC(item){
+            return item.progresso > 90;
         }
 
         function _editar(item){

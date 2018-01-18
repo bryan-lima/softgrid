@@ -172,6 +172,8 @@
 
                                     <td ng-show="subgrid || actions.length > 0" style="text-align:center; width: {{larguraColunaAcoes}}px">
 
+                                        <div ng-show="sgControls.showAction ? sgControls.showAction(row) : true">
+
                                                 <!-- botão para exibir sub tabela -->
                                                 <button ng-show="subgrid" type="button" class="btn btn-default btn-sm btn-subgrid" ng-click="showSubGrid = showSubGrid ? false : true" style="float: left;">
                                                     <span class="fa fa-expand" ng-class="{'fa-compress': showSubGrid}"></span>
@@ -184,10 +186,18 @@
                                                     </button>
 
                                                     <ul class="dropdown-menu dropdown-menu-left">
-                                                        <li ng-repeat="action in actions"><a ng-click="action.function(row)"><span class="{{action.icon}}"></span> {{action.title}}</a></li>
+
+                                                        <li ng-repeat="action in actions" ng-show="action.show ? action.show(row) : true">
+
+                                                            <a ng-click="action.function(row)"><span class="{{action.icon}}"></span> {{action.title}}</a>
+
+                                                        </li>
+
                                                     </ul>
 
                                                 </div>
+
+                                        </div>
 
                                     </td>
 
