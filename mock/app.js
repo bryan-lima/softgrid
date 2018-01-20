@@ -92,6 +92,11 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
                 {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
             ];
 
+//checkbox
+            vm.controles.checkBox = {
+                function: _teste,
+                item: "ativo"
+            };
 
         }
 
@@ -119,7 +124,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
         }
 
         function _teste(item){
-            alert(item);
+            console.log(item);
         }
 
         _gerarGrid();

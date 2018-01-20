@@ -128,14 +128,24 @@
 
                             <thead>
 
+                                <!-- Cabecalho para Checkbox -->
+                                <th ng-show="sgControls.checkBox" style="text-align: center;">
+
+                                    <input type="checkbox" ng-checked="sg_checked" ng-click="sg_checkAll()">
+
+                                </th>
+
+                                <!-- Cabecalho para Menu -->
                                 <th ng-show="actions.length > 0 || subgrid">
 
                                 </th>
 
+                                <!-- Cabecalho para Ações -->
 								<th ng-show="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align: center;">
 									Ações
 								</th>
 
+                                <!-- Cabecalho para colunas da grid -->
                                 <th ng-repeat="col in cols track by $index" ng-show="!col.hide" style="text-align:center;">
 
                                   <span class="title" ng-click="sg_sort(col, $index)">
@@ -148,16 +158,19 @@
 
                                 </th>
 
+                                <!-- Cabecalho para ativo -->
 								<th ng-show="sgControls.active" style="text-align: center;">
 									{{sgControls.activeTitle}}
 								</th>
 
+                                <!-- Cabecalho para Favorito -->
                                 <th ng-if="sgControls.favorite" style="text-align: center;">
 
                                     {{sgControls.favorite.title ? sgControls.favorite.title : 'Favorito'}}
 
                                 </th>
 
+                                <!-- Cabecalho para Progresso -->
                                 <th ng-if="sgControls.progress" style="text-align: center;">
 
                                     {{sgControls.progress.title ? sgControls.progress.title : 'Progresso'}}
@@ -170,6 +183,14 @@
 
                                 <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="sgControls.changeRowColor(row) === true && {'background-color': (sgControls.rowColor ? sgControls.rowColor :'#e59482')}" >
 
+                                    <!-- Coluna para Checkbox -->
+                                    <td ng-show="sgControls.checkBox" style="text-align: center; width: 50px;">
+
+                                        <input type="checkbox" ng-checked="row[sgControls.checkBox.item]" ng-click="sgControls.checkBox.function(row)">
+
+                                    </td>
+
+                                    <!-- Coluna para Menu -->
                                     <td ng-show="subgrid || actions.length > 0" style="text-align:center; width: {{larguraColunaAcoes}}px">
 
                                         <div ng-show="sgControls.showAction ? sgControls.showAction(row) : true">
@@ -201,7 +222,7 @@
 
                                     </td>
 
-									<!-- column to actions -->
+									<!-- Coluna para Ações -->
 									<td ng-if="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align:center; width: {{larguraColunaControles}}px">
 
 
@@ -223,7 +244,7 @@
 
 									</td>
 
-                                    <!-- data columns-->
+                                    <!-- Colunas da grid-->
                                     <td ng-repeat="col in cols track by $index" ng-init="$parent.editing = false" class="opafion">
 
                                         <input ng-show="editing" ng-init="newvalue = col.item(row)" class="edit-input" ng-model="newvalue" ng-blur="sg_edit(row, col, newvalue, this)" style="width: {{col.edit.width}};">
@@ -240,12 +261,17 @@
 
                                     </td>
 
-									<!-- Coluna para checkbox -->
+									<!-- Coluna para ativo -->
 									<td style="text-align: center;" ng-show="sgControls.active">
+
 										<label class="switch">
+
 											<input type="checkbox" ng-checked="sgControls.activeCol(row)" ng-click="sgControls.activeFunction(row)">
+
 											<div class="slider round"></div>
+
 										</label>
+
 									</td>
 
                                     <!-- Coluna para favoritos -->
@@ -269,6 +295,7 @@
                                     </td>
 
                                 </tr>
+
                                 <tr ng-repeat-end="" ng-show="subgrid" ng-hide="!showSubGrid" ng-class="{'soft-row-striped': ($index%2)}"> <!-- Linha para Subtabela -->
 
                                     <td colspan="{{cols.length + 3}}">

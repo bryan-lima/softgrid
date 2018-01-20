@@ -35,6 +35,7 @@
                 scope.larguraColunaControles = 0;
 
                 scope.sg_selected = false;
+                scope.sg_checked = false;
 
                 var flag = false;
 				var firstLoad = true;
@@ -113,6 +114,27 @@
 						}
                     }
 				}
+
+                //checka os itens de cada linha
+                scope.sg_checkAll = function (){
+
+                    if(scope.dataFiltered){
+
+                        if(scope.dataFiltered.length > 0){
+
+                            scope.sg_checked = !scope.sg_checked;
+
+                            angular.forEach(scope.dataFiltered, function(row) {
+
+                                if(scope.sgControls.checkBox.item)
+                                    row[scope.sgControls.checkBox.item] = scope.sg_checked;
+                            });
+
+                            scope.sgControls.checkBox.function(scope.dataFiltered);
+
+                        }
+                    }
+                }
 
 				//export grid data to excel
 				function sg_excel() {
