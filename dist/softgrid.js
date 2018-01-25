@@ -605,7 +605,11 @@
                     _properties.currentPage = scope.sg_currentPage;
 
                     if(scope.sg_orderBy !== null)
+                    {
                         _properties.orderBy = { item: scope.sg_orderBy.toString(), reverse: scope.reverse, index: scope.sg_orderByColIndex };
+                        scope.sg_orderByColIndexSaved = _properties.orderBy.index;
+                        scope.sg_orderBySaved = scope.sg_orderBy;
+                    }
                     else
                     {
                         scope.sg_orderBySaved = null;
