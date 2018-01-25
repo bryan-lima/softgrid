@@ -114,9 +114,14 @@ Selecionar Todos (^v1.1.9)
 Progresso (^v1.2.3)
      
      vm.controls.progress = { item: function (item) { return item.progresso ;}, title: "Conclusão", class: function (item){ return 'progress-bar-success'}};
-
-
      
+Checkbox (^v1.2.6)
+
+     vm.controls.checkBox = {
+                function: _teste,
+                item: "ativo"
+            };
+            
 ### width
 
 Define um tamanho fixo de largura para a grid.
