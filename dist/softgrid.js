@@ -24,7 +24,7 @@
 				sgStore: "="
 			},
 			templateUrl: "softgrid.html",
-			link: function (scope, element, attrs) {
+			link: function (scope) {
 
 				scope.sg_currentPage = 1;   //controla paginacao da grid
                 scope.sg_linesPerPageInput = 10;
@@ -43,13 +43,13 @@
 				//change page
 				scope.sg_changePage = function (value) {
 
-					if (value == -1 && scope.sg_currentPage > 1)
+					if (value === -1 && scope.sg_currentPage > 1)
 						scope.sg_currentPage = scope.sg_currentPage - 1;
-					else if (value == -1 && scope.sg_currentPage == 1)
+					else if (value === -1 && scope.sg_currentPage === 1)
 						scope.sg_currentPage = scope.totalPages;
-					else if (value == 0 && scope.sg_currentPage == scope.totalPages)
+					else if (value === 0 && scope.sg_currentPage === scope.totalPages)
 						scope.sg_currentPage = 1;
-					else if (value == 0 && scope.sg_currentPage < scope.totalPages)
+					else if (value === 0 && scope.sg_currentPage < scope.totalPages)
 						scope.sg_currentPage = scope.sg_currentPage + 1;
 					else
 						scope.sg_currentPage = value;
@@ -61,38 +61,57 @@
 				//change lines per page
 				scope.sg_changeLinesPerPage = function (value) {
 
-					if ((value == -1 && scope.sg_linesPerPageInput > 10) || value == 1)
+					if ((value === -1 && scope.sg_linesPerPageInput > 10) || value === 1)
                         scope.sg_linesPerPageInput = scope.sg_linesPerPageInput + (value * 10);
 
-				}
+				};
 
                 //sort rows of the grid
-                scope.sg_sort = function (col, colIndex) {
+                scope.sg_sort = function (col, colIndex, auto) {
 
                     if(scope.data.length > 0) {
 
+                        if(scope.sg_orderBy !== null && scope.sg_orderByColIndex === colIndex && scope.reverse){
+
+                            scope.sg_orderBy = null;
+                            scope.reverse = false;
+                            scope.sg_orderByColIndex = -1;
+
+                            if(!firstLoad)
+                                _saveStorage();
+
+                            return;
+                        }
+
+                        if(!auto){
+                            if(scope.sg_orderBy !== null && scope.sg_orderByColIndex !== colIndex)
+                                scope.reverse = false;
+
+                            if(scope.sg_orderBy !== null && scope.sg_orderByColIndex === colIndex)
+                                scope.reverse = true;
+                        }
+
                         scope.sg_orderByColIndex = colIndex;
-                        scope.reverse = (scope.sg_orderBy !== null && scope.sg_orderByColIndex === colIndex) ? !scope.reverse : false;
                         scope.data = $filter('orderBy')(scope.data, col.item, scope.reverse);
                         scope.sg_orderBy = col.item;
 
                         flag = true;
 
                         if(!firstLoad)
-                        	_saveStorage();
+                            _saveStorage();
                     }
-                }
+                };
 
 				//apply mask to column
 				scope.sg_mask = function (colType, text) {
 
-					if (colType == "phone")
+					if (colType === "phone")
 						return maskPhone(text);
-					else if (colType == "mail")
+					else if (colType === "mail")
 						return maskEmail(text);
 					else
 						return text;
-				}
+				};
 
 				//select all items of the row
 				scope.sg_selectAll = function (){
@@ -477,27 +496,29 @@
                         return;
                     }
 
-                    if(scope.sgControls){
+                    if(scope.sg_orderBySaved){
 
-						if(angular.isDefined(scope.sgControls.orderBy))
-							scope.sg_sort({item: scope.sgControls.orderBy});
+                        scope.sg_orderByColIndex = -1;
+
+                        if(angular.isDefined(scope.sg_orderBySaved))
+                            scope.sg_sort(scope.sg_orderBySaved, scope.sg_orderByColIndexSaved, true);
                     }
 
                     if(scope.data){
 
-                    	if(scope.data.length > 0){
+                        if(scope.data.length > 0){
 
-                    		if(firstLoad){ //primeira vez que carregou os dados
+                            if(firstLoad){ //primeira vez que carregou os dados
 
-								if(scope.sgStore)
-									_loadStorage();
+                                if(scope.sgStore)
+                                    _loadStorage();
 
-								firstLoad = false;
+                                firstLoad = false;
                             }
-						}
-					}
+                        }
+                    }
 
-					_atualizarPaginacao();
+                    _atualizarPaginacao();
                 });
 
                 scope.$watch('sg_linesPerPageInput', function () {
@@ -537,7 +558,7 @@
 
                     if(scope.hide){
                         //mostra todas linhas caso esconda paginacao
-                        if(scope.hide.pagination == true || scope.hide.all == true)
+                        if(scope.hide.pagination === true || scope.hide.all === true)
                             scope.sg_linesPerPage = 999;
                     }
 
@@ -572,49 +593,60 @@
 
                 function _saveStorage(){
 
-                	if(!scope.sgStore)
-                		return;
+                    if(!scope.sgStore)
+                        return;
 
-					if(!scope.sgStore.enabled)
-						return;
+                    if(!scope.sgStore.enabled)
+                        return;
 
-					var _properties = {
+                    var _properties = {};
 
-						linesPerPage: scope.sg_linesPerPage,
-						currentPage: scope.sg_currentPage,
-						orderBy: { item: scope.sg_orderBy.toString(), reverse: !scope.reverse, index: scope.sg_orderByColIndex }
+                    _properties.linesPerPage = scope.sg_linesPerPage;
+                    _properties.currentPage = scope.sg_currentPage;
 
-					};
+                    if(scope.sg_orderBy !== null)
+                        _properties.orderBy = { item: scope.sg_orderBy.toString(), reverse: scope.reverse, index: scope.sg_orderByColIndex };
+                    else
+                    {
+                        scope.sg_orderBySaved = null;
+                        scope.sg_orderByColIndexSaved = null;
+                    }
 
                     localStorage.setItem("SG-STORE_" + scope.sgStore.id, angular.toJson(_properties));
-				}
+                }
 
                 function _loadStorage(){
 
-					if(!scope.sgStore)
-						return;
+                    if(!scope.sgStore)
+                        return;
 
-					if(!scope.sgStore.enabled)
-						return;
+                    if(!scope.sgStore.enabled)
+                        return;
 
-					var _properties = angular.fromJson(localStorage.getItem("SG-STORE_" + scope.sgStore.id));
+                    var _properties = angular.fromJson(localStorage.getItem("SG-STORE_" + scope.sgStore.id));
 
-					if(!_properties)
-						return;
+                    if(!_properties)
+                        return;
 
-					scope.sg_linesPerPage = scope.sg_linesPerPageInput =  _properties.linesPerPage;
-					scope.sg_currentPage = _properties.currentPage;
+                    scope.sg_linesPerPage = scope.sg_linesPerPageInput =  _properties.linesPerPage;
+                    scope.sg_currentPage = _properties.currentPage;
 
-					if(_properties.orderBy.item !== "")
-					{
-						var _item = {item: eval('(' + _properties.orderBy.item + ')')} ;
+                    if(_properties.orderBy)
+                    {
+                        if(_properties.orderBy.item !== "")
+                        {
+                            var _item = {item: eval('(' + _properties.orderBy.item + ')')} ;
 
-                        scope.reverse = _properties.orderBy.reverse;
-						scope.sg_sort(_item, _properties.orderBy.index);
+                            scope.sg_orderByColIndexSaved = _properties.orderBy.index;
+                            scope.sg_orderBySaved = _item;
+
+                            scope.reverse = _properties.orderBy.reverse;
+                            scope.sg_sort(_item, _properties.orderBy.index, true);
+                        }
                     }
 
-					_atualizarPaginacao();
-				}
+                    _atualizarPaginacao();
+                }
             }
 		};
 
