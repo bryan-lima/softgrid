@@ -608,7 +608,7 @@
                     {
                         _properties.orderBy = { item: scope.sg_orderBy.toString(), reverse: scope.reverse, index: scope.sg_orderByColIndex };
                         scope.sg_orderByColIndexSaved = _properties.orderBy.index;
-                        scope.sg_orderBySaved = scope.sg_orderBy;
+                        scope.sg_orderBySaved = { item: scope.sg_orderBy };
                     }
                     else
                     {
