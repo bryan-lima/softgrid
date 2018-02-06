@@ -122,6 +122,19 @@ Checkbox (^v1.2.6)
                 item: "ativo"
             };
             
+Aprovação (^v1.3.0)
+     
+     vm.controls.approve = { show: _showApprove, callback: _callBackApprove };
+     
+     function _callBackApprove(item, aprovado)
+        {
+            console.log(item + "|" + aprovado);
+        }
+
+        function _showApprove(item){
+            return item.progresso > 50;
+        }
+            
 ### width
 
 Define um tamanho fixo de largura para a grid.
