@@ -98,6 +98,18 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
                 item: "ativo"
             };
 
+            vm.controles.approve = { show: _showApprove, callback: _callBackApprove };
+
+
+        }
+
+        function _callBackApprove(item, aprovado)
+        {
+            console.log(item + "|" + aprovado);
+        }
+
+        function _showApprove(item){
+            return item.progresso > 50;
         }
 
         function _showMenu(item){
