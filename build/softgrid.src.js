@@ -191,6 +191,9 @@
                             {
                                 var _text =  _colsToFilter[i].item(array_item);
 
+                                if(_text === null)
+                                	continue;
+
                                 var _contain = _text.indexOf(scope.sg_filter) > -1;
 
                                 if(_contain)
