@@ -37,6 +37,9 @@
                 scope.sg_selected = false;
                 scope.sg_checked = false;
 
+                scope.filteredData = [];
+                scope.sg_filter = "";
+
                 var flag = false;
 				var firstLoad = true;
 
@@ -153,6 +156,65 @@
 
                         }
                     }
+                }
+
+                //check coluna filtro
+				scope.sg_checkCol = function(col, event){
+
+                	col.checked = !col.checked;
+
+                	event.stopPropagation();
+
+                	_getFilteredData();
+
+				};
+
+                //filter
+				function _getFilteredData()
+				{
+                    scope.filteredData = scope.data;
+
+                    if(scope.sg_filter === "" || scope.sg_filter === null || angular.isUndefined(scope.sg_filter))
+                        return;
+
+                    var _colsToFilter = scope.cols.filter(function (array_item) { return array_item.checked });
+
+                    if(_colsToFilter.length > 0)
+					{
+                        scope.filteredData = scope.filteredData.filter(function (array_item)
+                        {
+                            var _filter = false;
+
+                            var i;
+
+                            for(i = 0; i < _colsToFilter.length; i++)
+                            {
+                                var _text =  _colsToFilter[i].item(array_item);
+
+                                var _contain = _text.indexOf(scope.sg_filter) > -1;
+
+                                if(_contain)
+                                {
+                                    _filter = _contain;
+                                    break;
+                                }
+                            }
+
+                            return _filter;
+                        });
+                    }
+                    else
+					{
+                        scope.filteredData = $filter('filter')(scope.filteredData, scope.sg_filter);
+					}
+
+					if(scope.sgControls)
+					{
+						if(angular.isDefined(scope.sgControls.filtered))
+						{
+							scope.sgControls.filtered = scope.filteredData;
+						}
+					}
                 }
 
 				//export grid data to excel
@@ -518,6 +580,9 @@
                         }
                     }
 
+                    _getFilteredData();
+
+
                     _atualizarPaginacao();
                 });
 
@@ -574,6 +639,12 @@
                 		_saveStorage();
 
 				});
+
+				scope.$watch('sg_filter', function(){
+
+					_getFilteredData();
+
+				})
 
                 function _calcularTamanhoColunaAcoes(){
 

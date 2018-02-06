@@ -10,9 +10,27 @@
                 <div ng-hide="hide.filter || hide.all">
 
                     <label>Filtrar</label>
+
                     <div class="input-group">
-                        <span class="input-group-addon" id="filtro-addon"><span class="fa fa-search"></span></span>
+
+                        <div class="input-group-btn">
+
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-search"></span></button>
+
+                            <ul class="dropdown-menu dropdown-menu-left">
+
+                                <li ng-repeat="col in cols track by $index">
+
+                                    <a ng-click="sg_checkCol(col, $event)"> <input type="checkbox" ng-checked="col.checked" ng-click="sg_checkCol(col, $event)" /> {{col.title}} </a>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
                         <input type="text" class="form-control" ng-model="sg_filter" placeholder="Palavra-chave" aria-describedby="filtro-addon">
+
                     </div>
 
                 </div>
@@ -188,7 +206,7 @@
 
                             <tbody>
 
-                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (data | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="sgControls.changeRowColor(row) === true && {'background-color': (sgControls.rowColor ? sgControls.rowColor :'#e59482')}" >
+                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (filteredData | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="sgControls.changeRowColor(row) === true && {'background-color': (sgControls.rowColor ? sgControls.rowColor :'#e59482')}" >
 
                                     <!-- Coluna para Checkbox -->
                                     <td ng-show="sgControls.checkBox" style="text-align: center; width: 50px;">

@@ -8,7 +8,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
         function _gerarGrid() {
 
             var _sub = [
-                {nome: "<div class='width: 10%; background-color: red; height: 10px;'></div>", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 0},
+                {nome: "Mariana", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 0},
                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 5},
                 {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 10},
                 {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 15},
@@ -99,7 +99,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             };
 
             vm.controles.approve = { show: _showApprove, callback: _callBackApprove };
-
+            vm.controles.filtered = [];
 
         }
 
