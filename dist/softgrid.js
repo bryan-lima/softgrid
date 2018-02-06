@@ -194,11 +194,12 @@
                                 if(_text === null)
                                 	continue;
 
-                                var _contain = _text.indexOf(scope.sg_filter) > -1;
+                                _text = removeAccents(_text);
+								var _filterText = removeAccents(scope.sg_filter);
 
-                                if(_contain)
+                                if(_text.indexOf(_filterText) > -1)
                                 {
-                                    _filter = _contain;
+                                    _filter = true;
                                     break;
                                 }
                             }
@@ -208,7 +209,7 @@
                     }
                     else
 					{
-                        scope.filteredData = $filter('filter')(scope.filteredData, scope.sg_filter);
+                        scope.filteredData = $filter('filter')(scope.filteredData, scope.sg_filter, customComparator);
 					}
 
 					if(scope.sgControls)
@@ -218,6 +219,58 @@
 							scope.sgControls.filtered = scope.filteredData;
 						}
 					}
+                }
+
+                function customComparator(actual, expected){
+
+                    if(typeof actual === 'object' || typeof actual === 'boolean' || actual === null)
+                        return;
+
+                    if(angular.isUndefined(actual) || actual === null )
+                        return;
+
+                    if(typeof actual !== 'string')
+                    	actual = actual.toString();
+
+                    actual = removeAccents(actual);
+                    expected = removeAccents(expected);
+
+                    return actual.indexOf(expected) > -1;
+                }
+
+                function removeAccents(string) {
+
+                	if(!string)
+                		return string;
+
+                    var mapaAcentosHex 	= {
+                        a : /[\xE0-\xE6]/g,
+                        e : /[\xE8-\xEB]/g,
+                        i : /[\xEC-\xEF]/g,
+                        o : /[\xF2-\xF6]/g,
+                        u : /[\xF9-\xFC]/g,
+                        c : /\xE7/g,
+                        n : /\xF1/g
+                    };
+
+                    var toReplace = [ ["Á", "A"], ["À", "A"], ["Â", "A"], ["Ã", "A"],
+                        ["É", "E"], ["È", "E"], ["Ê", "E"],
+                        ["Í", "I"], ["Ì", "I"], ["Î", "I"],
+                        ["Ó", "O"], ["Ò", "O"], ["Ô", "O"], ["Õ", "O"],
+                        ["Ú", "U"], ["Ù", "U"], ["Û", "U"]];
+
+                    for ( var letra in mapaAcentosHex ) {
+                        var expressaoRegular = mapaAcentosHex[letra];
+                        string = string.replace( expressaoRegular, letra );
+                    }
+
+                    var i;
+
+                    for(i = 0; i < toReplace.length; i++){
+                        string = string.replace(toReplace[i][0], toReplace[i][1]);
+                    }
+
+                    return string.toUpperCase();
                 }
 
 				//export grid data to excel
