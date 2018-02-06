@@ -206,7 +206,7 @@
 
                             <tbody>
 
-                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in (dataFiltered = (filteredData | filter: sg_filter | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage))) track by $index" ng-style="sgControls.changeRowColor(row) === true && {'background-color': (sgControls.rowColor ? sgControls.rowColor :'#e59482')}" >
+                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in filteredData | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage) track by $index" ng-style="sgControls.changeRowColor(row) === true && {'background-color': (sgControls.rowColor ? sgControls.rowColor :'#e59482')}" >
 
                                     <!-- Coluna para Checkbox -->
                                     <td ng-show="sgControls.checkBox" style="text-align: center; width: 50px;">

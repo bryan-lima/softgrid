@@ -179,8 +179,9 @@
 
                     var _colsToFilter = scope.cols.filter(function (array_item) { return array_item.checked });
 
-                    if(_colsToFilter.length > 0)
-					{
+                    if(_colsToFilter.length <= 0)
+						_colsToFilter = scope.cols;
+
                         scope.filteredData = scope.filteredData.filter(function (array_item)
                         {
                             var _filter = false;
@@ -206,11 +207,6 @@
 
                             return _filter;
                         });
-                    }
-                    else
-					{
-                        scope.filteredData = $filter('filter')(scope.filteredData, scope.sg_filter, customComparator);
-					}
 
 					if(scope.sgControls)
 					{
@@ -221,27 +217,12 @@
 					}
                 }
 
-                function customComparator(actual, expected){
-
-                    if(typeof actual === 'object' || typeof actual === 'boolean' || actual === null)
-                        return;
-
-                    if(angular.isUndefined(actual) || actual === null )
-                        return;
-
-                    if(typeof actual !== 'string')
-                    	actual = actual.toString();
-
-                    actual = removeAccents(actual);
-                    expected = removeAccents(expected);
-
-                    return actual.indexOf(expected) > -1;
-                }
-
                 function removeAccents(string) {
 
                 	if(!string)
                 		return string;
+
+                	string = string.toUpperCase();
 
                     var mapaAcentosHex 	= {
                         a : /[\xE0-\xE6]/g,
