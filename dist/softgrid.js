@@ -195,7 +195,11 @@
                                 if(_text === null)
                                 	continue;
 
+                                if(typeof _text !== 'string')
+                                	_text = _text.toString();
+
                                 _text = removeAccents(_text);
+                                
 								var _filterText = removeAccents(scope.sg_filter);
 
                                 if(_text.indexOf(_filterText) > -1)
