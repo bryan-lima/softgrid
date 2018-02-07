@@ -122,9 +122,9 @@ Checkbox (^v1.2.6)
                 item: "ativo"
             };
             
-Aprovação (^v1.3.0)
+Aprovação (^v1.3.6)
      
-     vm.controls.approve = { show: _showApprove, callback: _callBackApprove };
+     vm.controls.approve = { showCol: true, show: _showApprove, callback: _callBackApprove };
      
      function _callBackApprove(item, aprovado)
         {
