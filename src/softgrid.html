@@ -5,7 +5,7 @@
 
         <div class="row" ng-hide="hide.all">
 
-            <div class="col-md-3">
+            <div class="col-md-2">
 
                 <div ng-hide="hide.filter || hide.all">
 
@@ -37,11 +37,11 @@
 
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
 
                 <div class="row">
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group" ng-hide="hide.linesPage || hide.all || hide.pagination" style="margin-bottom: 0;">
 
                             <label>Linhas por página</label>
@@ -64,7 +64,7 @@
 
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
 
                         <div ng-hide="hide.options || hide.all">
 
@@ -93,26 +93,26 @@
 
                     </div>
 
+                    <div class="col-md-4">
+
+                        <div ng-hide="hide.fullscreen || hide.all">
+
+                            <label>&nbsp;</label><br>
+                            <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-expand" ng-class="{'fa-compress': softgrid.fullscreen}"></span>
+
+                                {{ softgrid.fullscreen ? (sgControls.fullscreen.on ? sgControls.fullscreen.on : 'Tela normal') : (sgControls.fullscreen.off ? sgControls.fullscreen.off : 'Tela cheia') }}
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
 
-            <div class="col-md-2">
-
-                <div ng-hide="hide.fullscreen || hide.all">
-
-                    <label>&nbsp;</label><br>
-                    <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-expand" ng-class="{'fa-compress': softgrid.fullscreen}"></span>
-
-                        {{ softgrid.fullscreen ? (sgControls.fullscreen.on ? sgControls.fullscreen.on : 'Tela normal') : (sgControls.fullscreen.off ? sgControls.fullscreen.off : 'Tela cheia') }}
-
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-3">
+            <div class="col-md-4">
 
                 <nav aria-label="Page navigation" class="pull-right" ng-hide="hide.pagination || hide.all">
 

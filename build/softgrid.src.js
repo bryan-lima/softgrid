@@ -618,11 +618,14 @@
 
                                 firstLoad = false;
                             }
+                            else // se recarregar dados da grid
+                            {
+                                scope.sg_currentPage = 1; //reseta pagina
+                            }
                         }
                     }
 
                     _getFilteredData();
-
 
                     _atualizarPaginacao();
                 });
