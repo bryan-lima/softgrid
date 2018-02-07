@@ -134,6 +134,12 @@ Aprovação (^v1.3.0)
         function _showApprove(item){
             return item.progresso > 50;
         }
+        
+Dados Filtrados (v1.3.5)
+
+     vm.controls.filtered = [];
+     
+     //basta inicializar este objeto para diretiva retornar os dados que estao filtrados na grid
             
 ### width
 
