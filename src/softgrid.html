@@ -196,7 +196,7 @@
                                 </th>
 
                                 <!-- Cabecalho para Aprovacao -->
-                                <th ng-if="sgControls.approve" style="text-align: center;">
+                                <th ng-if="sgControls.approve && sgControls.approve.showCol" style="text-align: center;">
 
                                     Aprovação
 
@@ -320,7 +320,7 @@
                                     </td>
 
                                     <!-- Coluna para Aprovacao -->
-                                    <td ng-if="sgControls.approve" style="text-align: center; width: 120px;">
+                                    <td ng-if="sgControls.approve && sgControls.approve.showCol" style="text-align: center; width: 120px;">
 
                                         <div ng-if="sgControls.approve.show(row)">
 

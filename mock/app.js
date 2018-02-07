@@ -98,7 +98,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
                 item: "ativo"
             };
 
-            vm.controles.approve = { show: _showApprove, callback: _callBackApprove };
+            vm.controles.approve = { showCol: false, show: _showApprove, callback: _callBackApprove };
             vm.controles.filtered = [];
 
         }
