@@ -599,6 +599,8 @@
                         return;
                     }
 
+                    _getFilteredData();
+
                     if(scope.sg_orderBySaved){
 
                         scope.sg_orderByColIndex = -1;
@@ -624,8 +626,6 @@
                             }
                         }
                     }
-
-                    _getFilteredData();
 
                     _atualizarPaginacao();
                 });
@@ -686,7 +686,8 @@
 
 				scope.$watch('sg_filter', function(){
 
-					_getFilteredData();
+					if(scope.sg_filter !== "")
+						_getFilteredData();
 
 				})
 
