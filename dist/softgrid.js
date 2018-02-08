@@ -72,7 +72,7 @@
                 //sort rows of the grid
                 scope.sg_sort = function (col, colIndex, auto) {
 
-                    if(scope.data.length > 0) {
+                    if(scope.filteredData.length > 0) {
 
                         if(scope.sg_orderBy !== null && scope.sg_orderByColIndex === colIndex && scope.reverse){
 
@@ -95,7 +95,7 @@
                         }
 
                         scope.sg_orderByColIndex = colIndex;
-                        scope.data = $filter('orderBy')(scope.data, col.item, scope.reverse);
+                        scope.filteredData = $filter('orderBy')(scope.filteredData, col.item, scope.reverse);
                         scope.sg_orderBy = col.item;
 
                         flag = true;
