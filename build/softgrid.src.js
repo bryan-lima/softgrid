@@ -112,6 +112,8 @@
 						return maskPhone(text);
 					else if (colType === "mail")
 						return maskEmail(text);
+					else if(colType === "date")
+						return $filter('date')(text, 'dd/MM/yyyy');
 					else
 						return text;
 				};
