@@ -40,7 +40,6 @@
                 scope.filteredData = [];
                 scope.sg_filter = "";
 
-                var flag = false;
 				var firstLoad = true;
 
 				//change page
@@ -97,8 +96,6 @@
                         scope.sg_orderByColIndex = colIndex;
                         scope.filteredData = $filter('orderBy')(scope.filteredData, col.item, scope.reverse);
                         scope.sg_orderBy = col.item;
-
-                        flag = true;
 
                         if(!firstLoad)
                             _saveStorage();
@@ -595,11 +592,6 @@
 
 				//watchers
                 scope.$watch('data', function () {
-
-                    if (flag) {
-                        flag = false;
-                        return;
-                    }
 
                     _getFilteredData();
 
