@@ -680,8 +680,7 @@
 
 				scope.$watch('sg_filter', function(){
 
-					if(scope.sg_filter !== "")
-						_getFilteredData();
+					_getFilteredData();
 
 				})
 
