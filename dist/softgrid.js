@@ -173,8 +173,11 @@
 				{
                     scope.filteredData = scope.data;
 
-                    if(scope.sg_filter === "" || scope.sg_filter === null || angular.isUndefined(scope.sg_filter))
+                    if(scope.sg_filter === "" || scope.sg_filter === null || angular.isUndefined(scope.sg_filter)) {
+
+                    	scope.sg_sort({ item: scope.sg_orderBy }, scope.sg_orderByColIndex, true);
                         return;
+                    }
 
                     var _colsToFilter = scope.cols.filter(function (array_item) { return array_item.checked });
 
@@ -218,6 +221,8 @@
 							scope.sgControls.filtered = scope.filteredData;
 						}
 					}
+
+                    scope.sg_sort({ item: scope.sg_orderBy }, scope.sg_orderByColIndex, true);
                 }
 
                 function removeAccents(string) {
