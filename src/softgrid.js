@@ -71,6 +71,9 @@
                 //sort rows of the grid
                 scope.sg_sort = function (col, colIndex, auto) {
 
+                	if(angular.isUndefined(scope.filteredData))
+                		return;
+
                     if(scope.filteredData.length > 0) {
 
                         if(scope.sg_orderBy !== null && scope.sg_orderByColIndex === colIndex && scope.reverse){
