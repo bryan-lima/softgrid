@@ -121,44 +121,44 @@
 				//select all items of the row
 				scope.sg_selectAll = function (){
 
-					if(scope.dataFiltered){
+					if(scope.filteredData){
 
-						if(scope.dataFiltered.length > 0){
+						if(scope.filteredData.length > 0){
 
                             scope.sg_selected = !scope.sg_selected;
 
-                            angular.forEach(scope.dataFiltered, function(row) {
+                            angular.forEach(scope.filteredData, function(row) {
 
                             	if(scope.sgControls.select.item)
                                 	row[scope.sgControls.select.item] = scope.sg_selected;
                             });
 
-                            scope.sgControls.select.callback(scope.dataFiltered);
+                            scope.sgControls.select.callback(scope.filteredData);
 
 						}
                     }
-				}
+				};
 
                 //checka os itens de cada linha
                 scope.sg_checkAll = function (){
 
-                    if(scope.dataFiltered){
+                    if(scope.filteredData){
 
-                        if(scope.dataFiltered.length > 0){
+                        if(scope.filteredData.length > 0){
 
                             scope.sg_checked = !scope.sg_checked;
 
-                            angular.forEach(scope.dataFiltered, function(row) {
+                            angular.forEach(scope.filteredData, function(row) {
 
                                 if(scope.sgControls.checkBox.item)
                                     row[scope.sgControls.checkBox.item] = scope.sg_checked;
                             });
 
-                            scope.sgControls.checkBox.function(scope.dataFiltered);
+                            scope.sgControls.checkBox.function(scope.filteredData);
 
                         }
                     }
-                }
+                };
 
                 //check coluna filtro
 				scope.sg_checkCol = function(col, event){
