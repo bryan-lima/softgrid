@@ -41,7 +41,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
 
             vm.colunas = [
                 {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
-                {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
+                {title: "Cargo",    item: function(item){return item.cargo}, align: "center", popOver: true},
                 {title: "Telefone", item: function(item){return item.contato.telefone}}
             ];
 

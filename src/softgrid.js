@@ -770,16 +770,13 @@
                 }
             }
 		};
-
 	}
 
 	//diretiva para popover
-	/*angular.module('softgrid.directive').directive('popover', function () {
+	angular.module('softgrid.directive').directive('popover', function () {
 		return function (scope, elem) {
 			elem.popover();
 		}
-	});*/
-
-
+	});
 
 })();
