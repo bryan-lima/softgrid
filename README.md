@@ -58,25 +58,39 @@ Define as colunas da grid.
      
 Propriedade | Função | Valores | Exemplo
 ------------ |--------|--------|--------
+default | Se a coluna é exibida por padr]ao | boolean | true
+type | Define o tipo da Coluna | string | "text"
 title | Define o header da coluna | string | "Nome do Usuário"
 item| Define a propriedade do objeto que aparece na coluna | function | function(item){ return item.nome }
 align| Alinhamento do texto na coluna | "left", "center", "right"| "center"
 maxLength| Tamanho máximo de caracteres na coluna | int | 20
 popOver| Mostra a coluna em um balão | boolean | true
      
+ ### Tipos de Colunas
  
-
-### actions
-
-Cria um botão de menu (hamburguer) em cada linha da grid contendo a ação desejada.
-
-`<softgrid actions="vm.acoes"></softgrid>`
-
-     vm.acoes = [
-        {title: "Editar",   icon: "fa fa-info-circle", function: _editarUsuario},
-        {title: "Excluir",  icon: "fa fa-wrench",      function: _excluirUsuario},
-        {title: "Bloquear", icon: "fa fa-calculator",  function: _bloquearUsuario}
-     ];
+ Checkbox
+   { type: "checkbox", title: "Selecionar", callback: function, item: row.item }
+   
+ Subgrid  
+   { type: "subgrid", title: "Detalhes", item: row.item }
+   
+  Menu
+   { type: "menu", title: "Opções", showRow: scope.sgControls.showAction, menu: scope.actions }
+   
+  Action
+   { type: "action", title: "Imprimir", callback: function, icon: "fa-printer") }
+   
+  Switch
+   { type: "switch", title: "Ativar/Desativer", item: row.item, callback: function }
+   
+  Favorite  
+   { type: "favorite", title: "Favorito", item: row.item, callback: function, showRow: function }
+   
+  Progress
+   { type: "progress", title: "Progresso", class: function, item: row.item }
+   
+  Approve
+   { type: "approve", title: "Aprovação", showCol: function, showRow: function, callback: function }
 
 ### data
 
@@ -91,49 +105,10 @@ Um array contendo os objetos que deverão ser carregados na grid.
                ];
 
 ### sg-controls
-
-Botões CRUD:
-     
-     vm.controls.create =  { title: "Criar Novo", function: _funcaoCriar }; //title opcional
-     vm.controls.read =    { function: _funcaoLer };
-     vm.controls.update  = { function: _funcaoAtualizar };
-     vm.controls.delete =  { title: "Deletar este item", function: _funcaoDeletar }; //title opcional
      
 Controles fullscren:
 
      vm.controls.fullscreen = {on: "Mostrar filtros", off: "Esconder filtros", top: 60, zindex: 999}; //todos opcionais
-     
-Favorito (^v1.1.6):
-
-     vm.controls.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50 };
-     
-Selecionar Todos (^v1.1.9)
-
-     vm.controls.select = {all: true, item: "ativo", callback: _teste};
-     
-Progresso (^v1.2.3)
-     
-     vm.controls.progress = { item: function (item) { return item.progresso ;}, title: "Conclusão", class: function (item){ return 'progress-bar-success'}};
-     
-Checkbox (^v1.2.6)
-
-     vm.controls.checkBox = {
-                function: _teste,
-                item: "ativo"
-            };
-            
-Aprovação (^v1.3.6)
-     
-     vm.controls.approve = { showCol: true, show: _showApprove, callback: _callBackApprove };
-     
-     function _callBackApprove(item, aprovado)
-        {
-            console.log(item + "|" + aprovado);
-        }
-
-        function _showApprove(item){
-            return item.progresso > 50;
-        }
         
 Dados Filtrados (v1.3.5)
 
@@ -173,20 +148,6 @@ pagination|
 
 Define uma classe CSS customizada para a grid.
 
-### subgrid
-
-Define uma sub-grid em cada linha da grid para mostrar objetos-filhos de algum item do array.
-
-       vm.subgrid = {};
-                 vm.subgrid.item = function (item) { return item.sub };
-
-                 vm.subgrid.cols = [
-                     {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
-                     {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
-                     {title: "Telefone", item: function(item){return item.contato.telefone}}
-                 ];
-
-                 vm.subgrid.hide = {all:true};
 
 
 
