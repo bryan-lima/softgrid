@@ -58,6 +58,7 @@ Define as colunas da grid.
      
 Propriedade | Função | Valores | Exemplo
 ------------ |--------|--------|--------
+default | Se a coluna é exibida por padr]ao | boolean | true
 type | Define o tipo da Coluna | string | "text"
 title | Define o header da coluna | string | "Nome do Usuário"
 item| Define a propriedade do objeto que aparece na coluna | function | function(item){ return item.nome }
