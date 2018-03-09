@@ -42,6 +42,7 @@
                 <div class="row">
 
                     <div class="col-md-4">
+
                         <div class="form-group" ng-hide="hide.linesPage || hide.all || hide.pagination" style="margin-bottom: 0;">
 
                             <label>Linhas por página</label>
@@ -124,6 +125,8 @@
                                 <a ng-click="sg_changePage(soft_page.value)" ng-bind-html="soft_page.text"></a>
                             </li>
 
+                            <li ng-if="sgStore" title="Editar Colunas" ng-click="abrirConfiguracao()"><span class="fa fa-pencil"></span></li>
+
                         </ul>
 
                 </nav>
@@ -140,235 +143,13 @@
 
                 <div class="softgrid-container">
 
-                    <div ng-style=" width ? { 'width': width + 'px' } : { 'width': '100%' }">
-
-                        <table ng-attr-id="{{!subgrid ? 'none': 'softgrid'}}" class="softgrid {{template}}" >
-
-                            <thead>
-
-                                <!-- Cabecalho para Checkbox -->
-                                <th ng-show="sgControls.checkBox" style="text-align: center;">
-
-                                    <input type="checkbox" ng-checked="sg_checked" ng-click="sg_checkAll()">
-
-                                </th>
-
-                                <!-- Cabecalho para Menu -->
-                                <th ng-show="actions.length > 0 || subgrid">
-
-                                </th>
-
-                                <!-- Cabecalho para Ações -->
-								<th ng-show="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align: center;">
-									Ações
-								</th>
-
-                                <!-- Cabecalho para colunas da grid -->
-                                <th ng-repeat="col in cols track by $index" ng-show="!col.hide" style="text-align:center;">
-
-                                  <span class="title" ng-click="sg_sort(col, $index)">
-
-									  {{col.title}}
-
-									  <span ng-show="$index === sg_orderByColIndex" class="fa fa-sort-amount-asc" ng-class="{'fa-sort-amount-desc' : reverse}"></span>
-
-								  </span>
-
-                                </th>
-
-                                <!-- Cabecalho para ativo -->
-								<th ng-show="sgControls.active" style="text-align: center;">
-									{{sgControls.activeTitle}}
-								</th>
-
-                                <!-- Cabecalho para Favorito -->
-                                <th ng-if="sgControls.favorite" style="text-align: center;">
-
-                                    {{sgControls.favorite.title ? sgControls.favorite.title : 'Favorito'}}
-
-                                </th>
-
-                                <!-- Cabecalho para Progresso -->
-                                <th ng-if="sgControls.progress" style="text-align: center;">
-
-                                    {{sgControls.progress.title ? sgControls.progress.title : 'Progresso'}}
-
-                                </th>
-
-                                <!-- Cabecalho para Aprovacao -->
-                                <th ng-if="sgControls.approve && sgControls.approve.showCol" style="text-align: center;">
-
-                                    Aprovação
-
-                                </th>
-
-                            </thead>
-
-                            <tbody>
-
-                                <tr ng-init="$last ? sg_hook() : angular.noop()" ng-class="{'soft-row-striped': ($index%2)}" ng-repeat-start="row in filteredData | limitTo: sg_linesPerPage : ((sg_currentPage * sg_linesPerPage) - sg_linesPerPage) track by $index" ng-style="sgControls.changeRowColor(row) === true && {'background-color': (sgControls.rowColor ? sgControls.rowColor :'#e59482')}" >
-
-                                    <!-- Coluna para Checkbox -->
-                                    <td ng-show="sgControls.checkBox" style="text-align: center; width: 50px;">
-
-                                        <input type="checkbox" ng-checked="row[sgControls.checkBox.item]" ng-click="sgControls.checkBox.function(row)">
-
-                                    </td>
-
-                                    <!-- Coluna para Menu -->
-                                    <td ng-show="subgrid || actions.length > 0" style="text-align:center; width: {{larguraColunaAcoes}}px">
-
-                                        <div ng-show="sgControls.showAction ? sgControls.showAction(row) : true">
-
-                                                <!-- botão para exibir sub tabela -->
-                                                <button ng-show="subgrid" type="button" class="btn btn-default btn-sm btn-subgrid" ng-click="showSubGrid = showSubGrid ? false : true" style="float: left;">
-                                                    <span class="fa fa-expand" ng-class="{'fa-compress': showSubGrid}"></span>
-                                                </button>
-
-                                                <div class="dropdown" ng-show="actions">
-
-                                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <span class="fa fa-bars"></span>
-                                                    </button>
-
-                                                    <ul class="dropdown-menu dropdown-menu-left">
-
-                                                        <li ng-repeat="action in actions" ng-show="action.show ? action.show(row) : true">
-
-                                                            <a ng-click="action.function(row)"><span class="{{action.icon}}"></span> {{action.title}}</a>
-
-                                                        </li>
-
-                                                    </ul>
-
-                                                </div>
-
-                                        </div>
-
-                                    </td>
-
-									<!-- Coluna para Ações -->
-									<td ng-if="sgControls.create || sgControls.read || sgControls.update || sgControls.delete" style="text-align:center; width: {{larguraColunaControles}}px">
-
-
-										<button ng-show="sgControls.create" type="button" class="btn btn-default btn-sm" ng-click="sgControls.create.action(row)" title="{{ sgControls.create.title ? sgControls.create.title : 'Criar' }}">
-											<span class="fa" ng-class="sgControls.create.icon ? sgControls.create.icon : 'fa-plus'"></span>
-										</button>
-
-										<button ng-show="sgControls.read" type="button" class="btn btn-default btn-sm"   ng-click="sgControls.read.action(row)" title="{{ sgControls.read.title ? sgControls.read.title : 'Ver' }}">
-											<span class="fa fa-search"></span>
-										</button>
-
-										<button ng-show="sgControls.update" type="button" class="btn btn-default btn-sm" ng-click="sgControls.update.action(row)" title="{{ sgControls.update.title ? sgControls.update.title : 'Atualizar' }}">
-											<span class="fa fa-pencil"></span>
-										</button>
-
-										<button ng-show="sgControls.delete" type="button" class="btn btn-default btn-sm" ng-click="sgControls.delete.action(row)" title="{{ sgControls.delete.title ? sgControls.delete.title : 'Deletar' }}">
-											<span class="fa fa-trash"></span>
-										</button>
-
-									</td>
-
-                                    <!-- Colunas da grid-->
-                                    <td ng-repeat="col in cols track by $index" ng-init="$parent.editing = false" class="opafion">
-
-                                        <input ng-show="editing" ng-init="newvalue = col.item(row)" class="edit-input" ng-model="newvalue" ng-blur="sg_edit(row, col, newvalue, this)" style="width: {{col.edit.width}};">
-
-                                        <div ng-show="!editing" ng-dblclick="sg_openEdit(this, $event)" ng-style="col.align ? { 'text-align': col.align} : { 'text-align': 'left' }">
-
-                                            <label ng-if="!col.popOver" ng-bind-html="sg_mask(col.type, (col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999)))" style="width: 100%;">
-
-                                            </label>
-
-                                            <label ng-if="col.popOver" style="text-decoration: underline; cursor: pointer" popover data-toggle="popover" data-trigger="hover" data-content="{{col.item(row)}}">{{(col.item(row) | limitTo: (col.maxLength ? col.maxLength : 999))}}</label>
-
-                                        </div>
-
-                                    </td>
-
-									<!-- Coluna para ativo -->
-									<td style="text-align: center;" ng-show="sgControls.active">
-
-										<label class="switch">
-
-											<input type="checkbox" ng-checked="sgControls.activeCol(row)" ng-click="sgControls.activeFunction(row)">
-
-											<div class="slider round"></div>
-
-										</label>
-
-									</td>
-
-                                    <!-- Coluna para favoritos -->
-                                    <td ng-if="sgControls.favorite" style="text-align: center; width: 50px;">
-
-                                        <span ng-show="sgControls.favorite.show(row)" class="fa fa-star" ng-class="{'active': sgControls.favorite.item(row)}" ng-click="sgControls.favorite.function(row)"></span>
-
-                                    </td>
-
-                                    <!-- Coluna para progresso -->
-                                    <td ng-if="sgControls.progress" style="text-align: center; width: 50px;">
-
-                                        <div class="progress">
-
-                                            <div class="progress-bar {{sgControls.progress.class ? sgControls.progress.class(row) : ''}}" role="progressbar" style="width: {{sgControls.progress.item(row)}}%;">
-                                                {{sgControls.progress.item(row)}}%
-                                            </div>
-
-                                        </div>
-
-                                    </td>
-
-                                    <!-- Coluna para Aprovacao -->
-                                    <td ng-if="sgControls.approve && sgControls.approve.showCol" style="text-align: center; width: 120px;">
-
-                                        <div ng-if="sgControls.approve.show(row)">
-
-                                            <button title="Aprovar" class="btn btn-default btn-sm" ng-click="sgControls.approve.callback(row, true)"><span class="fa fa-thumbs-up"></span></button>
-
-                                            <button title="Reprovar" class="btn btn-default btn-sm" ng-click="sgControls.approve.callback(row, false)"><span class="fa fa-thumbs-down"></span></button>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                                <tr ng-repeat-end="" ng-show="subgrid" ng-hide="!showSubGrid" ng-class="{'soft-row-striped': ($index%2)}"> <!-- Linha para Subtabela -->
-
-                                    <td colspan="{{cols.length + 3}}">
-
-                                        <div class="soft-subgrid-container">
-
-                                            <div ng-if="subgrid">
-
-                                                <softgrid  cols="subgrid.cols" actions="subgrid.actions" data="subgrid.object ? row[subgrid.object] : subgrid.item(row)" hide="subgrid.hide" template="'soft-subgrid'" sg-controls="subgrid.controls" subgrid="subgrid.subgrid"></softgrid>
-
-                                            </div>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-
-                                <!-- Exibe uma linha caso não haja dados -->
-                                <tr ng-show="!data || data.length <= 0" style="text-align: center;">
-
-                                    <td colspan="{{cols.length + 3}} ">
-                                    Não há dados a serem exibidos.
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
 
                 </div>
 
+                <div class="softgrid-configuration scrolls">
+
+
+                </div>
         </div>
 
     </div>

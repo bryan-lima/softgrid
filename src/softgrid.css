@@ -36,11 +36,6 @@
 
 .softgrid-container{}
 
-.softgrid-container .dropdown{
-    float: left;
-    margin-left: 3px;
-}
-
 .softgrid-container .dropdown-menu {
     border-top-left-radius: 0;
     position: fixed;
@@ -67,6 +62,7 @@
 
 .softgrid th{
     padding: 5px;
+    text-align: center;
     background-color: #8c8c8c !important;
     color: white;
     border: none;
@@ -280,6 +276,74 @@
 	font-size: 12px;
 	padding: 2px 8px 2px 8px;
 	min-width: 50px;
+}
+
+.softgrid-configuration{
+    position: relative;
+    float: right;
+    margin-top: -250px;
+    margin-right: 1px;
+    width: 0;
+    height: 250px;
+    text-align: center;
+    background-color: white;
+    overflow-y: auto;
+    transition: width 0.5s linear;
+}
+
+.softgrid-configuration h5{
+    font-size: 18px;
+    text-align: center;
+}
+
+.softgrid-configuration-col{
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    cursor: move;
+    background-color: #ecf0f1;
+    border-bottom: 2px solid #8c8c8c;
+}
+
+.softgrid-configuration-col:hover{
+    background-color: #ccc;
+}
+
+.softgrid-th-drop .fa-arrow-left{
+    display: none;
+}
+.softgrid-th-drop.active .fa-arrow-left{
+    float: left;
+    margin-top: 2px;
+    display: block;
+}
+
+.softgrid-th-drop .fa-times{
+    cursor: pointer;
+}
+
+.softgrid-th-drop:hover{
+}
+
+.softgrid-th-drop.active {
+}
+
+.scrolls::-webkit-scrollbar {
+    transition: all .5s;
+    width: 5px;
+    height: 1px;
+    z-index: 10;
+}
+
+.scrolls::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrolls::-webkit-scrollbar-thumb {
+    background: #b3ada7;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 /** RETIRA PROPRIEDADE QUE TORNA O ELEMENTO RELATIVO AO MODAL **/

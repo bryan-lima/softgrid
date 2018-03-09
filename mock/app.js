@@ -8,41 +8,44 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
         function _gerarGrid() {
 
             var _sub = [
-                {nome: "Mariana", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 0},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 5},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 10},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 15},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: true, progresso: 20},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 25},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 30},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 35},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: true, progresso: 40},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 45},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 50},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 55},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 60},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 65},
-                {nome: "Opa", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 70},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 75},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 80},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 85},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: true, progresso: 90},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 95},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 100},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 11},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: true, progresso: 54},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 83},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 78},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 12},
-                {nome: "Jack", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0202"}, ativo: false, progresso: 27},
-                {nome: "Nunes", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0303"}, ativo: false, progresso: 45},
-                {nome: "Peixoto", cargo: "Programador", contato: {tipo: "residencial", telefone: "12 90101-0404"}, ativo: false, progresso: 18}
+                {nome: "Mariana", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 0},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 5},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 10},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 15},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: true, progresso: 20},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 25},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 30},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 35},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: true, progresso: 40},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 45},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 50},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 55},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 60},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 65},
+                {nome: "Opa", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 70},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 75},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 80},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 85},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: true, progresso: 90},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 95},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 100},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 11},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: true, progresso: 54},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 83},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 78},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 12},
+                {nome: "Jack", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0202"}], ativo: false, progresso: 27},
+                {nome: "Nunes", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0303"}], ativo: false, progresso: 45},
+                {nome: "Peixoto", cargo: "Programador", contato: [{tipo: "residencial", telefone: "12 90101-0404"}], ativo: false, progresso: 18}
             ];
 
             vm.colunas = [
                 {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
                 {title: "Cargo",    item: function(item){return item.cargo}, align: "center", popOver: true},
-                {title: "Telefone", item: function(item){return item.contato.telefone}}
+                {title: "Telefone", item: function(item){return item.contato.telefone}, width: "100px"},
+                {title: "Cargo A", default: false, item: function(item){return item.cargo + "A"}},
+                {title: "Cargo B", default: false, item: function(item){return item.cargo + "B"}},
+                {title: "Cargo C", default: false, item: function(item){return item.cargo + "C"}}
             ];
 
             vm.acoes = [
@@ -74,12 +77,11 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             //vm.controles.favorite = { title: "Favoritar", function: _editar, item: function(item){ return item.ativo }, width: 50, show: function(item){ return item.ativo === false;} };
 
             vm.subgrid = {};
-            vm.subgrid.item = function (item) { return item };
+            vm.subgrid.item = function (item) { return item.contato };
 
             vm.subgrid.cols = [
-                {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
-                {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
-                {title: "Telefone", item: function(item){return item.contato.telefone}}
+                {title: "Nome",     item: function(item){return item.tipo}, edit: { item: "nome", function: _editar, width: "100%"}},
+                {title: "Telefone", item: function(item){return item.telefone}}
             ];
 
             vm.subgrid.hide = {all:true};

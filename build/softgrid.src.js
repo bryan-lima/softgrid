@@ -4,10 +4,10 @@
 	angular.module('softgrid.directive', ['base64'])
 		.directive('softgrid', softGrid);
 
-	softGrid.$injector = ['$filter', '$base64','$timeout'];
+	softGrid.$injector = ['$filter', '$base64','$timeout', '$compíle'];
 
 	/** @ngInject */
-	function softGrid($filter, $base64, $timeout) {
+	function softGrid($filter, $base64, $timeout, $compile) {
 		return {
 			restrict: 'E',
 			replace: true,
@@ -24,7 +24,12 @@
 				sgStore: "="
 			},
 			templateUrl: "softgrid.html",
-			link: function (scope) {
+			link: function (scope, element) {
+
+				var enableLog = false;
+
+				scope.container = $(element[0]).find(".softgrid-container")[0];
+				scope.configuration = $(element[0]).find(".softgrid-configuration")[0];
 
 				scope.sg_currentPage = 1;   //controla paginacao da grid
                 scope.sg_linesPerPageInput = 10;
@@ -39,11 +44,21 @@
 
                 scope.filteredData = [];
                 scope.sg_filter = "";
+                scope.sg_cols = [];
 
 				var firstLoad = true;
 
+				//configuracao
+				function _carregarColunas()
+				{
+
+				}
+
 				//change page
 				scope.sg_changePage = function (value) {
+
+					if(enableLog)
+						console.log("sg_changePage");
 
 					if (value === -1 && scope.sg_currentPage > 1)
 						scope.sg_currentPage = scope.sg_currentPage - 1;
@@ -66,10 +81,15 @@
 					if ((value === -1 && scope.sg_linesPerPageInput > 10) || value === 1)
                         scope.sg_linesPerPageInput = scope.sg_linesPerPageInput + (value * 10);
 
+                    if(enableLog)
+                        console.log("sg_changeLinesPerPage");
 				};
 
                 //sort rows of the grid
                 scope.sg_sort = function (col, colIndex, auto) {
+
+                    if(enableLog)
+                        console.log("sg_sort");
 
                 	if(angular.isUndefined(scope.filteredData))
                 		return;
@@ -84,6 +104,8 @@
 
                             if(!firstLoad)
                                 _saveStorage();
+
+                            _renderizarTabela();
 
                             return;
                         }
@@ -102,6 +124,8 @@
 
                         if(!firstLoad)
                             _saveStorage();
+
+                        _renderizarTabela();
                     }
                 };
 
@@ -156,6 +180,7 @@
 
                             scope.sgControls.checkBox.function(scope.filteredData);
 
+                            _renderizarTabela();
                         }
                     }
                 };
@@ -172,8 +197,11 @@
 				};
 
                 //filter
-				function _getFilteredData()
-				{
+				function _getFilteredData(){
+
+                    if(enableLog)
+                        console.log("getFilteredData");
+
                     scope.filteredData = scope.data;
 
                     if(scope.sg_filter === "" || scope.sg_filter === null || angular.isUndefined(scope.sg_filter)) {
@@ -185,7 +213,7 @@
                     var _colsToFilter = scope.cols.filter(function (array_item) { return array_item.checked });
 
                     if(_colsToFilter.length <= 0)
-						_colsToFilter = scope.cols;
+						_colsToFilter = scope.sg_cols;
 
                         scope.filteredData = scope.filteredData.filter(function (array_item)
                         {
@@ -195,6 +223,9 @@
 
                             for(i = 0; i < _colsToFilter.length; i++)
                             {
+                                if(!_colsToFilter[i].item || typeof _colsToFilter[i].item === 'string'  )
+                                	continue;
+
                                 var _text =  _colsToFilter[i].item(array_item);
 
                                 if(_text === null)
@@ -329,32 +360,38 @@
 				function _atualizarPaginacao() {
 
 					if(scope.data){
-					scope.totalPages = scope.data.length / scope.sg_linesPerPage;
-					scope.totalPages = scope.totalPages > parseInt(scope.totalPages) ? parseInt(scope.totalPages) + 1 : scope.totalPages;
 
-					scope.soft_pages = [];
+                        if(enableLog)
+                            console.log("atualizarPaginacao");
 
-					scope.soft_pages.push({ "text": "<span class='fa fa-chevron-left'></span>", "value": -1, "active": false });
+						scope.totalPages = scope.data.length / scope.sg_linesPerPage;
+						scope.totalPages = scope.totalPages > parseInt(scope.totalPages) ? parseInt(scope.totalPages) + 1 : scope.totalPages;
 
-					if (scope.totalPages > 1)
-						scope.soft_pages.push({ "text": 1 + "..", "value": 1, "active": scope.sg_currentPage == 1 });
+						scope.soft_pages = [];
 
-					var _pg = scope.sg_currentPage;
+						scope.soft_pages.push({ "text": "<span class='fa fa-chevron-left'></span>", "value": -1, "active": false });
 
-					for (var i = 2; i < scope.totalPages; i++) {
+						if (scope.totalPages > 1)
+							scope.soft_pages.push({ "text": 1 + "..", "value": 1, "active": scope.sg_currentPage === 1 });
 
-						var _active = i == _pg ? true : false;
+						var _pg = scope.sg_currentPage;
 
-						if ((i < _pg + 3) || (_pg <= 3 && i <= 6)) {
-							if ((_pg >= 3 && i > _pg - 3) || (_pg <= 3 && i <= 5) || (_pg >= 3 && i >= _pg && i <= _pg - 3) || (_pg >= scope.totalPages - 3 && i >= scope.totalPages - 5) || (_pg <= 3 && i <= 6)) {
-								scope.soft_pages.push({ "text": i, "value": i, "active": _active });
+						for (var i = 2; i < scope.totalPages; i++) {
+
+							var _active = i == _pg ? true : false;
+
+							if ((i < _pg + 3) || (_pg <= 3 && i <= 6)) {
+								if ((_pg >= 3 && i > _pg - 3) || (_pg <= 3 && i <= 5) || (_pg >= 3 && i >= _pg && i <= _pg - 3) || (_pg >= scope.totalPages - 3 && i >= scope.totalPages - 5) || (_pg <= 3 && i <= 6)) {
+									scope.soft_pages.push({ "text": i, "value": i, "active": _active });
+								}
 							}
 						}
-					}
 
-					scope.soft_pages.push({ "text": ".." + scope.totalPages, "value": scope.totalPages, "active": scope.sg_currentPage == scope.totalPages });
+						scope.soft_pages.push({ "text": ".." + scope.totalPages, "value": scope.totalPages, "active": scope.sg_currentPage === scope.totalPages });
 
-					scope.soft_pages.push({ "text": "<span class='fa fa-chevron-right'></span>", "value": 0, "active": false });
+						scope.soft_pages.push({ "text": "<span class='fa fa-chevron-right'></span>", "value": 0, "active": false });
+
+						_getFilteredData();
                     }
 				}
 
@@ -634,12 +671,14 @@
 
                 scope.$watch('sg_linesPerPageInput', function () {
 
-                    if(scope.sg_linesPerPageInput > 0)
-                    {
+                    if(scope.sg_linesPerPageInput > 0){
+
 						scope.sg_linesPerPage = parseInt(scope.sg_linesPerPageInput);
 
 						if(!firstLoad)
 							_saveStorage();
+
+						_getFilteredData();
                     }
 
                 });
@@ -690,7 +729,88 @@
 
 					_getFilteredData();
 
-				})
+				});
+
+				var flagCol = true;
+
+                scope.$watch('cols', function(){
+
+                	_controlesParaColunas();
+
+                });
+
+                function _controlesParaColunas(){
+
+                    var _colunas = [];
+
+                    if(angular.isDefined(scope.cols)){
+                        if(scope.cols.length > 0)
+                        {
+                            <!-- Coluna para Checkbox -->
+                            if(scope.sgControls)
+                                if (scope.sgControls.checkBox)
+                                    _colunas.push( { type: "checkbox", title: "Selecionar", callback: scope.sgControls.checkBox.function, item: scope.sgControls.checkBox.item } );
+
+                            <!-- Coluna para subgrid -->
+                            if (scope.subgrid)
+                                _colunas.push( { type: "subgrid", title: "Detalhes", item: scope.subgrid.item, cols: scope.subgrid.cols, menu: scope.subgrid.actions, hide: scope.subgrid.hide, subgrid: scope.subgrid.subgrid } );
+
+                            <!-- Coluna para menu -->
+                            if(scope.actions)
+                                if(scope.actions.length > 0)
+                                    _colunas.push( { type: "menu", title: "Opções", showRow: scope.sgControls.showAction, menu: scope.actions });
+
+                            <!-- Coluna para Ações -->
+                            if(scope.sgControls) {
+
+                                if (scope.sgControls.create)
+                                    _colunas.push( { type: "action", title: (scope.sgControls.create.title ? scope.sgControls.create.title : 'Criar'), callback: scope.sgControls.create.action, icon: (scope.sgControls.create.icon ? scope.sgControls.create.icon : "fa-plus") } );
+
+                                if (scope.sgControls.read)
+                                    _colunas.push( { type: "action", title: (scope.sgControls.read.title ? scope.sgControls.read.title : 'Ver'), callback: scope.sgControls.read.action, icon: (scope.sgControls.read.icon ? scope.sgControls.read.icon : "fa-search") } );
+
+                                if (scope.sgControls.update)
+                                    _colunas.push( { type: "action", title: (scope.sgControls.update.title ? scope.sgControls.update.title : 'Criar'), callback: scope.sgControls.update.action, icon: (scope.sgControls.update.icon ? scope.sgControls.update.icon : "fa-pencil") } );
+
+
+                                if (scope.sgControls.delete)
+                                    _colunas.push( { type: "action", title: (scope.sgControls.delete.title ? scope.sgControls.delete.title : 'Criar'), callback: scope.sgControls.delete.action, icon: (scope.sgControls.delete.icon ? scope.sgControls.delete.icon : "fa-trash") } );
+
+                            }
+
+                            _colunas = _colunas.concat(scope.cols);
+
+                            <!-- Coluna para ativo -->
+                            if(scope.sgControls)
+                                if (scope.sgControls.active)
+                                    _colunas.push( { type: "switch", title: (scope.sgControls.activeTitle ? scope.sgControls.activeTitle : "Ativo"), item: scope.sgControls.activeCol, callback: scope.sgControls.activeFunction } );
+
+                            <!-- Coluna para favoritos -->
+                            if(scope.sgControls)
+                                if (scope.sgControls.favorite)
+                                    _colunas.push( { type: "favorite", title: "Favorito", item: scope.sgControls.favorite, callback: scope.sgControls.favorite.function, showRow: scope.sgControls.favorite.show } );
+
+                            <!-- Coluna para progresso -->
+                            if(scope.sgControls)
+                                if (scope.sgControls.progress)
+                                    _colunas.push( { type: "progress", title: "Progresso", class: scope.sgControls.progress.class, item: scope.sgControls.progress.item } );
+
+                            <!-- Coluna para Aprovacao -->
+                            if(scope.sgControls)
+                                if (scope.sgControls.approve && scope.sgControls.approve.showCol)
+                                    _colunas.push( { type: "approve", title: "Aprovação", showCol: scope.sgControls.approve.showCol, showRow: scope.sgControls.approve.show, callback: scope.sgControls.approve.callback } );
+
+                            if(flagCol){
+                                scope.cols = _colunas;
+                                scope.sg_cols = scope.cols.filter(function(item) { return angular.isUndefined(item.default) || item.default === true; } );
+                                flagCol = false;
+                            }
+
+                            _getFilteredData();
+                        }
+                    }
+
+				}
 
                 function _calcularTamanhoColunaAcoes(){
 
@@ -733,7 +853,19 @@
                         scope.sg_orderByColIndexSaved = null;
                     }
 
+                    var _colunas = [];
+                    var i = 0;
+                    angular.forEach(scope.sg_cols, function(coluna){
+						_colunas.push( { col: removeAccents(coluna.title).replace(" ", ""), index: i } ) ;
+						i++;
+					});
+
+                    _properties.cols = _colunas;
+
                     localStorage.setItem("SG-STORE_" + scope.sgStore.id, angular.toJson(_properties));
+
+                    if(enableLog)
+                        console.log("_saveStorage");
                 }
 
                 function _loadStorage(){
@@ -766,7 +898,374 @@
                         }
                     }
 
+                    if(_properties.cols){
+
+                    	_controlesParaColunas();
+
+                    	var _colunas = [];
+
+                    	angular.forEach(_properties.cols, function(col){
+                    		_colunas.push(scope.cols.filter(function (item) { return removeAccents(item.title).replace(" ", "") === col.col; })[0]);
+                        });
+
+                        scope.sg_cols = _colunas;
+                    }
+
+                    if(enableLog)
+                        console.log("_loadStorage");
+
                     _atualizarPaginacao();
+                }
+
+                //novas funcoes
+				scope.abrirConfiguracao = function(){
+
+                	scope.configuracaoAberta = !scope.configuracaoAberta;
+
+                	if(scope.configuracaoAberta){
+                        $(scope.configuration).css("width", "200px");
+                        $(scope.configuration).css("border", "1px solid #ccc");
+                        _getFilteredData();
+                    }
+					else{
+                        $(scope.configuration).css("width", "0");
+                        $(scope.configuration).css("border", "0");
+                        _getFilteredData();
+                        _configurarRedimensionarColuna();
+					}
+                };
+
+                function _alterarColunas(colToID, colFromID){
+
+                	var _colunas = [];
+					var _colunaNova = {};
+
+					angular.forEach(scope.cols, function(coluna){
+
+						if(removeAccents(coluna.title).replace(" ", "") === colFromID)
+							_colunaNova = coluna;
+
+					});
+
+                    angular.forEach(scope.sg_cols, function(coluna){
+
+                        if(removeAccents(coluna.title).replace(" ", "") === colToID)
+                            _colunas.push(_colunaNova);
+
+                        if(removeAccents(coluna.title).replace(" ", "") !== colFromID)
+                        	_colunas.push(coluna);
+
+                    });
+
+                    scope.sg_cols = _colunas;
+
+                    _saveStorage();
+
+                	_getFilteredData();
+				}
+
+				scope.removerColuna = function(coluna){
+
+                	scope.sg_cols = scope.sg_cols.filter(function(col) { return col.title !== coluna.title ; } );
+					_saveStorage();
+
+					_getFilteredData();
+				};
+
+				function _renderizarTabela(){
+
+                    if(enableLog)
+                        console.log("_renderizarTabela");
+
+					$(scope.container).html("");
+                    $(scope.configuration).html("");
+
+					var _tabela = [];
+
+                	_tabela.push("<div style='" + (scope.width ? "width:" + scope.width + "px" : "width: 100%") + "'>");
+
+                		_tabela.push("<table width='100%' " + (scope.subgrid ? "id='softgrid'" : "") + " class='softgrid " + scope.template + "'>");
+
+							//cabecalho
+							_tabela.push("<thead>");
+
+								var i = 0;
+								angular.forEach(scope.sg_cols, function(col){
+
+                                    _tabela.push("<th id='sg_col_" + removeAccents(col.title).replace(" ", "") + "' class='softgrid-th-drop'>");
+
+									_tabela.push("<span class='fa fa-arrow-left'></span>");
+
+									_tabela.push("<span class='title' ng-click='sg_sort(sg_cols[" + i + "], " + i + ")'>");
+
+									_tabela.push(col.title);
+
+									if(i === scope.sg_orderByColIndex)
+										_tabela.push("<span class='fa " + (scope.reverse ? "fa-sort-amount-desc" : "fa-sort-amount-asc" ) + "'></span>");
+
+									_tabela.push("</span>");
+
+									if(col.type === "checkbox")
+										_tabela.push("<input style='margin: 0px 0px 0px 5px;' type='checkbox' " + (scope.sg_checked ? "checked" : "") + " ng-click='sg_checkAll()'>");
+
+									if(scope.configuracaoAberta)
+                                        _tabela.push("<span class='fa fa-times pull-right' ng-click='removerColuna(sg_cols[" + i + "])'></span>");
+
+									_tabela.push("</th>");
+
+									i++;
+								});
+
+                    		_tabela.push("</thead>");
+
+							//corpo
+							_tabela.push("<tbody>");
+
+                    		scope.filteredData = $filter('limitTo')(scope.filteredData, scope.sg_linesPerPage, (scope.sg_currentPage * scope.sg_linesPerPage) - scope.sg_linesPerPage);
+
+								var il = 0;
+
+								angular.forEach(scope.filteredData, function(linha){
+
+									var _corLinha = "";
+
+                                    if(scope.sgControls) {
+                                        if (scope.sgControls.changeRowColor) {
+                                            if (scope.sgControls.changeRowColor(linha) === true)
+                                                _corLinha = "style='background-color: " + (scope.sgControls.rowColor ? scope.sgControls.rowColor : '#e59482') + "'";
+                                        }
+                                    }
+
+									_tabela.push("<tr " + (il%2 ? "class='soft-row-striped'" : "" ) + " " + _corLinha +">");
+
+                                                var i = 0;
+                                                angular.forEach(scope.sg_cols, function(col){
+
+                                                	var _align = col.type !== "text" && col.type !== "html" && angular.isDefined(col.type) ? "text-align: center;" : "";
+													col.width = col.type !== "text" && col.type !== "html" && angular.isDefined(col.type) && angular.isUndefined(col.width) ? "110px" : col.width;
+
+                                                	_tabela.push("<td style='" + _align + (col.width ? "width: " + col.width : "") + "' ng-init='$parent.editing = false'>");
+
+                                                		if(angular.isUndefined(col.type) || col.type === "text" || col.type === "html"){
+															//_tabela.push("<input ng-show='editing' ng-init='newvalue = col.item(row)' class='edit-input' ng-model='newvalue' ng-blur='sg_edit(row, col, newvalue, this)' style='width: {{col.edit.width}};'>");
+
+															_tabela.push("<div ng-dblclick='sg_openEdit(this, $event)' style='" + (col.align ? ("text-align: " + col.align + ";") : "text-align: left;") + "'>");
+
+															if(!col.popOver){
+
+																_tabela.push("<label style='width: 100%;'>");
+
+																_tabela.push(scope.sg_mask(col.type, col.item(linha)));
+
+																_tabela.push("</label>");
+
+															}
+															else{
+																_tabela.push("<label style='text-decoration: underline; cursor: pointer' popover data-toggle='popover' data-trigger='hover' data-content='A'>" + $filter('limitTo')(col.item(linha), (col.maxLength ? col.maxLength : 999)) + "</label>");
+															}
+                                                        }
+                                                        else if(col.type === "checkbox"){
+															_tabela.push("<input type='checkbox' ng-click='sgControls.checkBox.function(filteredData[" + il + "])' " + (linha[scope.sgControls.checkBox.item] ? "checked" : "") + ">");
+														}
+														else if(col.type === "subgrid"){
+															_tabela.push("<button type='button' class='btn btn-default btn-sm btn-subgrid' ng-click='abrirSubGrid(" + i + "," + il + ")'>");
+															_tabela.push("<span class='fa " + (scope.showSubGrid ? "fa-compress" : "fa-expand") + "'></span></button>");
+														}
+														else if(col.type === "menu"){
+															if(!col.showRow(linha)) return;
+															_tabela.push("<div class='dropdown'>");
+															_tabela.push("<button type='button' class='btn btn-default btn-sm dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>");
+															_tabela.push("<span class='fa fa-bars'></span></button>");
+															_tabela.push("<ul class='dropdown-menu dropdown-menu-left'>");
+															var ai = 0;
+															angular.forEach(col.menu, function (action) {
+																if (action.show && action.show(linha)) {
+																	_tabela.push("<li>");
+																	_tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(filteredData[" + il + "])'><span class='" + action.icon + "'></span>" + action.title + "</a>");
+																	_tabela.push("</li>");
+																}
+																ai++;
+															});
+															_tabela.push("</ul></div>");
+														}
+														else if(col.type === "action"){
+															_tabela.push("<button class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(filteredData[" + il + "])' title='" + col.title + "'>");
+															_tabela.push("<span class='fa " + col.icon + "'></span></button>");
+														}
+														else if(col.type === "switch"){
+															_tabela.push("<label class='switch'>");
+															_tabela.push("<input type='checkbox' ng-click='sg_cols[" + i + "].callback(dataFiltered[" + il + "])'>");
+															_tabela.push("<div class='slider round'></div>");
+															_tabela.push("</label>");
+														}
+														else if(col.type === "favorite"){
+															if (!col.show(linha)) return;
+															_tabela.push("<span class='fa fa-star " + (col.item(linha) ? "active" : "") + " ng-click='sg_cols[" + i + "].callback(filteredData[" + il + "])'></span>");
+														}
+														else if(col.type === "progress"){
+															_tabela.push("<div class='progress'>");
+															_tabela.push("<div class='progress-bar " + (col.class ? col.class(linha) : "") + "' role='progressbar' style='width: " + col.item(linha) + "%;'>");
+															_tabela.push(col.item(linha) + "%</div></div>");
+														}
+														else if(col.type === "approve"){
+															if(!col.showCol(linha) || !col.showRow(linha)) return;
+															_tabela.push("<button title='Aprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(filteredData[" + il + "], true)'><span class='fa fa-thumbs-up'></span></button>");
+															_tabela.push("<button title='Reprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(filteredData[" + il + "], false)'><span class='fa fa-thumbs-down'></span></button>");
+														}
+
+                                                    _tabela.push("</div></td>");
+
+                                                    i++;
+                                                });
+
+									_tabela.push("</tr>");
+
+                                    <!-- Subgrid -->
+
+									_tabela.push("<tr class='" + (il%2 ? "soft-row-striped" : "") + "'>");
+
+									_tabela.push("<td id='sg_subgrid_" + il + "' colspan='" + scope.sg_cols.length + "'>");
+
+									_tabela.push("</td>");
+
+									_tabela.push("</tr>");
+
+
+									il++;
+								});
+
+							_tabela.push("</tbody>");
+
+						_tabela.push("</table>");
+
+					_tabela.push("</div>");
+
+                    angular.element(scope.container).append( $compile(_tabela.join(""))(scope) );
+
+                    var _configHtml = "<h5><label class='label label-primary'>Customizar Colunas</label></h5>";
+					var _exibindoTodas = true;
+
+                    angular.forEach(scope.cols, function(col) {
+
+                    	var _col = scope.sg_cols.filter(function(coluna){ return coluna.title === col.title; });
+
+                        if( (col.default === false && _col.length <= 0) || ( (angular.isUndefined(col.default) || col.default === true) && _col.length <= 0))
+						{
+							_configHtml += "<div id='sg_col_" + removeAccents(col.title).replace(" ", "") + "' class='softgrid-configuration-col'>" + col.title + "</div>";
+							_exibindoTodas = false;
+						}
+
+                    });
+
+                    if(_exibindoTodas)
+                    	_configHtml += "<small>Todas as colunas estão sendo exibidas.</small>";
+
+                    angular.element(scope.configuration).append( $compile(_configHtml)(scope) );
+
+                    if(scope.configuracaoAberta){
+						_configurarDrop();
+						_configurarDrag();
+                    }
+
+                    _hookDropDown();
+				}
+
+				scope.abrirSubGrid = function(indexCol, indexRow){
+
+					if($("#sg_subgrid_" + indexRow).hasClass("active")){
+                        $("#sg_subgrid_" + indexRow).html("");
+                        $("#sg_subgrid_" + indexRow).removeClass("active");
+					}
+					else {
+
+                        var _subgrid = [];
+
+                        _subgrid.push("<div class='soft-subgrid-container'>");
+
+                        _subgrid.push("<softgrid cols='sg_cols[" + indexCol + "].cols' actions='sg_cols[" + indexCol + "].menu' data='sg_cols[" + indexCol + "].item(filteredData[" + indexRow + "])' hide='sg_cols[" + indexCol + "].hide' sg-controls='sg_cols[" + indexCol + "].controls' subgrid='sg_cols[" + indexCol + "].subgrid' template=\"'soft-subgrid'\"></softgrid>");
+
+                        _subgrid.push("</div>");
+
+                        angular.element($("#sg_subgrid_" + indexRow)).append( $compile(_subgrid.join(""))(scope) );
+                        $("#sg_subgrid_" + indexRow).addClass("active");
+					}
+				};
+
+                function _configurarDrag() {
+
+                    //configura items que podem ser arrastados
+                    angular.forEach($(scope.configuration).find(".softgrid-configuration-col"), function (value, key) {
+
+                        var element = angular.element(value);
+
+                        if (element.attr("draggable") === "true") return;
+
+                        element.attr("draggable", "true");
+
+                        element.on('dragstart', _aoArrastarTarefa);
+
+                        element.on('dragend', _aoPararArrastarTarefa);
+
+                    });
+
+                }
+
+                function _aoArrastarTarefa(event) {
+                    event.dataTransfer.setData("Text", event.target.id);
+                }
+
+                function _aoPararArrastarTarefa(event) {
+
+
+
+                }
+
+                function _configurarDrop() {
+
+                    //configura areas de drop
+                    angular.forEach($(scope.container).find(".softgrid-th-drop"), function (value, key) {
+
+                        var element = angular.element(value);
+
+                        if(!element.hasClass("softgrid-th-drop"))
+                        	return;
+
+                        if (element.attr("draggable") === "true") return;
+
+                        element.attr("draggable", "true");
+
+                        element.on('dragstart', _aoArrastarTarefa);
+
+                        element.on('dragover', function (event) {
+                            event.preventDefault();
+                        });
+
+                        element.on('dragenter', function (event) {
+
+                        	$(event.target).addClass("active");
+
+                        });
+
+                        element.on('dragleave', function (event) {
+
+                            $(event.target).removeClass("active");
+
+                        });
+
+                        element.on('drop', _aoDroparTarefa);
+
+                    });
+
+                }
+
+                function _aoDroparTarefa(event) {
+
+                    event.preventDefault();
+
+                    var _colFromID = event.dataTransfer.getData("Text").replace("sg_col_", "");
+                    var _colToID = event.target.id.replace("sg_col_", "");
+
+                    _alterarColunas(_colToID, _colFromID);
                 }
             }
 		};
@@ -775,7 +1274,7 @@
 	//diretiva para popover
 	angular.module('softgrid.directive').directive('popover', function () {
 		return function (scope, elem) {
-			elem.popover();
+			//elem.popover();
 		}
 	});
 
