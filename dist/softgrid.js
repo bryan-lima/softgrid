@@ -788,7 +788,7 @@
                             <!-- Coluna para favoritos -->
                             if(scope.sgControls)
                                 if (scope.sgControls.favorite)
-                                    _colunas.push( { type: "favorite", title: "Favorito", item: scope.sgControls.favorite, callback: scope.sgControls.favorite.function, showRow: scope.sgControls.favorite.show } );
+                                    _colunas.push( { type: "favorite", title: "Favorito", item: scope.sgControls.favorite.item, callback: scope.sgControls.favorite.function, showRow: scope.sgControls.favorite.show } );
 
                             <!-- Coluna para progresso -->
                             if(scope.sgControls)
@@ -972,7 +972,7 @@
 					_getFilteredData();
 				};
 
-				function _renderizarTabela(){
+				function _renderizarTabela()	{
 
                     if(enableLog)
                         console.log("_renderizarTabela");
@@ -1079,11 +1079,13 @@
 															_tabela.push("<ul class='dropdown-menu dropdown-menu-left'>");
 															var ai = 0;
 															angular.forEach(col.menu, function (action) {
-																if (action.show && action.show(linha)) {
-																	_tabela.push("<li>");
-																	_tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(filteredData[" + il + "])'><span class='" + action.icon + "'></span>" + action.title + "</a>");
-																	_tabela.push("</li>");
-																}
+
+																if(angular.isDefined(action.show) && !action.show(linha)) return;
+
+																_tabela.push("<li>");
+																_tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(filteredData[" + il + "])'><span class='" + action.icon + "'></span>" + action.title + "</a>");
+																_tabela.push("</li>");
+
 																ai++;
 															});
 															_tabela.push("</ul></div>");
@@ -1133,6 +1135,11 @@
 
 									il++;
 								});
+
+								if(scope.filteredData.length <= 0){
+									_tabela.push("<tr><td>Não há dados a serem exibidos.</td></tr>");
+								}
+
 
 							_tabela.push("</tbody>");
 
@@ -1211,7 +1218,12 @@
                 }
 
                 function _aoArrastarTarefa(event) {
-                    event.dataTransfer.setData("Text", event.target.id);
+
+                	if(event.dataTransfer)
+                    	event.dataTransfer.setData("Text", event.target.id);
+                	else
+                		event.originalEvent.setData("Text", event.target.id);
+
                 }
 
                 function _aoPararArrastarTarefa(event) {
@@ -1262,7 +1274,13 @@
 
                     event.preventDefault();
 
-                    var _colFromID = event.dataTransfer.getData("Text").replace("sg_col_", "");
+                    var _colFromID = "";
+
+                    if(event.dataTransfer)
+                    	event.dataTransfer.getData("Text").replace("sg_col_", "");
+                    else
+                    	event.originalEvent.getData("Text").replace("sg_col_", "");;
+
                     var _colToID = event.target.id.replace("sg_col_", "");
 
                     _alterarColunas(_colToID, _colFromID);
