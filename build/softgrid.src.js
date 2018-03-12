@@ -1027,11 +1027,11 @@
 							//corpo
 							_tabela.push("<tbody>");
 
-                    		scope.filteredData = $filter('limitTo')(scope.filteredData, scope.sg_linesPerPage, (scope.sg_currentPage * scope.sg_linesPerPage) - scope.sg_linesPerPage);
+                    		var _linhas = $filter('limitTo')(scope.filteredData, scope.sg_linesPerPage, (scope.sg_currentPage * scope.sg_linesPerPage) - scope.sg_linesPerPage);
 
 								var il = 0;
 
-								angular.forEach(scope.filteredData, function(linha){
+								angular.forEach(_linhas, function(linha){
 
 									var _corLinha = "";
 
@@ -1143,10 +1143,9 @@
 									il++;
 								});
 
-								if(scope.filteredData.length <= 0){
+								if(_linhas.length <= 0){
 									_tabela.push("<tr><td style='text-align: center;' colspan='" + scope.sg_cols.length + "'>Não há dados a serem exibidos.</td></tr>");
 								}
-
 
 							_tabela.push("</tbody>");
 
