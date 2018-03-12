@@ -914,6 +914,8 @@
                         });
 
                         scope.sg_cols = _colunas;
+
+                        _getFilteredData();
                     }
 
                     if(enableLog)
