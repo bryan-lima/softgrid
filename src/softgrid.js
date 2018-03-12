@@ -1224,7 +1224,7 @@
                 	if(event.dataTransfer)
                     	event.dataTransfer.setData("Text", event.target.id);
                 	else
-                		event.originalEvent.setData("Text", event.target.id);
+                		event.originalEvent.dataTransfer.setData("Text", event.target.id);
 
                 }
 
@@ -1281,7 +1281,7 @@
                     if(event.dataTransfer)
                     	event.dataTransfer.getData("Text").replace("sg_col_", "");
                     else
-                    	event.originalEvent.getData("Text").replace("sg_col_", "");;
+                    	event.originalEvent.dataTransfer.getData("Text").replace("sg_col_", "");;
 
                     var _colToID = event.target.id.replace("sg_col_", "");
 
@@ -1294,7 +1294,7 @@
 	//diretiva para popover
 	angular.module('softgrid.directive').directive('popover', function () {
 		return function (scope, elem) {
-			//elem.popover();
+			elem.popover();
 		}
 	});
 
