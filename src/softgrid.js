@@ -1060,7 +1060,7 @@
 
 													var _style = col.style ? col.style(linha) : "";
 
-                                                	_tabela.push("<td style='" + _style + _align + (col.width ? "width: " + col.width : "") + "' ng-init='$parent.editing = false'>");
+                                                	_tabela.push("<td style='" + _align + (col.width ? "width: " + col.width : "") + "' ng-init='$parent.editing = false'>");
 
                                                 		if(angular.isUndefined(col.type) || col.type === "text" || col.type === "html" || col.type === "date"){
 															//_tabela.push("<input ng-show='editing' ng-init='newvalue = col.item(row)' class='edit-input' ng-model='newvalue' ng-blur='sg_edit(row, col, newvalue, this)' style='width: {{col.edit.width}};'>");
@@ -1069,7 +1069,7 @@
 
 															if(!col.popOver){
 
-																_tabela.push("<label style='width: 100%;'>");
+																_tabela.push("<label style='width: 100%; " + _style + "'>");
 
 																_tabela.push(scope.sg_mask(col.type, col.item(linha)));
 
