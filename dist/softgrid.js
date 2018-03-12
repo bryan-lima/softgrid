@@ -1103,7 +1103,7 @@
 															_tabela.push("</label>");
 														}
 														else if(col.type === "favorite"){
-															if (!col.show(linha)) return;
+															if(angular.isDefined(col.show) && !col.show(linha)) return
 															_tabela.push("<span class='fa fa-star " + (col.item(linha) ? "active" : "") + " ng-click='sg_cols[" + i + "].callback(filteredData[" + il + "])'></span>");
 														}
 														else if(col.type === "progress"){
