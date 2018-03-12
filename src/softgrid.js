@@ -72,6 +72,7 @@
 						scope.sg_currentPage = value;
 
 					_atualizarPaginacao();
+                    _getFilteredData();
 
 				};
 
@@ -126,6 +127,7 @@
                             _saveStorage();
                     }
 
+                    _atualizarPaginacao();
                     _renderizarTabela();
                 };
 
@@ -367,8 +369,9 @@
                         if(enableLog)
                             console.log("atualizarPaginacao");
 
-						scope.totalPages = scope.data.length / scope.sg_linesPerPage;
-						scope.totalPages = scope.totalPages > parseInt(scope.totalPages) ? parseInt(scope.totalPages) + 1 : scope.totalPages;
+                        scope.totalPages = scope.filteredData.length / scope.sg_linesPerPage;
+                        scope.totalPages = scope.totalPages > parseInt(scope.totalPages) ? parseInt(scope.totalPages) + 1 : scope.totalPages;
+                        scope.sg_currentPage = scope.totalPages < scope.sg_currentPage ? scope.totalPages : scope.sg_currentPage;
 
 						scope.soft_pages = [];
 
@@ -394,7 +397,6 @@
 
 						scope.soft_pages.push({ "text": "<span class='fa fa-chevron-right'></span>", "value": 0, "active": false });
 
-						_getFilteredData();
                     }
 				}
 
