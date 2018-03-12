@@ -980,6 +980,7 @@
 					$(scope.container).html("");
                     $(scope.configuration).html("");
 
+                    var enabledSubgrid = false;
 					var _tabela = [];
 
                 	_tabela.push("<div style='" + (scope.width ? "width:" + scope.width + "px" : "width: 100%") + "'>");
@@ -1070,6 +1071,7 @@
 														else if(col.type === "subgrid"){
 															_tabela.push("<button type='button' class='btn btn-default btn-sm btn-subgrid' ng-click='abrirSubGrid(" + i + "," + il + ")'>");
 															_tabela.push("<span class='fa " + (scope.showSubGrid ? "fa-compress" : "fa-expand") + "'></span></button>");
+															enabledSubgrid = true;
 														}
 														else if(col.type === "menu"){
 															if(!col.showRow(linha)) return;
@@ -1123,15 +1125,15 @@
 									_tabela.push("</tr>");
 
                                     <!-- Subgrid -->
+									if(enabledSubgrid){
+										_tabela.push("<tr class='" + (il%2 ? "soft-row-striped" : "") + "'>");
 
-									_tabela.push("<tr class='" + (il%2 ? "soft-row-striped" : "") + "'>");
+										_tabela.push("<td id='sg_subgrid_" + il + "' colspan='" + scope.sg_cols.length + "'>");
 
-									_tabela.push("<td id='sg_subgrid_" + il + "' colspan='" + scope.sg_cols.length + "'>");
+										_tabela.push("</td>");
 
-									_tabela.push("</td>");
-
-									_tabela.push("</tr>");
-
+										_tabela.push("</tr>");
+                                    }
 
 									il++;
 								});
