@@ -124,9 +124,9 @@
 
                         if(!firstLoad)
                             _saveStorage();
-
-                        _renderizarTabela();
                     }
+
+                    _renderizarTabela();
                 };
 
 				//apply mask to column
@@ -223,6 +223,9 @@
 
                             for(i = 0; i < _colsToFilter.length; i++)
                             {
+                            	if(_colsToFilter[i].type !== "text" && _colsToFilter[i].type !== "html" && _colsToFilter[i].type !== "date" && angular.isDefined(_colsToFilter[i].type))
+                            		continue;
+
                                 if(!_colsToFilter[i].item || typeof _colsToFilter[i].item === 'string'  )
                                 	continue;
 
@@ -925,11 +928,13 @@
                 	if(scope.configuracaoAberta){
                         $(scope.configuration).css("width", "200px");
                         $(scope.configuration).css("border", "1px solid #ccc");
+                        $(scope.container).css("min-height", "300px");
                         _getFilteredData();
                     }
 					else{
                         $(scope.configuration).css("width", "0");
                         $(scope.configuration).css("border", "0");
+                        $timeout(function(){$(scope.container).css("min-height", "0")}, 500);
                         _getFilteredData();
                         _configurarRedimensionarColuna();
 					}
@@ -1139,7 +1144,7 @@
 								});
 
 								if(scope.filteredData.length <= 0){
-									_tabela.push("<tr><td>Não há dados a serem exibidos.</td></tr>");
+									_tabela.push("<tr><td style='text-align: center;' colspan='" + scope.sg_cols.length + "'>Não há dados a serem exibidos.</td></tr>");
 								}
 
 
