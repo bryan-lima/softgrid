@@ -1047,7 +1047,7 @@
 
                                                 	_tabela.push("<td style='" + _align + (col.width ? "width: " + col.width : "") + "' ng-init='$parent.editing = false'>");
 
-                                                		if(angular.isUndefined(col.type) || col.type === "text" || col.type === "html"){
+                                                		if(angular.isUndefined(col.type) || col.type === "text" || col.type === "html" || col.type === "date"){
 															//_tabela.push("<input ng-show='editing' ng-init='newvalue = col.item(row)' class='edit-input' ng-model='newvalue' ng-blur='sg_edit(row, col, newvalue, this)' style='width: {{col.edit.width}};'>");
 
 															_tabela.push("<div ng-dblclick='sg_openEdit(this, $event)' style='" + (col.align ? ("text-align: " + col.align + ";") : "text-align: left;") + "'>");
@@ -1169,6 +1169,8 @@
                     if(_exibindoTodas)
                     	_configHtml += "<small>Todas as colunas estão sendo exibidas.</small>";
 
+                    _configHtml += "<a href='javascript:void(0)' ng-click='limparConfiguracaoColuna()'>Limpar alterações</a>";
+
                     angular.element(scope.configuration).append( $compile(_configHtml)(scope) );
 
                     if(scope.configuracaoAberta){
@@ -1178,6 +1180,12 @@
 
                     _hookDropDown();
 				}
+
+				scope.limparConfiguracaoColuna = function(){
+					scope.sg_cols = scope.cols.filter(function(item){ return angular.isUndefined(item.default) || item.default === true;});
+					_saveStorage();
+					_renderizarTabela();
+				};
 
 				scope.abrirSubGrid = function(indexCol, indexRow){
 
