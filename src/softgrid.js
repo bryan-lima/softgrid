@@ -1038,13 +1038,13 @@
 									var _corLinha = "";
 
                                     if(scope.sgControls) {
-                                        if (scope.sgControls.changeRowColor) {
-                                            if (scope.sgControls.changeRowColor(linha) === true){
-                                                if(typeof scope.sgControls.rowColor === 'string')
+                                        if (scope.sgControls.changeRowColor && typeof scope.sgControls.rowColor === 'string' ) {
+                                            if (scope.sgControls.changeRowColor(linha) === true)
                                                     _corLinha = "style='background-color: " + scope.sgControls.rowColor + "'";
-                                                else
-                                                    _corLinha = "style='background-color: " + scope.sgControls.rowColor(linha) + "'";
-                                            }
+                                        }
+                                        else
+                                        {
+                                            _corLinha = "style='background-color: " + scope.sgControls.rowColor(linha) + "'";
                                         }
                                     }
 
