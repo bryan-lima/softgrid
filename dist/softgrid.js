@@ -1062,7 +1062,7 @@
 
 															}
 															else{
-																_tabela.push("<label style='text-decoration: underline; cursor: pointer' popover data-toggle='popover' data-trigger='hover' data-content='A'>" + $filter('limitTo')(col.item(linha), (col.maxLength ? col.maxLength : 999)) + "</label>");
+																_tabela.push("<label style='text-decoration: underline; cursor: pointer' popover data-toggle='popover' data-trigger='hover' data-content='" + col.item(linha) + "'>" + $filter('limitTo')(col.item(linha), (col.maxLength ? col.maxLength : 999)) + "</label>");
 															}
                                                         }
                                                         else if(col.type === "checkbox"){
