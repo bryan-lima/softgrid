@@ -1279,9 +1279,9 @@
                     var _colFromID = "";
 
                     if(event.dataTransfer)
-                    	event.dataTransfer.getData("Text").replace("sg_col_", "");
+                        _colFromID = event.dataTransfer.getData("Text").replace("sg_col_", "");
                     else
-                    	event.originalEvent.dataTransfer.getData("Text").replace("sg_col_", "");;
+                        _colFromID = event.originalEvent.dataTransfer.getData("Text").replace("sg_col_", "");;
 
                     var _colToID = event.target.id.replace("sg_col_", "");
 
