@@ -572,22 +572,48 @@
 
 				// *** FUNÇÃO PARA EDITAR COLUNA ***
 
-				scope.sg_edit = function(row, col, newvalue, scope){
+                function _obterColuna(index){
+				    return scope.sg_cols[index];
+                }
 
-					row[col.edit.item] = newvalue;
-					scope.editing = false;
-					col.edit.function(row);
-				}
+                function _obterLinha(index){
+                    return scope.filteredData[index];
+                }
 
-				scope.sg_openEdit = function(ngScope, event){
+				scope.sg_edit = function(div){
 
-					if(!ngScope.col.edit)
-						return;
+                    if(scope.sg_editandoColunaValor !== null && scope.sg_editandoColunaValor !== ""){
+                        var _coluna = _obterColuna(scope.sg_editandoColunaIndex);
+                        scope.filteredData[scope.sg_editandoLinhaIndex][_coluna.edit.item] = scope.sg_editandoColunaValor;
+                        _coluna.edit.function(_obterLinha(scope.sg_editandoLinhaIndex));
+                    }
 
-					ngScope.editing = !ngScope.editing;
+                    scope.sg_editandoColuna = false;
+                    scope.sg_editandoColunaValor = null;
+                    scope.sg_editandoLinhaIndex = 0;
+                    scope.sg_editandoColunaIndex = 0;
 
-					var td = angular.element(event.target).parent().parent(); //nao me orgulho disso
-					var inpt = td.children()[0];
+					_renderizarTabela();
+				};
+
+				scope.sg_editandoColuna = false;
+				scope.sg_editandoColunaValor = null;
+				scope.sg_editandoLinhaIndex = 0;
+				scope.sg_editandoColunaIndex = 0;
+
+				scope.sg_openEdit = function(colunaIndex, linhaIndex, event){
+
+					scope.sg_editandoColuna = true;
+					scope.sg_editandoColunaIndex = colunaIndex;
+					scope.sg_editandoLinhaIndex = linhaIndex;
+
+					var _coluna = event.currentTarget;
+
+                    var _inputHtml = "<input id='sg_edit_input' class='edit-input' ng-model='sg_editandoColunaValor' placeholder='Digite o novo valor...' ng-blur='sg_edit(this)' style='width: " + scope.sg_cols[colunaIndex].edit.width + ";'>";
+
+                    angular.element(_coluna).append( $compile( _inputHtml )(scope) );
+
+                    var inpt = $("#sg_edit_input");
 
                     $timeout(function() {
 
@@ -598,7 +624,7 @@
 
                     }, 200) ;
 
-				}
+				};
 
 				// *** FIM FUNÇÃO PARA EDITAR COLUNA ***
 
@@ -643,6 +669,9 @@
 				//watchers
                 scope.$watch('data', function () {
 
+                    if(enableLog)
+                        console.log("dataWatcher");
+
                     _getFilteredData();
 
                     if(scope.sg_orderBySaved){
@@ -676,6 +705,9 @@
 
                 scope.$watch('sg_linesPerPageInput', function () {
 
+                    if(enableLog)
+                        console.log("linesPerPageInputWatcher");
+
                     if(scope.sg_linesPerPageInput > 0){
 
 						scope.sg_linesPerPage = parseInt(scope.sg_linesPerPageInput);
@@ -689,6 +721,9 @@
                 });
 
                 scope.$watch('sgControls', function (){
+
+                    if(enableLog)
+                        console.log("sgControlsWatcher");
 
                     //define a largura da coluna de controles
 
@@ -711,6 +746,9 @@
 
                 scope.$watch('hide', function(){
 
+                    if(enableLog)
+                        console.log("hideWatcher");
+
                     if(scope.hide){
                         //mostra todas linhas caso esconda paginacao
                         if(scope.hide.pagination === true || scope.hide.all === true)
@@ -725,12 +763,18 @@
 
                 scope.$watch('sg_currentPage', function(){
 
+                    if(enableLog)
+                        console.log("currentPageWatcher");
+
                 	if(!firstLoad)
                 		_saveStorage();
 
 				});
 
 				scope.$watch('sg_filter', function(){
+
+                    if(enableLog)
+                        console.log("filterWatcher");
 
 					_getFilteredData();
 
@@ -739,6 +783,9 @@
 				var flagCol = true;
 
                 scope.$watch('cols', function(){
+
+                    if(enableLog)
+                        console.log("colsWatcher");
 
                 	_controlesParaColunas();
 
@@ -1046,7 +1093,8 @@
                                         }
                                         else
                                         {
-                                            _corLinha = "style='background-color: " + scope.sgControls.rowColor(linha) + "'";
+                                        	if(angular.isDefined(scope.sgControls.rowColor))
+                                            	_corLinha = "style='background-color: " + scope.sgControls.rowColor(linha) + "'";
                                         }
                                     }
 
@@ -1060,18 +1108,19 @@
 
 													var _style = col.style ? col.style(linha) : "";
 
-                                                	_tabela.push("<td style='" + _align + (col.width ? "width: " + col.width : "") + "' ng-init='$parent.editing = false'>");
+                                                	_tabela.push("<td style='" + _align + (col.width ? "width: " + col.width : "") + "'>");
 
                                                 		if(angular.isUndefined(col.type) || col.type === "text" || col.type === "html" || col.type === "date"){
-															//_tabela.push("<input ng-show='editing' ng-init='newvalue = col.item(row)' class='edit-input' ng-model='newvalue' ng-blur='sg_edit(row, col, newvalue, this)' style='width: {{col.edit.width}};'>");
 
-															_tabela.push("<div ng-dblclick='sg_openEdit(this, $event)' style='" + (col.align ? ("text-align: " + col.align + ";") : "text-align: left;") + "'>");
+                                                		    var _editar = col.edit ? "title='Clique aqui para editar' ng-click='sg_openEdit(" + i + ", " + il + ", $event)'" : "";
+
+															_tabela.push("<div " + _editar + " style='" + (col.align ? ("text-align: " + col.align + ";") : "text-align: left;") + "'>");
 
 															if(!col.popOver){
 
 																_tabela.push("<label style='width: 100%; " + _style + "'>");
 
-																_tabela.push(scope.sg_mask(col.type, col.item(linha)));
+																	_tabela.push(scope.sg_mask(col.type, col.item(linha)));
 
 																_tabela.push("</label>");
 
@@ -1316,7 +1365,7 @@
 	//diretiva para popover
 	angular.module('softgrid.directive').directive('popover', function () {
 		return function (scope, elem) {
-			elem.popover();
+			 elem.popover();
 		}
 	});
 
