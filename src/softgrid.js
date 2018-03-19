@@ -1093,11 +1093,11 @@
 							//corpo
 							_tabela.push("<tbody>");
 
-                    		var _linhas = $filter('limitTo')(scope.filteredData, scope.sg_linesPerPage, (scope.sg_currentPage * scope.sg_linesPerPage) - scope.sg_linesPerPage);
+                    		scope.showData = $filter('limitTo')(scope.filteredData, scope.sg_linesPerPage, (scope.sg_currentPage * scope.sg_linesPerPage) - scope.sg_linesPerPage);
 
 								var il = 0;
 
-								angular.forEach(_linhas, function(linha){
+								angular.forEach(scope.showData, function(linha){
 
 									var _corLinha = "";
 
@@ -1145,7 +1145,7 @@
 															}
                                                         }
                                                         else if(col.type === "checkbox"){
-															_tabela.push("<input type='checkbox' ng-click='sgControls.checkBox.function(filteredData[" + il + "])' " + (linha[scope.sgControls.checkBox.item] ? "checked" : "") + ">");
+															_tabela.push("<input type='checkbox' ng-click='sgControls.checkBox.function(showData[" + il + "])' " + (linha[scope.sgControls.checkBox.item] ? "checked" : "") + ">");
 														}
 														else if(col.type === "subgrid"){
 															_tabela.push("<button type='button' class='btn btn-default btn-sm btn-subgrid' ng-click='abrirSubGrid(" + i + "," + il + ")'>");
@@ -1164,7 +1164,7 @@
 																if(angular.isDefined(action.show) && !action.show(linha)) return;
 
 																_tabela.push("<li>");
-																_tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(filteredData[" + il + "])'><span class='" + action.icon + "'></span>" + action.title + "</a>");
+																_tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(showData[" + il + "])'><span class='" + action.icon + "'></span>" + action.title + "</a>");
 																_tabela.push("</li>");
 
 																ai++;
@@ -1172,7 +1172,7 @@
 															_tabela.push("</ul></div>");
 														}
 														else if(col.type === "action"){
-															_tabela.push("<button class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(filteredData[" + il + "])' title='" + col.title + "'>");
+															_tabela.push("<button class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "])' title='" + col.title + "'>");
 															_tabela.push("<span class='fa " + col.icon + "'></span></button>");
 														}
 														else if(col.type === "switch"){
@@ -1183,7 +1183,7 @@
 														}
 														else if(col.type === "favorite"){
 															if(angular.isDefined(col.show) && !col.show(linha)) return
-															_tabela.push("<span class='fa fa-star " + (col.item(linha) ? "active" : "") + " ng-click='sg_cols[" + i + "].callback(filteredData[" + il + "])'></span>");
+															_tabela.push("<span class='fa fa-star " + (col.item(linha) ? "active" : "") + " ng-click='sg_cols[" + i + "].callback(showData[" + il + "])'></span>");
 														}
 														else if(col.type === "progress"){
 															_tabela.push("<div class='progress'>");
@@ -1192,8 +1192,8 @@
 														}
 														else if(col.type === "approve"){
 															if(!col.showCol(linha) || !col.showRow(linha)) return;
-															_tabela.push("<button title='Aprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(filteredData[" + il + "], true)'><span class='fa fa-thumbs-up'></span></button>");
-															_tabela.push("<button title='Reprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(filteredData[" + il + "], false)'><span class='fa fa-thumbs-down'></span></button>");
+															_tabela.push("<button title='Aprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "], true)'><span class='fa fa-thumbs-up'></span></button>");
+															_tabela.push("<button title='Reprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "], false)'><span class='fa fa-thumbs-down'></span></button>");
 														}
 
                                                     _tabela.push("</div></td>");
@@ -1217,7 +1217,7 @@
 									il++;
 								});
 
-								if(_linhas.length <= 0){
+								if(scope.showData.length <= 0){
 									_tabela.push("<tr><td style='text-align: center;' colspan='" + scope.sg_cols.length + "'>Não há dados a serem exibidos.</td></tr>");
 								}
 
@@ -1278,7 +1278,7 @@
 
                         _subgrid.push("<div class='soft-subgrid-container'>");
 
-                        _subgrid.push("<softgrid cols='sg_cols[" + indexCol + "].cols' actions='sg_cols[" + indexCol + "].menu' data='sg_cols[" + indexCol + "].item(filteredData[" + indexRow + "])' hide='sg_cols[" + indexCol + "].hide' sg-controls='sg_cols[" + indexCol + "].controls' subgrid='sg_cols[" + indexCol + "].subgrid' template=\"'soft-subgrid'\"></softgrid>");
+                        _subgrid.push("<softgrid cols='sg_cols[" + indexCol + "].cols' actions='sg_cols[" + indexCol + "].menu' data='sg_cols[" + indexCol + "].item(showData[" + indexRow + "])' hide='sg_cols[" + indexCol + "].hide' sg-controls='sg_cols[" + indexCol + "].controls' subgrid='sg_cols[" + indexCol + "].subgrid' template=\"'soft-subgrid'\"></softgrid>");
 
                         _subgrid.push("</div>");
 
