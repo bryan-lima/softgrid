@@ -979,7 +979,7 @@
                 	if(scope.configuracaoAberta){
                         $(scope.configuration).css("width", "200px");
                         $(scope.configuration).css("border", "1px solid #ccc");
-                        $(scope.container).css("min-height", "300px");
+						$(scope.container).css("min-height", "300px");
                         _getFilteredData();
                     }
 					else{
