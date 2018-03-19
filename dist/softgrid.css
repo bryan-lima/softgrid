@@ -288,17 +288,18 @@
 	min-width: 50px;
 }
 
-.softgrid-configuration{
-    position: relative;
+.softgrid-configuration {
+    position: fixed;
     float: right;
-    margin-top: -250px;
+    right: 15px;
+    margin-top: 35px;
     margin-right: 1px;
     width: 0;
     height: 250px;
     text-align: center;
     background-color: white;
     overflow-y: auto;
-    transition: width 0.5s linear;
+    transition: width 0.5s linear;    
 }
 
 .softgrid-configuration h5{
