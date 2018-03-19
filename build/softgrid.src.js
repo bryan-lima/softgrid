@@ -780,6 +780,10 @@
 
 				});
 
+				scope.$watch('filteredData', function(){
+					scope.linhaSelecionadaIndex = null;
+				});
+
 				var flagCol = true;
 
                 scope.$watch('cols', function(){
@@ -1028,6 +1032,13 @@
 					_getFilteredData();
 				};
 
+                scope.sg_selecionarLinha = function(index){
+
+                	scope.linhaSelecionadaIndex = index;
+                	console.log(index);
+
+				};
+
 				function _renderizarTabela()	{
 
                     if(enableLog)
@@ -1098,7 +1109,7 @@
                                         }
                                     }
 
-									_tabela.push("<tr " + (il%2 ? "class='soft-row-striped'" : "" ) + " " + _corLinha +">");
+									_tabela.push("<tr ng-click='sg_selecionarLinha(" + il + ")' class='soft-row " + (il%2 ? "soft-row-striped" : "" ) + (scope.linhaSelecionadaIndex === il ? 'active' : '') + "' " + _corLinha +">");
 
                                                 var i = 0;
                                                 angular.forEach(scope.sg_cols, function(col){
@@ -1190,7 +1201,7 @@
 
                                     <!-- Subgrid -->
 									if(enabledSubgrid){
-										_tabela.push("<tr class='" + (il%2 ? "soft-row-striped" : "") + "'>");
+										_tabela.push("<tr style='display: none' class='" + (il%2 ? "soft-row-striped" : "") + "'>");
 
 										_tabela.push("<td id='sg_subgrid_" + il + "' colspan='" + scope.sg_cols.length + "'>");
 
@@ -1255,6 +1266,7 @@
 					if($("#sg_subgrid_" + indexRow).hasClass("active")){
                         $("#sg_subgrid_" + indexRow).html("");
                         $("#sg_subgrid_" + indexRow).removeClass("active");
+                        $($("#sg_subgrid_" + indexRow).parent()).css("display", "none");
 					}
 					else {
 
@@ -1268,6 +1280,8 @@
 
                         angular.element($("#sg_subgrid_" + indexRow)).append( $compile(_subgrid.join(""))(scope) );
                         $("#sg_subgrid_" + indexRow).addClass("active");
+
+                        $($("#sg_subgrid_" + indexRow).parent()).css("display", "table-row");
 					}
 				};
 
