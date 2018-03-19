@@ -606,15 +606,23 @@
 					scope.sg_editandoColuna = true;
 					scope.sg_editandoColunaIndex = colunaIndex;
 					scope.sg_editandoLinhaIndex = linhaIndex;
+					scope.sg_editandoValor = scope.sg_cols[colunaIndex].item(scope.showData[linhaIndex]);
 
 					var _coluna = event.currentTarget;
 
-                    var _inputHtml = "<input id='sg_edit_input' class='edit-input' ng-model='sg_editandoColunaValor' placeholder='Digite o novo valor...' ng-blur='sg_edit(this)' style='width: " + scope.sg_cols[colunaIndex].edit.width + ";'>";
+                    var _inputHtml = "<input " +
+						"id='sg_edit_input' " +
+						"class='edit-input' " +
+						"ng-model='sg_editandoColunaValor' " +
+						"ng-blur='sg_edit(this)' " +
+                        "tooltip data-toggle='tooltip' data-placement='top' title='Digite o novo valor. Valor atual: " + scope.sg_editandoValor + "'"+
+						"style='color: black !important; width: " + scope.sg_cols[colunaIndex].edit.width + ";'>";
 
                     angular.element(_coluna).append( $compile( _inputHtml )(scope) );
 
-                    var inpt = $("#sg_edit_input");
+                    $(_coluna).find("label").css("display", "none");
 
+                    var inpt = $("#sg_edit_input");
                     $timeout(function() {
 
                     	if(inpt.value !== "")
@@ -1383,8 +1391,15 @@
 	//diretiva para popover
 	angular.module('softgrid.directive').directive('popover', function () {
 		return function (scope, elem) {
-			 elem.popover();
+			 $(elem).popover();
 		}
 	});
+
+    //diretiva para tooltip
+    angular.module('softgrid.directive').directive('tooltip', function () {
+        return function (scope, elem) {
+            $(elem).tooltip();
+        }
+    });
 
 })();
