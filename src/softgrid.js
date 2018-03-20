@@ -603,6 +603,9 @@
 
 				scope.sg_openEdit = function(colunaIndex, linhaIndex, event){
 
+					if(scope.sg_editandoColuna)
+						return;
+
 					scope.sg_editandoColuna = true;
 					scope.sg_editandoColunaIndex = colunaIndex;
 					scope.sg_editandoLinhaIndex = linhaIndex;
