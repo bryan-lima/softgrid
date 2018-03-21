@@ -91,7 +91,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             vm.acoes = [
                 {title: "Editar",   icon: "fa fa-info-circle", function: _teste, show: _showItemA },
                 {title: "Excluir",  icon: "fa fa-wrench",      function: _teste, show: _showItemB},
-                {title: "Bloquear", icon: "fa fa-calculator",  function: _teste}
+                {title: "Bloquear", icon: "fa fa-calculator",  function: _bloquear}
             ];
 
 //checkbox
@@ -105,6 +105,10 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
 
         }
 
+        function _bloquear(item){
+            console.log("bloquear");
+            console.log(item);
+        }
         function _callBackApprove(item, aprovado)
         {
             console.log(item + "|" + aprovado);

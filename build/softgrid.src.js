@@ -1172,7 +1172,10 @@
 															var ai = 0;
 															angular.forEach(col.menu, function (action) {
 
-																if(angular.isDefined(action.show) && !action.show(linha)) return;
+																if(angular.isDefined(action.show) && !action.show(linha)) {
+																	ai++;
+																	return;
+                                                                }
 
 																_tabela.push("<li>");
 																_tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(showData[" + il + "])'><span class='" + action.icon + "'></span>" + action.title + "</a>");
