@@ -87,6 +87,10 @@
     color: white !important;
 }
 
+.softgrid .soft-row:hover .popover{
+    color: black !important;
+}
+
 .softgrid .soft-row.active{
     background-color: rgba(74, 74, 74, 0.5) !important;
     color: white !important;
