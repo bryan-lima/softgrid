@@ -526,8 +526,16 @@
 					if (!valor)
 						valor = ' - ';
 
-					return valor;
-				};
+                    if(angular.isString(valor))
+                        return removerCaracteresInvalidos(valor);
+                    else
+                        return valor;
+                }
+
+                function removerCaracteresInvalidos(string)
+                {
+                    return string.replace("\\", "").replace("\"", "").replace("“", "").replace("”", "").replace("‘", "").replace("’", "").replace("º", "").replace("–", "");
+                }
 
 				// *** FIM FUNÇÕES PARA EXPORTAR EXCEL
 
