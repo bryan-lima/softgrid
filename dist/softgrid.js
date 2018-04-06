@@ -745,8 +745,9 @@
                         console.log("sgControlsWatcher");
 
                     //define a largura da coluna de controles
-
                     if(angular.isDefined(scope.sgControls) && scope.sgControls){
+
+                    	scope.sgControls.checkAll = scope.sg_checkAll;
 
 						if(scope.sgControls.create)
 							scope.larguraColunaControles += 60;
