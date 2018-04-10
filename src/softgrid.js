@@ -832,9 +832,16 @@
                                 _colunas.push( { type: "subgrid", title: "Detalhes", item: scope.subgrid.item, cols: scope.subgrid.cols, menu: scope.subgrid.actions, hide: scope.subgrid.hide, subgrid: scope.subgrid.subgrid } );
 
                             <!-- Coluna para menu -->
-                            if(scope.actions)
-                                if(scope.actions.length > 0)
-                                    _colunas.push( { type: "menu", title: "Opções", showRow: scope.sgControls.showAction, menu: scope.actions });
+                            if(scope.actions) {
+                                if (scope.actions.length > 0) {
+                                	var a = { type: "menu", title: "Opções", menu: scope.actions };
+                                	if(angular.isDefined(scope.sgControls)){
+                                		if(angular.isDefined(scope.sgControls.showAction))
+                                			a.showRow = scope.sgControls.showAction;
+									}
+                                    _colunas.push(a);
+                                }
+                            }
 
                             <!-- Coluna para Ações -->
                             if(scope.sgControls) {
@@ -1173,7 +1180,7 @@
 															enabledSubgrid = true;
 														}
 														else if(col.type === "menu"){
-															if(!col.showRow(linha)) return;
+															if(angular.isDefined(col.showRow) && !col.showRow(linha)) return;
 															_tabela.push("<div class='dropdown'>");
 															_tabela.push("<button type='button' class='btn btn-default btn-sm dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>");
 															_tabela.push("<span class='fa fa-bars'></span></button>");
@@ -1187,7 +1194,7 @@
                                                                 }
 
 																_tabela.push("<li>");
-																_tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(showData[" + il + "])'><span class='" + action.icon + "'></span>" + action.title + "</a>");
+																_tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(showData[" + il + "])'><span class='" + action.icon + "'></span>  " + action.title + "</a>");
 																_tabela.push("</li>");
 
 																ai++;
@@ -1205,8 +1212,11 @@
 															_tabela.push("</label>");
 														}
 														else if(col.type === "favorite"){
-															if(angular.isDefined(col.show) && !col.show(linha)) return
-															_tabela.push("<span class='fa fa-star " + (col.item(linha) ? "active" : "") + " ng-click='sg_cols[" + i + "].callback(showData[" + il + "])'></span>");
+
+															if(angular.isDefined(col.show) && !col.show(linha))
+																return;
+
+															_tabela.push("<span class='fa fa-star " + (col.item(linha) ? "active" : "") + "' ng-click='sg_favoritar(" + i + ", " + il + ")'></span>");
 														}
 														else if(col.type === "progress"){
 															_tabela.push("<div class='progress'>");
@@ -1281,6 +1291,14 @@
 
                     _hookDropDown();
 				}
+
+				scope.sg_favoritar = function(ic, il){
+
+                    scope.sg_cols[ic].callback(scope.showData[il]);
+
+                    $timeout(_renderizarTabela, 1000);
+
+				};
 
 				scope.limparConfiguracaoColuna = function(){
 					scope.sg_cols = scope.cols.filter(function(item){ return angular.isUndefined(item.default) || item.default === true;});

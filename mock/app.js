@@ -45,7 +45,14 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
                 {title: "Telefone", item: function(item){return 0}, width: "100px", popOver: true},
                 {title: "Cargo A", default: false, item: function(item){return item.cargo + "A"}},
                 {title: "Cargo B", default: false, item: function(item){return item.cargo + "B"}},
-                {title: "Cargo C", default: false, item: function(item){return item.cargo + "C"}}
+                {title: "Cargo C", default: false, item: function(item){return item.cargo + "C"}},
+                {
+                    type: "favorite",
+                    title: "Favorito",
+                    item: function(item){return item.ativo; },
+                    callback: _teste,
+                    show: function(item) { return true; }
+                }
             ];
 
             vm.acoes = [
@@ -142,6 +149,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
         }
 
         function _teste(item){
+            item.ativo = !item.ativo;
             console.log(item);
         }
 
