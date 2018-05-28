@@ -233,7 +233,7 @@
 
                                 var _text =  _colsToFilter[i].item(array_item);
 
-                                if(_text === null)
+                                if(_text === null || _text === undefined)
                                 	continue;
 
                                 if(typeof _text !== 'string')
