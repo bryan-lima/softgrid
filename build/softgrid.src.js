@@ -796,7 +796,9 @@
                     if(enableLog)
                         console.log("filterWatcher");
 
-					_getFilteredData();
+					//_getFilteredData();
+
+                    scope.sg_changePage(1);
 
 				});
 
