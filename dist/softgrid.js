@@ -97,7 +97,7 @@
 
                     if(scope.filteredData.length > 0) {
 
-                        if(scope.sg_orderBy !== null && scope.sg_orderByColIndex === colIndex && scope.reverse){
+                        if(scope.sg_orderBy !== null && scope.sg_orderByColIndex === colIndex && scope.reverse && !auto){
 
                             scope.sg_orderBy = null;
                             scope.reverse = false;
@@ -321,7 +321,7 @@
 
 					_atualizarPaginacao();
 					_hookDropDown();
-				}
+				};
 
 				function createTable() {
 
