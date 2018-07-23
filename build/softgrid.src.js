@@ -1148,11 +1148,11 @@
                                                 angular.forEach(scope.sg_cols, function(col){
 
                                                 	var _align = col.type !== "text" && col.type !== "html" && angular.isDefined(col.type) ? "text-align: center;" : "";
-													col.width = col.type !== "text" && col.type !== "html" && angular.isDefined(col.type) && angular.isUndefined(col.width) ? "110px" : col.width;
+													col.width = col.type !== "text" && col.type !== "html" && angular.isDefined(col.type) && angular.isUndefined(col.width) ? "110px;" : col.width;
 
 													var _style = col.style ? col.style(linha) : "";
 
-                                                	_tabela.push("<td style='" + _align + (col.width ? "width: " + col.width : "") + "'>");
+                                                	_tabela.push("<td style='" + _style + _align + (col.width ? "width: " + col.width : "") + "'>");
 
                                                 		if(angular.isUndefined(col.type) || col.type === "text" || col.type === "html" || col.type === "date"){
 
