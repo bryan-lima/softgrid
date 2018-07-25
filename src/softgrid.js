@@ -585,14 +585,14 @@
                 }
 
                 function _obterLinha(index){
-                    return scope.filteredData[index];
+                    return scope.showData[index];
                 }
 
 				scope.sg_edit = function(div){
 
                     if(scope.sg_editandoColunaValor !== null && scope.sg_editandoColunaValor !== ""){
                         var _coluna = _obterColuna(scope.sg_editandoColunaIndex);
-                        scope.filteredData[scope.sg_editandoLinhaIndex][_coluna.edit.item] = scope.sg_editandoColunaValor;
+                        scope.showData[scope.sg_editandoLinhaIndex][_coluna.edit.item] = scope.sg_editandoColunaValor;
                         _coluna.edit.function(_obterLinha(scope.sg_editandoLinhaIndex));
                     }
 
