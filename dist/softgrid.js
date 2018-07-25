@@ -1154,82 +1154,93 @@
 
                                                 	_tabela.push("<td style='" + _style + _align + (col.width ? "width: " + col.width : "") + "'>");
 
-                                                		if(angular.isUndefined(col.type) || col.type === "text" || col.type === "html" || col.type === "date"){
+                                                    if(angular.isUndefined(col.type) || col.type === "text" || col.type === "html" || col.type === "date"){
 
-                                                		    var _editar = col.edit ? "title='Clique aqui para editar' ng-click='sg_openEdit(" + i + ", " + il + ", $event)'" : "";
+                                                        var _editar = col.edit ? "title='Clique aqui para editar' ng-click='sg_openEdit(" + i + ", " + il + ", $event)'" : "";
 
-															_tabela.push("<div " + _editar + " style='" + (col.align ? ("text-align: " + col.align + ";") : "text-align: left;") + "'>");
+                                                        _tabela.push("<div " + _editar + " style='" + (col.align ? ("text-align: " + col.align + ";") : "text-align: left;") + "'>");
 
-															if(!col.popOver){
+                                                        if(!col.popOver){
 
-																_tabela.push("<label style='width: 100%; " + _style + "'>");
+                                                            _tabela.push("<label style='width: 100%; " + _style + "'>");
 
-																	_tabela.push(scope.sg_mask(col.type, col.item(linha)));
+                                                            _tabela.push(scope.sg_mask(col.type, col.item(linha)));
 
-																_tabela.push("</label>");
+                                                            _tabela.push("</label>");
 
-															}
-															else{
-																_tabela.push("<label style='text-decoration: underline; cursor: pointer' popover data-toggle='popover' data-trigger='hover' data-content='" + col.item(linha) + "'>" + $filter('limitTo')(col.item(linha), (col.maxLength ? col.maxLength : 999)) + "</label>");
-															}
                                                         }
-                                                        else if(col.type === "checkbox"){
-															_tabela.push("<input type='checkbox' ng-click='sgControls.checkBox.function(showData[" + il + "])' " + (linha[scope.sgControls.checkBox.item] ? "checked" : "") + ">");
-														}
-														else if(col.type === "subgrid"){
-															_tabela.push("<button type='button' class='btn btn-default btn-sm btn-subgrid' ng-click='abrirSubGrid(" + i + "," + il + ")'>");
-															_tabela.push("<span class='fa " + (scope.showSubGrid ? "fa-compress" : "fa-expand") + "'></span></button>");
-															enabledSubgrid = true;
-														}
-														else if(col.type === "menu"){
-															if(angular.isDefined(col.showRow) && !col.showRow(linha)) return;
-															_tabela.push("<div class='dropdown'>");
-															_tabela.push("<button type='button' class='btn btn-default btn-sm dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>");
-															_tabela.push("<span class='fa fa-bars'></span></button>");
-															_tabela.push("<ul class='dropdown-menu dropdown-menu-left'>");
-															var ai = 0;
-															angular.forEach(col.menu, function (action) {
+                                                        else{
+                                                            _tabela.push("<label style='text-decoration: underline; cursor: pointer' popover data-toggle='popover' data-trigger='hover' data-content='" + col.item(linha) + "'>" + $filter('limitTo')(col.item(linha), (col.maxLength ? col.maxLength : 999)) + "</label>");
+                                                        }
+                                                    }
+                                                    else if(col.type === "checkbox"){
+                                                        _tabela.push("<input type='checkbox' ng-click='sgControls.checkBox.function(showData[" + il + "])' " + (linha[scope.sgControls.checkBox.item] ? "checked" : "") + ">");
+                                                    }
+                                                    else if(col.type === "subgrid"){
+                                                        _tabela.push("<button type='button' class='btn btn-default btn-sm btn-subgrid' ng-click='abrirSubGrid(" + i + "," + il + ")'>");
+                                                        _tabela.push("<span class='fa " + (scope.showSubGrid ? "fa-compress" : "fa-expand") + "'></span></button>");
+                                                        enabledSubgrid = true;
+                                                    }
+                                                    else if(col.type === "menu"){
 
-																if(angular.isDefined(action.show) && !action.show(linha)) {
-																	ai++;
-																	return;
-                                                                }
+                                                        if(angular.isDefined(col.showRow) && !col.showRow(linha)) {
+                                                            i++;
+                                                            return;
+                                                        }
+                                                        _tabela.push("<div class='dropdown'>");
+                                                        _tabela.push("<button type='button' class='btn btn-default btn-sm dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>");
+                                                        _tabela.push("<span class='fa fa-bars'></span></button>");
+                                                        _tabela.push("<ul class='dropdown-menu dropdown-menu-left'>");
+                                                        var ai = 0;
+                                                        angular.forEach(col.menu, function (action) {
 
-																_tabela.push("<li>");
-																_tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(showData[" + il + "])'><span class='" + action.icon + "'></span>  " + action.title + "</a>");
-																_tabela.push("</li>");
+                                                            if(angular.isDefined(action.show) && !action.show(linha)) {
+                                                                ai++;
+                                                                return;
+                                                            }
 
-																ai++;
-															});
-															_tabela.push("</ul></div>");
-														}
-														else if(col.type === "action"){
-															_tabela.push("<button class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "])' title='" + col.title + "'>");
-															_tabela.push("<span class='fa " + col.icon + "'></span></button>");
-														}
-														else if(col.type === "switch"){
-															_tabela.push("<label class='switch'>");
-															_tabela.push("<input type='checkbox' ng-click='sg_cols[" + i + "].callback(dataFiltered[" + il + "])'>");
-															_tabela.push("<div class='slider round'></div>");
-															_tabela.push("</label>");
-														}
-														else if(col.type === "favorite"){
+                                                            _tabela.push("<li>");
+                                                            _tabela.push("<a ng-click='sg_cols[" + i + "].menu[" + ai + "].function(showData[" + il + "])'><span class='" + action.icon + "'></span>  " + action.title + "</a>");
+                                                            _tabela.push("</li>");
 
-															if(angular.isDefined(col.show) && !col.show(linha))
-																return;
+                                                            ai++;
+                                                        });
+                                                        _tabela.push("</ul></div>");
+                                                    }
+                                                    else if(col.type === "action"){
+                                                        _tabela.push("<button class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "])' title='" + col.title + "'>");
+                                                        _tabela.push("<span class='fa " + col.icon + "'></span></button>");
+                                                    }
+                                                    else if(col.type === "switch"){
+                                                        _tabela.push("<label class='switch'>");
+                                                        _tabela.push("<input type='checkbox' ng-click='sg_cols[" + i + "].callback(dataFiltered[" + il + "])'>");
+                                                        _tabela.push("<div class='slider round'></div>");
+                                                        _tabela.push("</label>");
+                                                    }
+                                                    else if(col.type === "favorite"){
 
-															_tabela.push("<span class='fa fa-star " + (col.item(linha) ? "active" : "") + "' ng-click='sg_favoritar(" + i + ", " + il + ")'></span>");
-														}
-														else if(col.type === "progress"){
-															_tabela.push("<div class='progress'>");
-															_tabela.push("<div class='progress-bar " + (col.class ? col.class(linha) : "") + "' role='progressbar' style='width: " + col.item(linha) + "%;'>");
-															_tabela.push(col.item(linha) + "%</div></div>");
-														}
-														else if(col.type === "approve"){
-															if(!col.showCol(linha) || !col.showRow(linha)) return;
-															_tabela.push("<button title='Aprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "], true)'><span class='fa fa-thumbs-up'></span></button>");
-															_tabela.push("<button title='Reprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "], false)'><span class='fa fa-thumbs-down'></span></button>");
-														}
+                                                        if(angular.isDefined(col.show) && !col.show(linha)){
+                                                            i++;
+                                                            return;
+                                                        }
+
+                                                        _tabela.push("<span class='fa fa-star " + (col.item(linha) ? "active" : "") + "' ng-click='sg_favoritar(" + i + ", " + il + ")'></span>");
+                                                    }
+                                                    else if(col.type === "progress"){
+                                                        _tabela.push("<div class='progress'>");
+                                                        _tabela.push("<div class='progress-bar " + (col.class ? col.class(linha) : "") + "' role='progressbar' style='width: " + col.item(linha) + "%;'>");
+                                                        _tabela.push(col.item(linha) + "%</div></div>");
+                                                    }
+                                                    else if(col.type === "approve"){
+
+                                                        if(!col.showCol(linha) || !col.showRow(linha)){
+                                                            i++;
+                                                            return;
+                                                        }
+
+                                                        _tabela.push("<button title='Aprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "], true)'><span class='fa fa-thumbs-up'></span></button>");
+                                                        _tabela.push("<button title='Reprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "], false)'><span class='fa fa-thumbs-down'></span></button>");
+                                                    }
 
                                                     _tabela.push("</div></td>");
 
