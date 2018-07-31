@@ -429,7 +429,7 @@
 					var retorno = gerarTabela(scope.cols, scope.data, [], [], 0, scope.cols.length);
 					var html = gerarHTML(retorno);
 					dispararDownloadXLSHTML(html);
-				}
+				};
 
 				function dispararDownloadXLSHTML(html) {
 					var byteCharacters = html;
