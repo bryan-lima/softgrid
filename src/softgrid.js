@@ -432,10 +432,17 @@
 				}
 
 				function dispararDownloadXLSHTML(html) {
-					var encodedUri = 'data:application/vnd.ms-excel;base64,' + $base64.encode(html);
+					var byteCharacters = html;
+					var byteNumbers = new Array(byteCharacters.length);
+					for (var i = 0; i < byteCharacters.length; i++) {
+						byteNumbers[i] = byteCharacters.charCodeAt(i);
+					}
+					var byteArray = new Uint8Array(byteNumbers);
+					var blob = new Blob([byteArray], {type: "data:application/vnd.ms-excel"});
+
 					var link = document.createElement("a");
-					link.setAttribute("href", encodedUri);
-					link.setAttribute("download", (new Date()).toLocaleString());
+					link.setAttribute("href", URL.createObjectURL(blob));
+					link.setAttribute("download", (new Date()).toLocaleString() + ".xls");
 					document.body.appendChild(link); // Required for FF
 					link.click();
 					document.body.removeChild(link);
