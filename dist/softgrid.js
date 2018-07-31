@@ -48,12 +48,6 @@
 
 				var firstLoad = true;
 
-				//configuracao
-				function _carregarColunas()
-				{
-
-				}
-
 				//change page
 				scope.sg_changePage = function (value) {
 
@@ -301,21 +295,6 @@
                     return string.toUpperCase();
                 }
 
-				//export grid data to excel
-				function sg_excel() {
-
-					var html = createTable();
-					var downloadLink = document.getElementById("softDownload");
-					downloadLink.href = 'data:application/vnd.ms-excel;base64,' + $base64.encode(html);
-
-
-					downloadLink.download = 'Planilha_' + new Date().toLocaleDateString() + '.xls';
-					downloadLink.click();
-					downloadLink.href = "";
-					downloadLink.download = "";
-
-				}
-
 				//control
 				scope.sg_hook = function () {
 
@@ -323,16 +302,38 @@
 					_hookDropDown();
 				};
 
+				//export grid data to excel
+				scope.exportExcel = function() {
+
+					var byteCharacters = createTable();
+					var byteNumbers = new Array(byteCharacters.length);
+					for (var i = 0; i < byteCharacters.length; i++) {
+						byteNumbers[i] = byteCharacters.charCodeAt(i);
+					}
+					var byteArray = new Uint8Array(byteNumbers);
+					var blob = new Blob([byteArray], {type: "data:application/vnd.ms-excel"});
+
+					var link = document.createElement("a");
+					link.setAttribute("href", URL.createObjectURL(blob));
+					link.setAttribute("download", (new Date()).toLocaleString() + ".xls");
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
+
+				};
+
 				function createTable() {
 
-					var table = "<table>";
+					var table = "<table border='1' cellpadding='5'>";
 
 					var i = 0;
 
-					table += "<tr>";
+					table += "<tr bgcolor='orange'>";
 
 					for (i = 0; i < scope.cols.length; i++) {
-						table += "<td><b>" + scope.cols[i].title + "</b></td>";
+
+						if(scope.cols[i].type != "subgrid")
+							table += "<td><b>" + scope.cols[i].title + "</b></td>";
 					}
 
 					table += "</tr>";
@@ -341,20 +342,100 @@
 
 					for (i = 0; i < scope.data.length; i++) {
 
+						var subgrid = null;
+
 						table += "<tr>";
 
 						for (a = 0; a < scope.cols.length; a++) {
 
-							var valor = scope.data[i][a];
+							if(scope.cols[a].type != "subgrid")
+							{
+								var valor = '';
 
-							table += "<td>";
+								if (scope.data[i])
+									valor = angular.isFunction(scope.cols[a].item) ? scope.cols[a].item(scope.data[i]) : scope.data[i][scope.cols[a].propriedade];
 
-							table += scope.data[i][a] ? scope.data[i][a] : '-';
+								if (!valor)
+									valor = ' - ';
 
-							table += "</td>";
+								if(angular.isString(valor))
+									valor = removerCaracteresInvalidos(valor);
+
+								table += "<td>";
+
+								table += valor;
+
+								table += "</td>";
+							}
+							else
+								subgrid = scope.cols[a];
+
 						}
 
 						table += "</tr>";
+
+						if(subgrid != null){
+
+							var _subColunas = subgrid.cols;
+							var _subItens = subgrid.item(scope.data[i]);
+
+							if(_subItens.length > 0)
+							{
+								table += "<tr>";
+
+								table += "<td colspan='" + (scope.cols.length - 1) + "' bgcolor='#d3d3d3'>";
+
+								table += "<table border='1'>";
+
+								table += "<tr>";
+
+								angular.forEach(_subColunas, function(coluna){
+
+									table += "<td><b>";
+
+									table += coluna.title;
+
+									table += "</b></td>";
+								});
+
+								table += "</tr>";
+
+								angular.forEach(_subItens, function(item){
+
+									table += "<tr>";
+
+									angular.forEach(_subColunas, function(coluna){
+
+										var valor = '';
+
+										if (item)
+											valor = angular.isFunction(coluna.item) ? coluna.item(item) : item[coluna.propriedade];
+
+										if (!valor)
+											valor = ' - ';
+
+										if(angular.isString(valor))
+											valor = removerCaracteresInvalidos(valor);
+
+										table += "<td>";
+
+										table += valor;
+
+										table += "</td>";
+									});
+
+									table += "</tr>";
+
+								});
+
+								table += "</table>";
+
+								table += "</td>";
+
+								table += "</tr>";
+							}
+
+						}
 					}
 
 					table += "</table>";
@@ -416,6 +497,11 @@
                 // *** FUNÇÕES PARA EXPORTAR EXCEL
 
 				scope.softGridToExcel = function () {
+
+					scope.exportExcel();
+					return;
+
+					//metodos abaixo serao removidos
 					var _corCabecalhoFundo = '#FA6938';
 					var _corCabecalhoFonte = '#FFFFFF';
 					var _grossuraCabecalhoFonte = 800;
