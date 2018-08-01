@@ -72,22 +72,31 @@
                             <label>Opções</label>
 
                             <div class="input-group">
+
                                 <input type="text" class="form-control" aria-label="..." value="{{filteredData.length}} encontrado(s)" disabled="true">
+
                                 <div class="input-group-btn">
+
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>
+
                                     <ul class="dropdown-menu dropdown-menu-right">
+
                                         <li ng-repeat="item in sgMenu">
                                             <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>
                                         </li>
-                                        <li role="separator" class="divider" ng-show="sgMenu"></li>
-                                        <li ng-if="sgControls.select"><a ng-click="sg_selectAll()"><span class="fa fa-check"></span> Selecionar Todos</a></li>
-                                        <li><a ng-click="exportExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>
-                                    </ul>
-                                </div>
-                            </div>
 
-                            <div ng-if="!subgrid">
-                                <a href="#" ng-show="false"  id="softDownload"></a>
+                                        <li role="separator" class="divider" ng-show="sgMenu"></li>
+
+                                        <li ng-if="sgControls.select"><a ng-click="sg_selectAll()"><span class="fa fa-check"></span> Selecionar Todos</a></li>
+
+                                        <li><a ng-click="exportExcel()"><span class="fa fa-file-excel-o"></span> Exportar Excel</a></li>
+
+                                        <li><a ng-click="exportarPDF()"><span class="fa fa-file-pdf-o"></span> Exportar PDF</a></li>
+
+                                    </ul>
+
+                                </div>
+
                             </div>
 
                         </div>
@@ -151,15 +160,16 @@
     <div class="row">
 
         <div class="col-md-12">
+
             <div class="softgrid-configuration scrolls">
 
 
             </div>
-                <div class="softgrid-container">
+
+            <div class="softgrid-container">
 
 
-                </div>
-
+            </div>
                 
         </div>
 

@@ -32,6 +32,7 @@
 .softgrid-container{
     width: 100%;
     overflow-x: auto;
+    margin: auto;
 }
 
 .softgrid-container{}

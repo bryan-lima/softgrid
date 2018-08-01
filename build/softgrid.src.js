@@ -302,7 +302,7 @@
 					_hookDropDown();
 				};
 
-				//export grid data to excel
+				//exportar grid para excel
 				scope.exportExcel = function() {
 
 					var byteCharacters = createTable();
@@ -453,6 +453,29 @@
 
 					return table;
 				}
+
+				//exportar grid para PDF
+				scope.exportarPDF = function(){
+
+					var _container = $(element[0]).find(".softgrid-container")[0];
+
+                    var cache_width = $(_container).width(); //Criado um cache do CSS
+                    var a4  =[ 595.28,  841.89]; // Widht e Height de uma folha a4
+
+					// Setar o width da div no formato a4
+					$(_container).width((a4[0]*1.33333) -80).css('max-width','none');
+
+					html2canvas($(_container), {
+						onrendered: function(canvas) {
+							var img = canvas.toDataURL("image/png",1.0);
+							var doc = new jsPDF( { unit:'px', format:'a4', orientation: 'landscape' } );
+							doc.addImage(img, 'JPEG', 20, 20);
+							doc.save((new Date()).toLocaleString() + '.pdf');
+							//Retorna ao CSS normal
+							$(_container).width(cache_width);
+                            }
+                        });
+				};
 
 				function _atualizarPaginacao() {
 
