@@ -330,11 +330,22 @@
 
 					table += "<tr bgcolor='orange'>";
 
+					var subGridTitle = null;
+
 					for (i = 0; i < scope.cols.length; i++) {
 
 						if(scope.cols[i].type != "subgrid")
-							table += "<td><b>" + scope.cols[i].title + "</b></td>";
+						{
+							if(angular.isFunction(scope.cols[i].item))
+								table += "<td><b>" + scope.cols[i].title + "</b></td>";
+                        }
+						else
+                            subGridTitle = scope.cols[i].title;
+
 					}
+
+					if(subGridTitle != null)
+						table += "<td align='center'><b>" + subGridTitle + "</b>";
 
 					table += "</tr>";
 
@@ -344,7 +355,7 @@
 
 						var subgrid = null;
 
-						table += "<tr>";
+						table += "<tr valign='top'>";
 
 						for (a = 0; a < scope.cols.length; a++) {
 
@@ -361,81 +372,81 @@
 								if(angular.isString(valor))
 									valor = removerCaracteresInvalidos(valor);
 
-								table += "<td>";
+                                if(angular.isFunction(scope.cols[a].item))
+								{
+									table += "<td>";
 
-								table += valor;
+									table += valor;
 
-								table += "</td>";
+									table += "</td>";
+								}
+
 							}
 							else
 								subgrid = scope.cols[a];
 
 						}
 
+                        if(subgrid != null){
+
+                            var _subColunas = subgrid.cols;
+                            var _subItens = subgrid.item(scope.data[i]);
+
+                            if(_subItens.length > 0)
+                            {
+                                table += "<td bgcolor='#F6F6F6'>";
+
+									table += "<table border='1'>";
+
+										table += "<tr>";
+
+										angular.forEach(_subColunas, function(coluna){
+
+											table += "<td><b>";
+
+											table += coluna.title;
+
+											table += "</b></td>";
+										});
+
+										table += "</tr>";
+
+										angular.forEach(_subItens, function(item){
+
+											table += "<tr>";
+
+											angular.forEach(_subColunas, function(coluna){
+
+												var valor = '';
+
+												if (item)
+													valor = angular.isFunction(coluna.item) ? coluna.item(item) : item[coluna.propriedade];
+
+												if (!valor)
+													valor = ' - ';
+
+												if(angular.isString(valor))
+													valor = removerCaracteresInvalidos(valor);
+
+												table += "<td>";
+
+												table += valor;
+
+												table += "</td>";
+											});
+
+											table += "</tr>";
+
+										});
+
+									table += "</table>";
+
+                                table += "</td>";
+                            }
+
+                        }
+
 						table += "</tr>";
-
-						if(subgrid != null){
-
-							var _subColunas = subgrid.cols;
-							var _subItens = subgrid.item(scope.data[i]);
-
-							if(_subItens.length > 0)
-							{
-								table += "<tr>";
-
-								table += "<td colspan='" + (scope.cols.length - 1) + "' bgcolor='#d3d3d3'>";
-
-								table += "<table border='1'>";
-
-								table += "<tr>";
-
-								angular.forEach(_subColunas, function(coluna){
-
-									table += "<td><b>";
-
-									table += coluna.title;
-
-									table += "</b></td>";
-								});
-
-								table += "</tr>";
-
-								angular.forEach(_subItens, function(item){
-
-									table += "<tr>";
-
-									angular.forEach(_subColunas, function(coluna){
-
-										var valor = '';
-
-										if (item)
-											valor = angular.isFunction(coluna.item) ? coluna.item(item) : item[coluna.propriedade];
-
-										if (!valor)
-											valor = ' - ';
-
-										if(angular.isString(valor))
-											valor = removerCaracteresInvalidos(valor);
-
-										table += "<td>";
-
-										table += valor;
-
-										table += "</td>";
-									});
-
-									table += "</tr>";
-
-								});
-
-								table += "</table>";
-
-								table += "</td>";
-
-								table += "</tr>";
-							}
-
-						}
 					}
 
 					table += "</table>";
@@ -493,137 +504,6 @@
 
 					return text
 				}
-
-                // *** FUNÇÕES PARA EXPORTAR EXCEL
-
-				scope.softGridToExcel = function () {
-
-					scope.exportExcel();
-					return;
-
-					//metodos abaixo serao removidos
-					var _corCabecalhoFundo = '#FA6938';
-					var _corCabecalhoFonte = '#FFFFFF';
-					var _grossuraCabecalhoFonte = 800;
-					var _corCorpoFundo = '#FFFFFF';
-					var _corCorpoFonte = '#000000';
-					var _grossuraCorpoFonte = 100;
-					var _corSubTabelaFundo = '#DDDDDD';
-					var _corSubTabelaFonte = '#000000';
-					var _grossuraSubTabelaFonte = 800;
-					//sg_excel();
-					var retorno = gerarTabela(scope.cols, scope.data, [], [], 0, scope.cols.length);
-					var html = gerarHTML(retorno);
-					dispararDownloadXLSHTML(html);
-				};
-
-				function dispararDownloadXLSHTML(html) {
-					var byteCharacters = html;
-					var byteNumbers = new Array(byteCharacters.length);
-					for (var i = 0; i < byteCharacters.length; i++) {
-						byteNumbers[i] = byteCharacters.charCodeAt(i);
-					}
-					var byteArray = new Uint8Array(byteNumbers);
-					var blob = new Blob([byteArray], {type: "data:application/vnd.ms-excel"});
-
-					var link = document.createElement("a");
-					link.setAttribute("href", URL.createObjectURL(blob));
-					link.setAttribute("download", (new Date()).toLocaleString() + ".xls");
-					document.body.appendChild(link); // Required for FF
-					link.click();
-					document.body.removeChild(link);
-				}
-
-				function gerarHTML(lista) {
-					var table = '<table border="3" cellpadding="3" cellspacing="3"><tbody>';
-					lista.forEach(function (level1) {
-						var tr = '<tr>';
-						level1.forEach(function (level2) {
-							if (level2) {
-								tr += '<td style="color:' + level2.corFonte + ';background-color:' + level2.corFundo + ';font-weight:' + level2.grossuraFonte + '; ">' + level2.valor + '</td>';
-							}
-							else {
-								tr += '<td></td>';
-							}
-						});
-						tr += '</tr>';
-						table += tr;
-					});
-					table += '</tbody></table>';
-					return table;
-				};
-
-				function gerarTabela(colunas, linhas, subTabelas, linhasAdicionais, celulaInicial, totalCelulas, html) {
-					var _conteudo = [];
-					_conteudo = _conteudo.concat(gerarCabecalho(colunas, totalCelulas, celulaInicial));
-					_conteudo = _conteudo.concat(gerarLinha(colunas, subTabelas, linhasAdicionais, linhas, totalCelulas, celulaInicial));
-					if (html) {
-						return gerarHTML(_conteudo);
-					}
-					else {
-						return _conteudo;
-					}
-				};
-
-				function gerarCabecalho(colunas, totalCelulas, celulaInicial) {
-					var _retorno = [];
-					var _celulas = new Array(totalCelulas);
-					colunas.forEach(function(coluna){
-                        _celulas[celulaInicial] = {
-                            valor: coluna.title,
-                            corFundo: '#FA6938',
-                            corFonte: '#FFFFFF',
-                            grossuraFonte: 800
-                        };
-                        celulaInicial++;
-					});
-					/*angular.element(colunas).each(function (iC, coluna) {
-						_celulas[celulaInicial] = {
-							valor: coluna.title,
-							corFundo: '#FA6938',
-							corFonte: '#FFFFFF',
-							grossuraFonte: 800,
-						};
-						celulaInicial++;
-					});*/
-					_retorno.push(_celulas);
-					return _retorno;
-				};
-
-				function gerarLinha(colunas, subTabelas, linhasAdicionais, linhas, totalCelulas, celulaInicial) {
-					var _retorno = [];
-
-					linhas.forEach(function (linha) {
-						var _celulas = new Array(totalCelulas);
-						var _celulaInicial = celulaInicial;
-						colunas.forEach(function (coluna) {
-							_celulas[_celulaInicial] = {
-								valor: obterColunaListaValor(linha, coluna),
-								corFundo: '#FFFFFF',
-								corFonte: '#000000',
-								grossuraFonte: 100,
-							};
-							_celulaInicial++;
-						});
-						_retorno.push(_celulas);
-					});
-
-					return _retorno;
-				};
-
-				function obterColunaListaValor(linha, coluna) {
-					var valor = '';
-					if (linha) {
-						valor = angular.isFunction(coluna.item) ? coluna.item(linha) : linha[coluna.propriedade];
-					}
-					if (!valor)
-						valor = ' - ';
-
-                    if(angular.isString(valor))
-                        return removerCaracteresInvalidos(valor);
-                    else
-                        return valor;
-                }
 
                 function removerCaracteresInvalidos(string)
                 {
@@ -1257,7 +1137,13 @@
 
                                                             _tabela.push("<label style='width: 100%; " + _style + "'>");
 
+                                                            if(angular.isFunction(col.click))
+                                                            	_tabela.push("<a style='color: #f39c12; cursor: pointer; font-weight: bold' ng-click='sg_cols[" + i + "].click(showData[" + il + "])'>");
+
                                                             _tabela.push(scope.sg_mask(col.type, col.item(linha)));
+
+                                                            if(angular.isFunction(col.click))
+                                                                _tabela.push("</a>");
 
                                                             _tabela.push("</label>");
 
@@ -1543,4 +1429,4 @@
 
 })();
 
-angular.module('softgrid.directive').run(['$templateCache', function($templateCache) {$templateCache.put('softgrid.html','\r\n<div class="softgrid-display" ng-class="{\'softgrid-display-fullscreen\': softgrid.fullscreen}" ng-style="sgControls.fullscreen && softgrid.fullscreen ? { \'z-index\': sgControls.fullscreen.zindex, \'top\': sgControls.fullscreen.top + \'px\'} : \'\'">\r\n\r\n    <div class="grid-controles" ng-style="sgControls.fullscreen && softgrid.fullscreen ? { \'z-index\': (sgControls.fullscreen.zindex + 1), \'top\': (sgControls.fullscreen.top) + \'px\'} : \'\'">\r\n\r\n        <div class="row" ng-hide="hide.all">\r\n\r\n            <div class="col-md-2">\r\n\r\n                <div ng-hide="hide.filter || hide.all">\r\n\r\n                    <label>Filtrar</label>\r\n\r\n                    <div class="input-group">\r\n\r\n                        <div class="input-group-btn">\r\n\r\n                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-search"></span></button>\r\n\r\n                            <ul class="dropdown-menu dropdown-menu-left">\r\n\r\n                                <li ng-repeat="col in cols track by $index">\r\n\r\n                                    <a ng-click="sg_checkCol(col, $event)"> <input type="checkbox" ng-checked="col.checked" ng-click="sg_checkCol(col, $event)" /> {{col.title}} </a>\r\n\r\n                                </li>\r\n\r\n                            </ul>\r\n\r\n                        </div>\r\n\r\n                        <input type="text" class="form-control" ng-model="sg_filter" placeholder="Palavra-chave" aria-describedby="filtro-addon">\r\n\r\n                    </div>\r\n\r\n                </div>\r\n\r\n            </div>\r\n\r\n            <div class="col-md-6">\r\n\r\n                <div class="row">\r\n\r\n                    <div class="col-md-4">\r\n\r\n                        <div class="form-group" ng-hide="hide.linesPage || hide.all || hide.pagination" style="margin-bottom: 0;">\r\n\r\n                            <label>Linhas por p\xE1gina</label>\r\n\r\n                            <div class="input-group" style="width: 120px;">\r\n\r\n                        <span class="input-group-btn">\r\n                            <button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(-1)">-</button>\r\n                        </span>\r\n\r\n                                <input class="form-control" ng-model="sg_linesPerPageInput">\r\n\r\n                                <span class="input-group-btn">\r\n\t\t\t\t\t\t\t<button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(1)">+</button>\r\n\t\t\t\t\t\t</span>\r\n\r\n                            </div>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                    <div class="col-md-4">\r\n\r\n                        <div ng-hide="hide.options || hide.all">\r\n\r\n                            <label>Op\xE7\xF5es</label>\r\n\r\n                            <div class="input-group">\r\n                                <input type="text" class="form-control" aria-label="..." value="{{filteredData.length}} encontrado(s)" disabled="true">\r\n                                <div class="input-group-btn">\r\n                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>\r\n                                    <ul class="dropdown-menu dropdown-menu-right">\r\n                                        <li ng-repeat="item in sgMenu">\r\n                                            <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>\r\n                                        </li>\r\n                                        <li role="separator" class="divider" ng-show="sgMenu"></li>\r\n                                        <li ng-if="sgControls.select"><a ng-click="sg_selectAll()"><span class="fa fa-check"></span> Selecionar Todos</a></li>\r\n                                        <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>\r\n                                    </ul>\r\n                                </div>\r\n                            </div>\r\n\r\n                            <div ng-if="!subgrid">\r\n                                <a href="#" ng-show="false"  id="softDownload"></a>\r\n                            </div>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                    <div class="col-md-4">\r\n\r\n                        <div ng-hide="hide.fullscreen || hide.all">\r\n\r\n                            <label>&nbsp;</label><br>\r\n                            <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-expand" ng-class="{\'fa-compress\': softgrid.fullscreen}"></span>\r\n\r\n                                {{ softgrid.fullscreen ? (sgControls.fullscreen.on ? sgControls.fullscreen.on : \'Tela normal\') : (sgControls.fullscreen.off ? sgControls.fullscreen.off : \'Tela cheia\') }}\r\n\r\n                            </button>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </div>\r\n\r\n            </div>\r\n\r\n            <div class="col-md-4">\r\n\r\n                <nav aria-label="Page navigation" class="pull-right" ng-hide="hide.pagination || hide.all">\r\n\r\n                    <label>Pagina\xE7\xE3o</label>\r\n\r\n                        <ul class="pagination">\r\n\r\n                            <li ng-repeat="soft_page in soft_pages" ng-class="{\'active\': soft_page.active}">\r\n                                <a ng-click="sg_changePage(soft_page.value)" ng-bind-html="soft_page.text"></a>\r\n                            </li>\r\n\r\n                            <li ng-if="sgStore" title="Editar Colunas" ng-click="abrirConfiguracao()"><span class="fa fa-pencil"></span></li>\r\n                            \r\n                            <!-- <div class="input-group-btn">\r\n                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>\r\n                                <ul class="dropdown-menu dropdown-menu-right">\r\n                                    <li ng-repeat="item in sgMenu">\r\n                                        <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>\r\n                                    </li>\r\n                                    <li role="separator" class="divider" ng-show="sgMenu"></li>\r\n                                    <li ng-if="sgControls.select"><a ng-click="sg_selectAll()"><span class="fa fa-check"></span> Selecionar Todos</a></li>\r\n                                    <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>\r\n                                </ul>\r\n                            </div> -->\r\n                        </ul>\r\n\r\n                </nav>\r\n\r\n            </div>\r\n\r\n        </div>\r\n\r\n    </div>\r\n\r\n    <div class="row">\r\n\r\n        <div class="col-md-12">\r\n            <div class="softgrid-configuration scrolls">\r\n\r\n\r\n            </div>\r\n                <div class="softgrid-container">\r\n\r\n\r\n                </div>\r\n\r\n                \r\n        </div>\r\n\r\n    </div>\r\n\r\n    <div class="row" ng-hide="hide.pagination || hide.all">\r\n\r\n        <div class="col-md-12">\r\n\r\n            <nav aria-label="...">\r\n                <ul class="pager" style="margin-top: 5px;">\r\n                    <li class="previous"><button class="btn btn-default pull-left" ng-click="sg_changePage(-1)"><span aria-hidden="true">&larr;</span> P\xE1gina anterior</button></li>\r\n                    <li class="next"><button class="btn btn-default pull-right" ng-click="sg_changePage(0)">Pr\xF3xima p\xE1gina <span aria-hidden="true">&rarr;</span></button></li>\r\n                </ul>\r\n            </nav>\r\n\r\n        </div>\r\n\r\n    </div>\r\n\r\n</div>\r\n\r\n');}]);
+angular.module('softgrid.directive').run(['$templateCache', function($templateCache) {$templateCache.put('softgrid.html','\r\n<div class="softgrid-display" ng-class="{\'softgrid-display-fullscreen\': softgrid.fullscreen}" ng-style="sgControls.fullscreen && softgrid.fullscreen ? { \'z-index\': sgControls.fullscreen.zindex, \'top\': sgControls.fullscreen.top + \'px\'} : \'\'">\r\n\r\n    <div class="grid-controles" ng-style="sgControls.fullscreen && softgrid.fullscreen ? { \'z-index\': (sgControls.fullscreen.zindex + 1), \'top\': (sgControls.fullscreen.top) + \'px\'} : \'\'">\r\n\r\n        <div class="row" ng-hide="hide.all">\r\n\r\n            <div class="col-md-2">\r\n\r\n                <div ng-hide="hide.filter || hide.all">\r\n\r\n                    <label>Filtrar</label>\r\n\r\n                    <div class="input-group">\r\n\r\n                        <div class="input-group-btn">\r\n\r\n                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-search"></span></button>\r\n\r\n                            <ul class="dropdown-menu dropdown-menu-left">\r\n\r\n                                <li ng-repeat="col in cols track by $index">\r\n\r\n                                    <a ng-click="sg_checkCol(col, $event)"> <input type="checkbox" ng-checked="col.checked" ng-click="sg_checkCol(col, $event)" /> {{col.title}} </a>\r\n\r\n                                </li>\r\n\r\n                            </ul>\r\n\r\n                        </div>\r\n\r\n                        <input type="text" class="form-control" ng-model="sg_filter" placeholder="Palavra-chave" aria-describedby="filtro-addon">\r\n\r\n                    </div>\r\n\r\n                </div>\r\n\r\n            </div>\r\n\r\n            <div class="col-md-6">\r\n\r\n                <div class="row">\r\n\r\n                    <div class="col-md-4">\r\n\r\n                        <div class="form-group" ng-hide="hide.linesPage || hide.all || hide.pagination" style="margin-bottom: 0;">\r\n\r\n                            <label>Linhas por p\xE1gina</label>\r\n\r\n                            <div class="input-group" style="width: 120px;">\r\n\r\n                        <span class="input-group-btn">\r\n                            <button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(-1)">-</button>\r\n                        </span>\r\n\r\n                                <input class="form-control" ng-model="sg_linesPerPageInput">\r\n\r\n                                <span class="input-group-btn">\r\n\t\t\t\t\t\t\t<button class="btn btn-default" type="button" ng-click="sg_changeLinesPerPage(1)">+</button>\r\n\t\t\t\t\t\t</span>\r\n\r\n                            </div>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                    <div class="col-md-4">\r\n\r\n                        <div ng-hide="hide.options || hide.all">\r\n\r\n                            <label>Op\xE7\xF5es</label>\r\n\r\n                            <div class="input-group">\r\n                                <input type="text" class="form-control" aria-label="..." value="{{filteredData.length}} encontrado(s)" disabled="true">\r\n                                <div class="input-group-btn">\r\n                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>\r\n                                    <ul class="dropdown-menu dropdown-menu-right">\r\n                                        <li ng-repeat="item in sgMenu">\r\n                                            <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>\r\n                                        </li>\r\n                                        <li role="separator" class="divider" ng-show="sgMenu"></li>\r\n                                        <li ng-if="sgControls.select"><a ng-click="sg_selectAll()"><span class="fa fa-check"></span> Selecionar Todos</a></li>\r\n                                        <li><a ng-click="exportExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>\r\n                                    </ul>\r\n                                </div>\r\n                            </div>\r\n\r\n                            <div ng-if="!subgrid">\r\n                                <a href="#" ng-show="false"  id="softDownload"></a>\r\n                            </div>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                    <div class="col-md-4">\r\n\r\n                        <div ng-hide="hide.fullscreen || hide.all">\r\n\r\n                            <label>&nbsp;</label><br>\r\n                            <button class="btn btn-default" ng-click="softgrid.fullscreen = softgrid.fullscreen ? false : true"><span class="fa fa-expand" ng-class="{\'fa-compress\': softgrid.fullscreen}"></span>\r\n\r\n                                {{ softgrid.fullscreen ? (sgControls.fullscreen.on ? sgControls.fullscreen.on : \'Tela normal\') : (sgControls.fullscreen.off ? sgControls.fullscreen.off : \'Tela cheia\') }}\r\n\r\n                            </button>\r\n\r\n                        </div>\r\n\r\n                    </div>\r\n\r\n                </div>\r\n\r\n            </div>\r\n\r\n            <div class="col-md-4">\r\n\r\n                <nav aria-label="Page navigation" class="pull-right" ng-hide="hide.pagination || hide.all">\r\n\r\n                    <label>Pagina\xE7\xE3o</label>\r\n\r\n                        <ul class="pagination">\r\n\r\n                            <li ng-repeat="soft_page in soft_pages" ng-class="{\'active\': soft_page.active}">\r\n                                <a ng-click="sg_changePage(soft_page.value)" ng-bind-html="soft_page.text"></a>\r\n                            </li>\r\n\r\n                            <li ng-if="sgStore" title="Editar Colunas" ng-click="abrirConfiguracao()"><span class="fa fa-pencil"></span></li>\r\n                            \r\n                            <!-- <div class="input-group-btn">\r\n                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-bars"></span></button>\r\n                                <ul class="dropdown-menu dropdown-menu-right">\r\n                                    <li ng-repeat="item in sgMenu">\r\n                                        <a ng-click="item.function()"><span class="{{item.icon}}"></span> {{item.title}}</a>\r\n                                    </li>\r\n                                    <li role="separator" class="divider" ng-show="sgMenu"></li>\r\n                                    <li ng-if="sgControls.select"><a ng-click="sg_selectAll()"><span class="fa fa-check"></span> Selecionar Todos</a></li>\r\n                                    <li><a ng-click="softGridToExcel()"><span class="fa fa-file-excel-o"></span> Gerar Excel</a></li>\r\n                                </ul>\r\n                            </div> -->\r\n                        </ul>\r\n\r\n                </nav>\r\n\r\n            </div>\r\n\r\n        </div>\r\n\r\n    </div>\r\n\r\n    <div class="row">\r\n\r\n        <div class="col-md-12">\r\n            <div class="softgrid-configuration scrolls">\r\n\r\n\r\n            </div>\r\n                <div class="softgrid-container">\r\n\r\n\r\n                </div>\r\n\r\n                \r\n        </div>\r\n\r\n    </div>\r\n\r\n    <div class="row" ng-hide="hide.pagination || hide.all">\r\n\r\n        <div class="col-md-12">\r\n\r\n            <nav aria-label="...">\r\n                <ul class="pager" style="margin-top: 5px;">\r\n                    <li class="previous"><button class="btn btn-default pull-left" ng-click="sg_changePage(-1)"><span aria-hidden="true">&larr;</span> P\xE1gina anterior</button></li>\r\n                    <li class="next"><button class="btn btn-default pull-right" ng-click="sg_changePage(0)">Pr\xF3xima p\xE1gina <span aria-hidden="true">&rarr;</span></button></li>\r\n                </ul>\r\n            </nav>\r\n\r\n        </div>\r\n\r\n    </div>\r\n\r\n</div>\r\n\r\n');}]);

@@ -330,11 +330,22 @@
 
 					table += "<tr bgcolor='orange'>";
 
+					var subGridTitle = null;
+
 					for (i = 0; i < scope.cols.length; i++) {
 
 						if(scope.cols[i].type != "subgrid")
-							table += "<td><b>" + scope.cols[i].title + "</b></td>";
+						{
+							if(angular.isFunction(scope.cols[i].item))
+								table += "<td><b>" + scope.cols[i].title + "</b></td>";
+                        }
+						else
+                            subGridTitle = scope.cols[i].title;
+
 					}
+
+					if(subGridTitle != null)
+						table += "<td align='center'><b>" + subGridTitle + "</b>";
 
 					table += "</tr>";
 
@@ -344,7 +355,7 @@
 
 						var subgrid = null;
 
-						table += "<tr>";
+						table += "<tr valign='top'>";
 
 						for (a = 0; a < scope.cols.length; a++) {
 
@@ -361,81 +372,81 @@
 								if(angular.isString(valor))
 									valor = removerCaracteresInvalidos(valor);
 
-								table += "<td>";
+                                if(angular.isFunction(scope.cols[a].item))
+								{
+									table += "<td>";
 
-								table += valor;
+									table += valor;
 
-								table += "</td>";
+									table += "</td>";
+								}
+
 							}
 							else
 								subgrid = scope.cols[a];
 
 						}
 
+                        if(subgrid != null){
+
+                            var _subColunas = subgrid.cols;
+                            var _subItens = subgrid.item(scope.data[i]);
+
+                            if(_subItens.length > 0)
+                            {
+                                table += "<td bgcolor='#F6F6F6'>";
+
+									table += "<table border='1'>";
+
+										table += "<tr>";
+
+										angular.forEach(_subColunas, function(coluna){
+
+											table += "<td><b>";
+
+											table += coluna.title;
+
+											table += "</b></td>";
+										});
+
+										table += "</tr>";
+
+										angular.forEach(_subItens, function(item){
+
+											table += "<tr>";
+
+											angular.forEach(_subColunas, function(coluna){
+
+												var valor = '';
+
+												if (item)
+													valor = angular.isFunction(coluna.item) ? coluna.item(item) : item[coluna.propriedade];
+
+												if (!valor)
+													valor = ' - ';
+
+												if(angular.isString(valor))
+													valor = removerCaracteresInvalidos(valor);
+
+												table += "<td>";
+
+												table += valor;
+
+												table += "</td>";
+											});
+
+											table += "</tr>";
+
+										});
+
+									table += "</table>";
+
+                                table += "</td>";
+                            }
+
+                        }
+
 						table += "</tr>";
-
-						if(subgrid != null){
-
-							var _subColunas = subgrid.cols;
-							var _subItens = subgrid.item(scope.data[i]);
-
-							if(_subItens.length > 0)
-							{
-								table += "<tr>";
-
-								table += "<td colspan='" + (scope.cols.length - 1) + "' bgcolor='#d3d3d3'>";
-
-								table += "<table border='1'>";
-
-								table += "<tr>";
-
-								angular.forEach(_subColunas, function(coluna){
-
-									table += "<td><b>";
-
-									table += coluna.title;
-
-									table += "</b></td>";
-								});
-
-								table += "</tr>";
-
-								angular.forEach(_subItens, function(item){
-
-									table += "<tr>";
-
-									angular.forEach(_subColunas, function(coluna){
-
-										var valor = '';
-
-										if (item)
-											valor = angular.isFunction(coluna.item) ? coluna.item(item) : item[coluna.propriedade];
-
-										if (!valor)
-											valor = ' - ';
-
-										if(angular.isString(valor))
-											valor = removerCaracteresInvalidos(valor);
-
-										table += "<td>";
-
-										table += valor;
-
-										table += "</td>";
-									});
-
-									table += "</tr>";
-
-								});
-
-								table += "</table>";
-
-								table += "</td>";
-
-								table += "</tr>";
-							}
-
-						}
 					}
 
 					table += "</table>";
@@ -493,137 +504,6 @@
 
 					return text
 				}
-
-                // *** FUNÇÕES PARA EXPORTAR EXCEL
-
-				scope.softGridToExcel = function () {
-
-					scope.exportExcel();
-					return;
-
-					//metodos abaixo serao removidos
-					var _corCabecalhoFundo = '#FA6938';
-					var _corCabecalhoFonte = '#FFFFFF';
-					var _grossuraCabecalhoFonte = 800;
-					var _corCorpoFundo = '#FFFFFF';
-					var _corCorpoFonte = '#000000';
-					var _grossuraCorpoFonte = 100;
-					var _corSubTabelaFundo = '#DDDDDD';
-					var _corSubTabelaFonte = '#000000';
-					var _grossuraSubTabelaFonte = 800;
-					//sg_excel();
-					var retorno = gerarTabela(scope.cols, scope.data, [], [], 0, scope.cols.length);
-					var html = gerarHTML(retorno);
-					dispararDownloadXLSHTML(html);
-				};
-
-				function dispararDownloadXLSHTML(html) {
-					var byteCharacters = html;
-					var byteNumbers = new Array(byteCharacters.length);
-					for (var i = 0; i < byteCharacters.length; i++) {
-						byteNumbers[i] = byteCharacters.charCodeAt(i);
-					}
-					var byteArray = new Uint8Array(byteNumbers);
-					var blob = new Blob([byteArray], {type: "data:application/vnd.ms-excel"});
-
-					var link = document.createElement("a");
-					link.setAttribute("href", URL.createObjectURL(blob));
-					link.setAttribute("download", (new Date()).toLocaleString() + ".xls");
-					document.body.appendChild(link); // Required for FF
-					link.click();
-					document.body.removeChild(link);
-				}
-
-				function gerarHTML(lista) {
-					var table = '<table border="3" cellpadding="3" cellspacing="3"><tbody>';
-					lista.forEach(function (level1) {
-						var tr = '<tr>';
-						level1.forEach(function (level2) {
-							if (level2) {
-								tr += '<td style="color:' + level2.corFonte + ';background-color:' + level2.corFundo + ';font-weight:' + level2.grossuraFonte + '; ">' + level2.valor + '</td>';
-							}
-							else {
-								tr += '<td></td>';
-							}
-						});
-						tr += '</tr>';
-						table += tr;
-					});
-					table += '</tbody></table>';
-					return table;
-				};
-
-				function gerarTabela(colunas, linhas, subTabelas, linhasAdicionais, celulaInicial, totalCelulas, html) {
-					var _conteudo = [];
-					_conteudo = _conteudo.concat(gerarCabecalho(colunas, totalCelulas, celulaInicial));
-					_conteudo = _conteudo.concat(gerarLinha(colunas, subTabelas, linhasAdicionais, linhas, totalCelulas, celulaInicial));
-					if (html) {
-						return gerarHTML(_conteudo);
-					}
-					else {
-						return _conteudo;
-					}
-				};
-
-				function gerarCabecalho(colunas, totalCelulas, celulaInicial) {
-					var _retorno = [];
-					var _celulas = new Array(totalCelulas);
-					colunas.forEach(function(coluna){
-                        _celulas[celulaInicial] = {
-                            valor: coluna.title,
-                            corFundo: '#FA6938',
-                            corFonte: '#FFFFFF',
-                            grossuraFonte: 800
-                        };
-                        celulaInicial++;
-					});
-					/*angular.element(colunas).each(function (iC, coluna) {
-						_celulas[celulaInicial] = {
-							valor: coluna.title,
-							corFundo: '#FA6938',
-							corFonte: '#FFFFFF',
-							grossuraFonte: 800,
-						};
-						celulaInicial++;
-					});*/
-					_retorno.push(_celulas);
-					return _retorno;
-				};
-
-				function gerarLinha(colunas, subTabelas, linhasAdicionais, linhas, totalCelulas, celulaInicial) {
-					var _retorno = [];
-
-					linhas.forEach(function (linha) {
-						var _celulas = new Array(totalCelulas);
-						var _celulaInicial = celulaInicial;
-						colunas.forEach(function (coluna) {
-							_celulas[_celulaInicial] = {
-								valor: obterColunaListaValor(linha, coluna),
-								corFundo: '#FFFFFF',
-								corFonte: '#000000',
-								grossuraFonte: 100,
-							};
-							_celulaInicial++;
-						});
-						_retorno.push(_celulas);
-					});
-
-					return _retorno;
-				};
-
-				function obterColunaListaValor(linha, coluna) {
-					var valor = '';
-					if (linha) {
-						valor = angular.isFunction(coluna.item) ? coluna.item(linha) : linha[coluna.propriedade];
-					}
-					if (!valor)
-						valor = ' - ';
-
-                    if(angular.isString(valor))
-                        return removerCaracteresInvalidos(valor);
-                    else
-                        return valor;
-                }
 
                 function removerCaracteresInvalidos(string)
                 {
@@ -1257,7 +1137,13 @@
 
                                                             _tabela.push("<label style='width: 100%; " + _style + "'>");
 
+                                                            if(angular.isFunction(col.click))
+                                                            	_tabela.push("<a style='color: #f39c12; cursor: pointer; font-weight: bold' ng-click='sg_cols[" + i + "].click(showData[" + il + "])'>");
+
                                                             _tabela.push(scope.sg_mask(col.type, col.item(linha)));
+
+                                                            if(angular.isFunction(col.click))
+                                                                _tabela.push("</a>");
 
                                                             _tabela.push("</label>");
 

@@ -41,7 +41,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
 
             vm.colunas = [
                 {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
-                {title: "Cargo",    item: function(item){return item.cargo}, align: "center"},
+                {title: "Cargo",    item: function(item){return item.cargo}, align: "center", click: opa},
                 {title: "Telefone", item: function(item){return 0}, width: "100px", popOver: true},
                 {title: "Cargo A", default: false, item: function(item){return item.cargo + "A"}},
                 {title: "Cargo B", default: false, item: function(item){return item.cargo + "B"}},
@@ -110,6 +110,10 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             vm.controles.approve = { showCol: false, show: _showApprove, callback: _callBackApprove };
             vm.controles.filtered = [];
 
+        }
+
+        function opa(item){
+            console.log(item);
         }
 
         function _bloquear(item){
