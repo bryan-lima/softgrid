@@ -460,21 +460,35 @@
 					var _container = $(element[0]).find(".softgrid-container")[0];
 
                     var cache_width = $(_container).width(); //Criado um cache do CSS
+					var cache_cols = scope.sg_cols;
+					var cache_lines = scope.sg_linesPerPage;
+
                     var a4  =[ 595.28,  841.89]; // Widht e Height de uma folha a4
 
+					scope.sg_cols = cache_cols.filter(function(col){ return angular.isFunction(col.item) && col.type != 'subgrid'; });
+					scope.sg_linesPerPage = scope.data.length;
+
+					_renderizarTabela();
+
+					$timeout(function(){
 					// Setar o width da div no formato a4
 					$(_container).width((a4[0]*1.33333) -80).css('max-width','none');
 
 					html2canvas($(_container), {
 						onrendered: function(canvas) {
+
 							var img = canvas.toDataURL("image/png",1.0);
-							var doc = new jsPDF( { unit:'px', format:'a4', orientation: 'landscape' } );
+							var doc = new jsPDF( { unit:'px', format:'a4', orientation: 'portrait' } );
 							doc.addImage(img, 'JPEG', 20, 20);
 							doc.save((new Date()).toLocaleString() + '.pdf');
 							//Retorna ao CSS normal
 							$(_container).width(cache_width);
+                            scope.sg_cols = cache_cols;
+                            scope.sg_linesPerPage = cache_lines;
+                            _renderizarTabela();
                             }
                         });
+                    }, 200);
 				};
 
 				function _atualizarPaginacao() {
