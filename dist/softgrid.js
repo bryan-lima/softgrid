@@ -1257,7 +1257,27 @@
                                                         _tabela.push("<button title='Aprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "], true)'><span class='fa fa-thumbs-up'></span></button>");
                                                         _tabela.push("<button title='Reprovar' class='btn btn-default btn-sm' ng-click='sg_cols[" + i + "].callback(showData[" + il + "], false)'><span class='fa fa-thumbs-down'></span></button>");
                                                     }
+													else if(col.type === "select"){
 
+                                                        _tabela.push("<div class='dropdown softgrid-dropdown-container'>");
+                                                        _tabela.push("<button type='button' class='btn btn-default btn-sm dropdown-toggle softgrid-dropdown' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>");
+                                                        _tabela.push("<span class='fa fa-caret-down'></span>" + scope.showData[il][scope.sg_cols[i].item][scope.sg_cols[i].field.text] + "</button>");
+                                                        _tabela.push("<ul class='dropdown-menu dropdown-menu-left'>");
+
+                                                        var ai = 0;
+
+                                                        angular.forEach(col.data, function (item) {
+
+                                                            _tabela.push("<li>");
+                                                            _tabela.push("<a ng-click='sg_select(" + i + ", " + il + ", " + ai + ")'> " +  item[col.field.text] + "</a>");
+                                                            _tabela.push("</li>");
+
+                                                            ai++;
+                                                        });
+
+                                                        _tabela.push("</ul></div>");
+
+													}
                                                     _tabela.push("</div></td>");
 
                                                     i++;
@@ -1320,6 +1340,14 @@
 
                     _hookDropDown();
 				}
+
+				scope.sg_select = function(indexColuna, indexLinha, indexItem){
+
+					scope.sg_cols[indexColuna].callback(scope.showData[indexLinha], scope.sg_cols[indexColuna].data[indexItem]);
+                    scope.showData[indexLinha][scope.sg_cols[indexColuna].item][scope.sg_cols[indexColuna].field.text] = scope.sg_cols[indexColuna].data[indexItem][scope.sg_cols[indexColuna].field.text];
+                    scope.showData[indexLinha][scope.sg_cols[indexColuna].item][scope.sg_cols[indexColuna].field.value] = scope.sg_cols[indexColuna].data[indexItem][scope.sg_cols[indexColuna].field.value];
+                    _renderizarTabela();
+				};
 
 				scope.sg_favoritar = function(ic, il){
 
