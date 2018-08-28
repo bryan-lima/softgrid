@@ -1152,7 +1152,7 @@
                                         }
                                     }
 
-									_tabela.push("<tr id='sg_linha_" + il + "' ng-click='sg_selecionarLinha(" + il + ")' class='soft-row " + (il%2 ? "soft-row-striped" : "" ) + (scope.linhaSelecionadaIndex === il ? 'active' : '') + "' " + _corLinha +">");
+									_tabela.push("<tr id='sg_linha_" + il + "' ng-click='sg_selecionarLinha(" + il + ")' class='soft-row " + (il%2 ? "soft-row-striped" : "" ) + (scope.linhaSelecionadaIndex === il ? '' : '') + "' " + _corLinha +">");
 
                                                 var i = 0;
                                                 angular.forEach(scope.sg_cols, function(col){
@@ -1346,7 +1346,7 @@
 					scope.sg_cols[indexColuna].callback(scope.showData[indexLinha], scope.sg_cols[indexColuna].data[indexItem]);
                     scope.showData[indexLinha][scope.sg_cols[indexColuna].item][scope.sg_cols[indexColuna].field.text] = scope.sg_cols[indexColuna].data[indexItem][scope.sg_cols[indexColuna].field.text];
                     scope.showData[indexLinha][scope.sg_cols[indexColuna].item][scope.sg_cols[indexColuna].field.value] = scope.sg_cols[indexColuna].data[indexItem][scope.sg_cols[indexColuna].field.value];
-                    _renderizarTabela();
+                    $timeout(_renderizarTabela, 200);
 				};
 
 				scope.sg_favoritar = function(ic, il){

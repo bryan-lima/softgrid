@@ -119,6 +119,16 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             vm.controles.approve = { showCol: false, show: _showApprove, callback: _callBackApprove };
             vm.controles.filtered = [];
 
+            vm.controles.rowColor = corLinha;
+
+        }
+
+        function trocarCorLinha(item){
+            return item.ativo;
+        }
+
+        function corLinha(item){
+            return item.ativo ? "red" : "";
         }
 
         function opa(item){
@@ -131,7 +141,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
         }
         function _callBackApprove(item, aprovado)
         {
-            debugger;
+            item.ativo = !item.ativo;
             console.log(item + "|" + aprovado);
         }
 
