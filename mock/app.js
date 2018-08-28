@@ -180,4 +180,10 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
         _gerarGrid();
 
         $timeout(function(){$('[data-toggle="tooltip"]').tooltip();}, 200);
+
+        vm.setarTudo = function(){
+            angular.forEach(vm.data, function(item){
+                item.ativo = true;
+            });
+        }
     });

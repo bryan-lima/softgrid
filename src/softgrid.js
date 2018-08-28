@@ -696,6 +696,12 @@
                 $timeout(_configurarRedimensionarColuna, 500);
 
 				//watchers
+				scope.$watch('showData', function(newNames, oldNames){
+
+					$timeout(_renderizarTabela, 200);
+
+				}, true);
+
                 scope.$watch('data', function () {
 
                     if(enableLog)
@@ -1346,7 +1352,7 @@
 					scope.sg_cols[indexColuna].callback(scope.showData[indexLinha], scope.sg_cols[indexColuna].data[indexItem]);
                     scope.showData[indexLinha][scope.sg_cols[indexColuna].item][scope.sg_cols[indexColuna].field.text] = scope.sg_cols[indexColuna].data[indexItem][scope.sg_cols[indexColuna].field.text];
                     scope.showData[indexLinha][scope.sg_cols[indexColuna].item][scope.sg_cols[indexColuna].field.value] = scope.sg_cols[indexColuna].data[indexItem][scope.sg_cols[indexColuna].field.value];
-                    $timeout(_renderizarTabela, 200);
+
 				};
 
 				scope.sg_favoritar = function(ic, il){
