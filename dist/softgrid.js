@@ -160,7 +160,7 @@
 				};
 
                 //checka os itens de cada linha
-                scope.sg_checkAll = function (){
+                scope.sg_checkAll = function (i){
 
                     if(scope.filteredData){
 
@@ -170,11 +170,11 @@
 
                             angular.forEach(scope.filteredData, function(row) {
 
-                                if(scope.sgControls.checkBox.item)
-                                    row[scope.sgControls.checkBox.item] = scope.sg_checked;
+                                if(scope.sg_cols[i].item)
+                                    row[scope.sg_cols[i].item] = scope.sg_checked;
                             });
 
-                            scope.sgControls.checkBox.function(scope.filteredData);
+                            scope.sg_cols[i].callback(scope.filteredData);
 
                             _renderizarTabela();
                         }
@@ -1117,7 +1117,7 @@
 									_tabela.push("</span>");
 
 									if(col.type === "checkbox")
-										_tabela.push("<input style='margin: 0px 0px 0px 5px;' type='checkbox' " + (scope.sg_checked ? "checked" : "") + " ng-click='sg_checkAll()'>");
+										_tabela.push("<input style='margin: 0px 0px 0px 5px;' type='checkbox' " + (scope.sg_checked ? "checked" : "") + " ng-click='sg_checkAll(" + i + ")'>");
 
 									if(scope.configuracaoAberta)
                                         _tabela.push("<span class='fa fa-times pull-right' ng-click='removerColuna(sg_cols[" + i + "])'></span>");
@@ -1190,7 +1190,7 @@
                                                         }
                                                     }
                                                     else if(col.type === "checkbox"){
-                                                        _tabela.push("<input type='checkbox' ng-click='sgControls.checkBox.function(showData[" + il + "])' " + (linha[scope.sgControls.checkBox.item] ? "checked" : "") + ">");
+                                                        _tabela.push("<input type='checkbox' ng-click='sg_cols[" + i + "].callback(showData[" + il + "])' " + (linha[scope.sg_cols[i].item] ? "checked" : "") + ">");
                                                     }
                                                     else if(col.type === "subgrid"){
                                                         _tabela.push("<button type='button' class='btn btn-default btn-sm btn-subgrid' ng-click='abrirSubGrid(" + i + "," + il + ")'>");

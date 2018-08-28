@@ -46,6 +46,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
             ];
 
             vm.colunas = [
+                {type: "checkbox", title: "Selecionar", callback: opa, item: "ativo" },
                 {title: "Nome",     item: function(item){return item.nome}, edit: { item: "nome", function: _editar, width: "100%"}},
                 {title: "Cargo",    item: function(item){return item.cargo}, align: "center", click: opa},
                 {title: "Telefone", item: function(item){return 0}, width: "100px", popOver: true},
