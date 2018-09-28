@@ -1004,12 +1004,21 @@
                     	_controlesParaColunas();
 
                     	var _colunas = [];
+						var _limpar = false;
 
                     	angular.forEach(_properties.cols, function(col){
-                    		_colunas.push(scope.cols.filter(function (item) { return removeAccents(item.title).replace(" ", "") === col.col; })[0]);
+                    		var _col = scope.cols.filter(function (item) { return removeAccents(item.title).replace(" ", "") === col.col; })[0];
+
+                    		if(_col)
+                    			_colunas.push(_col);
+                    		else
+                    			_limpar = true;
                         });
 
                         scope.sg_cols = _colunas;
+
+                        if(_limpar)
+                        	scope.limparConfiguracaoColuna();
 
                         _getFilteredData();
                     }
