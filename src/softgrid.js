@@ -28,6 +28,7 @@
 
 				var enableLog = false;
 
+				scope.loading = false;
 				scope.container = $(element[0]).find(".softgrid-container")[0];
 				scope.configuration = $(element[0]).find(".softgrid-configuration")[0];
 
@@ -457,6 +458,8 @@
 				//exportar grid para PDF
 				scope.exportarPDF = function(){
 
+					scope.loading = true;
+
 					var _container = $(element[0]).find(".softgrid-container")[0];
 
                     var cache_width = $(_container).width(); //Criado um cache do CSS
@@ -470,22 +473,64 @@
 
 					_renderizarTabela();
 
+					var _orientacao = 'portrait';
+
+
 					$timeout(function(){
 					// Setar o width da div no formato a4
-					$(_container).width((a4[0]*1.33333) -80).css('max-width','none');
+					$(_container).width((a4[0])).css('max-width','none');
+					$(_container).height(_container.clientHeight);
 
 					html2canvas($(_container), {
+
 						onrendered: function(canvas) {
 
-							var img = canvas.toDataURL("image/png",1.0);
-							var doc = new jsPDF( { unit:'px', format:'a4', orientation: 'portrait' } );
-							doc.addImage(img, 'JPEG', 20, 20);
+							var doc = new jsPDF( { unit:'px', format:'a4', orientation: _orientacao } );
+
+                            for (var i = 0; i <= _container.clientHeight / 980; i++) {
+
+                                var srcImg  = canvas;
+                                var sX      = 0;
+                                var sY      = 1120*i;
+                                var sWidth  = 778;
+                                var sHeight = 1120;
+                                var dX      = 0;
+                                var dY      = 0;
+                                var dWidth  = 778;
+                                var dHeight = 1120;
+
+                                window.onePageCanvas = document.createElement("canvas");
+                                onePageCanvas.setAttribute('width', 778);
+                                onePageCanvas.setAttribute('height', 1120);
+                                var ctx = onePageCanvas.getContext('2d');
+
+                                ctx.drawImage(srcImg,sX,sY,sWidth,sHeight,dX,dY,dWidth,dHeight);
+
+                                // document.body.appendChild(canvas);
+                                var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+
+                                var width         = onePageCanvas.width;
+                                var height        = onePageCanvas.clientHeight;
+
+                                if (i > 0) {
+                                    doc.addPage();
+                                }
+
+                                doc.setPage(i+1);
+                                doc.addImage(canvasDataURL, 'PNG', 10, 10, (width*.72), (height*.71));
+
+                            }
+
 							doc.save((new Date()).toLocaleString() + '.pdf');
+
 							//Retorna ao CSS normal
 							$(_container).width(cache_width);
+							$(_container).height('auto');
                             scope.sg_cols = cache_cols;
                             scope.sg_linesPerPage = cache_lines;
                             _renderizarTabela();
+							scope.loading = false;
+							scope.$apply();
                             }
                         });
                     }, 200);
