@@ -321,7 +321,8 @@
     text-align: center;
     background-color: white;
     overflow-y: auto;
-    transition: width 0.5s linear;    
+    transition: width 0.5s linear;
+    z-index: 5;
 }
 
 .softgrid-configuration h5{
