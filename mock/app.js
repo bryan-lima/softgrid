@@ -176,7 +176,8 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
                     item: function(item){return item.ativo; },
                     callback: _teste,
                     show: function(item) { return true; }
-                }
+                },
+                {type: "switch", title: "Ativo", callback: opa, item: function(item) { return item.ativo; } }
             ];
 
             vm.acoes = [
@@ -247,6 +248,7 @@ angular.module('todoApp', ['softgrid.directive','ngSanitize'])
         }
 
         function opa(item){
+            item.ativo = !item.ativo;
             console.log(item);
         }
 

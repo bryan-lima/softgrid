@@ -272,7 +272,7 @@
 }
 
 .softgrid-display input:checked + .slider {
-    background-color: #bdc3c7;
+    background-color: #2ecc71;
 }
 
 .softgrid-display input:focus + .slider {

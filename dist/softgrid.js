@@ -458,82 +458,98 @@
 				//exportar grid para PDF
 				scope.exportarPDF = function(){
 
-					scope.loading = true;
+                    scope.loading = true;
 
-					var _container = $(element[0]).find(".softgrid-container")[0];
+                    var _container = $(element[0]).find(".softgrid-container")[0];
 
                     var cache_width = $(_container).width(); //Criado um cache do CSS
-					var cache_cols = scope.sg_cols;
-					var cache_lines = scope.sg_linesPerPage;
+                    var cache_cols = scope.sg_cols;
+                    var cache_lines = scope.sg_linesPerPage;
 
                     var a4  =[ 595.28,  841.89]; // Widht e Height de uma folha a4
 
-					scope.sg_cols = cache_cols.filter(function(col){ return angular.isFunction(col.item) && col.type != 'subgrid'; });
-					scope.sg_linesPerPage = scope.data.length;
+                    scope.sg_cols = cache_cols.filter(function(col){ return angular.isFunction(col.item) && col.type != 'subgrid'; });
+                    scope.sg_linesPerPage = scope.data.length;
 
-					_renderizarTabela();
+                    _renderizarTabela();
 
-					var _orientacao = 'portrait';
+                    $timeout(function(){
 
+                        var _orientacao = 'landscape';
 
-					$timeout(function(){
-					// Setar o width da div no formato a4
-					$(_container).width((a4[0])).css('max-width','none');
-					$(_container).height(_container.clientHeight);
+                        // Setar o width da div no formato a4
+                        $(_container).width((a4[1])).css('max-width','none');
+                        $(_container).css('max-height','none');
+                        $(_container).height(_container.clientHeight);
+                        $(_container).css("position", "fixed");
+                        $(_container).css("top", "0");
+                        $(_container).css("left", "0");
 
-					html2canvas($(_container), {
+                        $timeout(function(){
 
-						onrendered: function(canvas) {
+                            var _node = $(element[0]).find(".softgrid-container")[0];
 
-							var doc = new jsPDF( { unit:'px', format:'a4', orientation: _orientacao } );
+                            domtoimage.toPng(_node, { quality: 0.75, bgcolor: "#FFFFFF", height: _container.clientHeight, width: a4[1] })
+                                .then(function (dataUrl) {
 
-                            for (var i = 0; i <= _container.clientHeight / 980; i++) {
+                                    var img = new Image();
 
-                                var srcImg  = canvas;
-                                var sX      = 0;
-                                var sY      = 1120*i;
-                                var sWidth  = 778;
-                                var sHeight = 1120;
-                                var dX      = 0;
-                                var dY      = 0;
-                                var dWidth  = 778;
-                                var dHeight = 1120;
+                                    img.onload = function(){
+                                        var doc = new jsPDF( { unit:'px', format:'a4', orientation: _orientacao } );
 
-                                window.onePageCanvas = document.createElement("canvas");
-                                onePageCanvas.setAttribute('width', 778);
-                                onePageCanvas.setAttribute('height', 1120);
-                                var ctx = onePageCanvas.getContext('2d');
+                                        for (var i = 0; i <= _container.clientHeight / 980; i++) {
 
-                                ctx.drawImage(srcImg,sX,sY,sWidth,sHeight,dX,dY,dWidth,dHeight);
+                                            var srcImg  = img;
+                                            var sX      = 0;
+                                            var sY      = 1120*i;
+                                            var sWidth  = 778;
+                                            var sHeight = 1120;
+                                            var dX      = 0;
+                                            var dY      = 0;
+                                            var dWidth  = 778;
+                                            var dHeight = 1120;
 
-                                // document.body.appendChild(canvas);
-                                var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+                                            window.onePageCanvas = document.createElement("canvas");
+                                            onePageCanvas.setAttribute('width', 778);
+                                            onePageCanvas.setAttribute('height', 1120);
+                                            var ctx = onePageCanvas.getContext('2d');
 
-                                var width         = onePageCanvas.width;
-                                var height        = onePageCanvas.clientHeight;
+                                            ctx.drawImage(srcImg,sX,sY,sWidth,sHeight,dX,dY,dWidth,dHeight);
 
-                                if (i > 0) {
-                                    doc.addPage();
-                                }
+                                            // document.body.appendChild(canvas);
+                                            var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
 
-                                doc.setPage(i+1);
-                                doc.addImage(canvasDataURL, 'PNG', 10, 10, (width*.72), (height*.71));
+                                            var width         = onePageCanvas.width;
+                                            var height        = onePageCanvas.clientHeight;
 
-                            }
+                                            if (i > 0) {
+                                                doc.addPage();
+                                            }
 
-							doc.save((new Date()).toLocaleString() + '.pdf');
+                                            doc.setPage(i+1);
+                                            doc.addImage(canvasDataURL, 'PNG', 10, 10, (width*.72), (height*.71));
 
-							//Retorna ao CSS normal
-							$(_container).width(cache_width);
-							$(_container).height('auto');
-                            scope.sg_cols = cache_cols;
-                            scope.sg_linesPerPage = cache_lines;
-                            _renderizarTabela();
-							scope.loading = false;
-							scope.$apply();
-                            }
-                        });
-                    }, 200);
+                                        }
+
+                                        doc.save((new Date()).toLocaleString() + '.pdf');
+
+                                        //Retorna ao CSS normal
+                                        $(_container).width(cache_width);
+                                        $(_container).height('auto');
+                                        $(_container).css("position", "relative");
+                                        scope.sg_cols = cache_cols;
+                                        scope.sg_linesPerPage = cache_lines;
+                                        _renderizarTabela();
+                                        scope.loading = false;
+                                        scope.$apply();
+                                    };
+
+                                    img.src = dataUrl;
+                                });
+                        }, 1000);
+
+                    }, 1000);
+
 				};
 
 				function _atualizarPaginacao() {
@@ -1289,7 +1305,7 @@
                                                     }
                                                     else if(col.type === "switch"){
                                                         _tabela.push("<label class='switch'>");
-                                                        _tabela.push("<input type='checkbox' ng-click='sg_cols[" + i + "].callback(dataFiltered[" + il + "])'>");
+                                                        _tabela.push("<input type='checkbox' ng-click='sg_cols[" + i + "].callback(showData[" + il + "])' " + (scope.sg_cols[i].item(linha) ? "checked" : "") + ">");
                                                         _tabela.push("<div class='slider round'></div>");
                                                         _tabela.push("</label>");
                                                     }

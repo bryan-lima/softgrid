@@ -14,7 +14,8 @@
     "angular-sanitize": "*",
     "font-awesome": "*",
     "angular": "1.5.11",
-    "jspdf": "jsPDF#^1.4.1"
+    "jspdf": "jsPDF#^1.4.1",
+    "dom-to-image": "^2.6.0"
   },
   "keywords": [
     "soft",
