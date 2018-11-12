@@ -1375,7 +1375,7 @@
 									il++;
 								});
 
-								if(scope.showData.length <= 0){
+								if(angular.isDefined(scope.showData) && scope.showData.length <= 0){
 									_tabela.push("<tr><td style='text-align: center;' colspan='" + scope.sg_cols.length + "'>Não há dados a serem exibidos.</td></tr>");
 								}
 
