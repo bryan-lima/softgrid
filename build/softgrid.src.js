@@ -466,7 +466,7 @@
                     var cache_cols = scope.sg_cols;
                     var cache_lines = scope.sg_linesPerPage;
 
-                    var a4  =[ 595.28,  841.89]; // Widht e Height de uma folha a4
+                    var a4  =[ 595.28,  921.89]; // Widht e Height de uma folha a4
 
                     scope.sg_cols = cache_cols.filter(function(col){ return angular.isFunction(col.item) && col.type != 'subgrid'; });
                     scope.sg_linesPerPage = scope.data.length;
@@ -484,6 +484,7 @@
                         $(_container).css("position", "fixed");
                         $(_container).css("top", "0");
                         $(_container).css("left", "0");
+                        $(".softgrid th").css("padding", "1px");
 
                         $timeout(function(){
 
@@ -496,22 +497,22 @@
 
                                     img.onload = function(){
                                         var doc = new jsPDF( { unit:'px', format:'a4', orientation: _orientacao } );
-
-                                        for (var i = 0; i <= _container.clientHeight / 980; i++) {
+                                        var _altura = 589;
+                                        for (var i = 0; i <= _container.clientHeight / _altura; i++) {
 
                                             var srcImg  = img;
                                             var sX      = 0;
-                                            var sY      = 1120*i;
-                                            var sWidth  = 778;
-                                            var sHeight = 1120;
+                                            var sY      = _altura*i;
+                                            var sWidth  = 978;
+                                            var sHeight = _altura;
                                             var dX      = 0;
                                             var dY      = 0;
-                                            var dWidth  = 778;
-                                            var dHeight = 1120;
+                                            var dWidth  = 908;
+                                            var dHeight = _altura;
 
                                             window.onePageCanvas = document.createElement("canvas");
-                                            onePageCanvas.setAttribute('width', 778);
-                                            onePageCanvas.setAttribute('height', 1120);
+                                            onePageCanvas.setAttribute('width', 978);
+                                            onePageCanvas.setAttribute('height', _altura);
                                             var ctx = onePageCanvas.getContext('2d');
 
                                             ctx.drawImage(srcImg,sX,sY,sWidth,sHeight,dX,dY,dWidth,dHeight);
@@ -530,26 +531,22 @@
                                             doc.addImage(canvasDataURL, 'PNG', 10, 10, (width*.72), (height*.71));
 
                                         }
-
                                         doc.save((new Date()).toLocaleString() + '.pdf');
-
                                         //Retorna ao CSS normal
                                         $(_container).width(cache_width);
                                         $(_container).height('auto');
                                         $(_container).css("position", "relative");
+                                        $(".softgrid th").css("padding", "5px");
                                         scope.sg_cols = cache_cols;
                                         scope.sg_linesPerPage = cache_lines;
                                         _renderizarTabela();
                                         scope.loading = false;
                                         scope.$apply();
                                     };
-
                                     img.src = dataUrl;
                                 });
                         }, 1000);
-
                     }, 1000);
-
 				};
 
 				function _atualizarPaginacao() {
