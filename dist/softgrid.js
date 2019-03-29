@@ -4,7 +4,7 @@
 	angular.module('softgrid.directive', ['base64'])
 		.directive('softgrid', softGrid);
 
-	softGrid.$injector = ['$filter', '$base64','$timeout', '$compíle'];
+    softGrid.$injector = ['$filter', '$base64','$timeout', '$compíle'];   
 
 	/** @ngInject */
 	function softGrid($filter, $base64, $timeout, $compile) {
@@ -181,7 +181,6 @@
                         }
                     }
                 };
-
                 //check coluna filtro
 				scope.sg_checkCol = function(col, event){
 
@@ -192,7 +191,6 @@
                 	_getFilteredData();
 
 				};
-
                 //filter
 				function _getFilteredData(){
 
@@ -258,7 +256,6 @@
 
                     scope.sg_sort({ item: scope.sg_orderBy }, scope.sg_orderByColIndex, true);
                 }
-
                 function removeAccents(string) {
 
                 	if(!string)
@@ -295,14 +292,12 @@
 
                     return string.toUpperCase();
                 }
-
 				//control
 				scope.sg_hook = function () {
 
 					_atualizarPaginacao();
 					_hookDropDown();
 				};
-
 				//exportar grid para excel
 				scope.exportExcel = function() {
 
@@ -322,7 +317,6 @@
 					document.body.removeChild(link);
 
 				};
-
 				function createTable() {
 
 					var table = "<table border='1' cellpadding='5'>";
@@ -454,101 +448,66 @@
 
 					return table;
 				}
-
 				//exportar grid para PDF
 				scope.exportarPDF = function(){
-
-                    scope.loading = true;
-
-                    var _container = $(element[0]).find(".softgrid-container")[0];
-
-                    var cache_width = $(_container).width(); //Criado um cache do CSS
-                    var cache_cols = scope.sg_cols;
-                    var cache_lines = scope.sg_linesPerPage;
-
-                    var a4  =[ 595.28,  921.89]; // Widht e Height de uma folha a4
-
-                    scope.sg_cols = cache_cols.filter(function(col){ return angular.isFunction(col.item) && col.type != 'subgrid'; });
-                    scope.sg_linesPerPage = scope.data.length;
-
-                    _renderizarTabela();
-
-                    $timeout(function(){
-
-                        var _orientacao = 'landscape';
-
-                        // Setar o width da div no formato a4
-                        $(_container).width((a4[1])).css('max-width','none');
-                        $(_container).css('max-height','none');
-                        $(_container).height(_container.clientHeight);
-                        $(_container).css("position", "fixed");
-                        $(_container).css("top", "0");
-                        $(_container).css("left", "0");
-                        $(".softgrid th").css("padding", "1px");
-
-                        $timeout(function(){
-
-                            var _node = $(element[0]).find(".softgrid-container")[0];
-
-                            domtoimage.toPng(_node, { quality: 0.75, bgcolor: "#FFFFFF", height: _container.clientHeight, width: a4[1] })
-                                .then(function (dataUrl) {
-
-                                    var img = new Image();
-
-                                    img.onload = function(){
-                                        var doc = new jsPDF( { unit:'px', format:'a4', orientation: _orientacao } );
-                                        var _altura = 589;
-                                        for (var i = 0; i <= _container.clientHeight / _altura; i++) {
-
-                                            var srcImg  = img;
-                                            var sX      = 0;
-                                            var sY      = _altura*i;
-                                            var sWidth  = 978;
-                                            var sHeight = _altura;
-                                            var dX      = 0;
-                                            var dY      = 0;
-                                            var dWidth  = 908;
-                                            var dHeight = _altura;
-
-                                            window.onePageCanvas = document.createElement("canvas");
-                                            onePageCanvas.setAttribute('width', 978);
-                                            onePageCanvas.setAttribute('height', _altura);
-                                            var ctx = onePageCanvas.getContext('2d');
-
-                                            ctx.drawImage(srcImg,sX,sY,sWidth,sHeight,dX,dY,dWidth,dHeight);
-
-                                            // document.body.appendChild(canvas);
-                                            var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
-
-                                            var width         = onePageCanvas.width;
-                                            var height        = onePageCanvas.clientHeight;
-
-                                            if (i > 0) {
-                                                doc.addPage();
-                                            }
-
-                                            doc.setPage(i+1);
-                                            doc.addImage(canvasDataURL, 'PNG', 10, 10, (width*.72), (height*.71));
-
-                                        }
-                                        doc.save((new Date()).toLocaleString() + '.pdf');
-                                        //Retorna ao CSS normal
-                                        $(_container).width(cache_width);
-                                        $(_container).height('auto');
-                                        $(_container).css("position", "relative");
-                                        $(".softgrid th").css("padding", "5px");
-                                        scope.sg_cols = cache_cols;
-                                        scope.sg_linesPerPage = cache_lines;
-                                        _renderizarTabela();
-                                        scope.loading = false;
-                                        scope.$apply();
-                                    };
-                                    img.src = dataUrl;
-                                });
-                        }, 1000);
-                    }, 1000);
-				};
-
+                    var doc = new jsPDF( { unit:'px', format:'a4', orientation: 'landscape' } );
+                    var _linhasPorPagina = scope.sg_linesPerPage; 
+                    var _indexItem = 1;
+                    var _indexPagina = 0;
+                    var _totalPaginas = scope.data.length / _linhasPorPagina;
+                    var _docWidth = doc.internal.pageSize.getWidth();
+                    var _docHeight = doc.internal.pageSize.getHeight();
+                    var _distanciaX = 10;
+                    scope.obterLarguraColunas();
+                    for(var i = 0; i < scope.data.length; i++){
+                        if(_indexPagina == 0 || _indexItem == _linhasPorPagina){                            
+                            _indexItem = 1;
+                            _indexPagina++;
+                            if(_indexPagina > 1) doc.addPage();
+                            doc.setFontSize(7.5);
+                            doc.text("Página " + _indexPagina + " de " + _totalPaginas, _docWidth - 50, _docHeight - 10);
+                            _distanciaX = 10;
+                            angular.forEach(scope.sg_cols, function(coluna){
+                                console.log(coluna.type);
+                                if(!scope.validarColunaImpressao(coluna)) return;
+                                var _largura = coluna.larguraDinamica * 4
+                                doc.setFontSize(10);  
+                                doc.text(coluna.title, _distanciaX + 5, 10, { maxWidth: _largura + 'px'});
+                                _distanciaX += _largura;
+                            });
+                        }   
+                        _distanciaX = 10;
+                        angular.forEach(scope.sg_cols, function(coluna){
+                            if(!scope.validarColunaImpressao(coluna)) return;
+                            var _largura = coluna.larguraDinamica * 4
+                            doc.setFontSize(10);  
+                            var _item = angular.isFunction(coluna.item) ? coluna.item(scope.data[i]) : scope.data[i][coluna.item];  
+                            _item = angular.isDefined(_item) ? _item.toString() : 'n/a';                          
+                            doc.text(_item, _distanciaX + 5, 10 + (_indexItem * 10), { maxWidth: _largura + 'px'});
+                            _distanciaX += _largura;
+                        });
+                        _indexItem++;
+                    }     
+                    doc.save((new Date()).toLocaleString() + '.pdf');
+                };
+                scope.obterLarguraColunas = function(){
+                    angular.forEach(scope.sg_cols, function(coluna){
+                        coluna.larguraDinamica = coluna.title.length;
+                        angular.forEach(scope.data, function(linha){
+                            var _item;
+                            if(angular.isFunction(coluna.item))
+                                _item = coluna.item(linha);
+                            else
+                                _item = linha[coluna.item];
+                            var _length = 0;
+                            if(!!_item) _length = _item.toString().length;
+                            if(_length > coluna.larguraDinamica) coluna.larguraDinamica = _length;
+                        });
+                    });
+                };
+                scope.validarColunaImpressao = function(coluna){
+                    return coluna.type != 'action' && coluna.type != 'subgrid' && coluna.type != 'menu' && coluna.type != 'checkbox' && coluna.type != 'select';
+                };
 				function _atualizarPaginacao() {
 
 					if(scope.data){
@@ -586,11 +545,9 @@
 
                     }
 				}
-
 				function maskEmail(text) {
 					return "<a href='mailto:" + text + "'><span class='fa fa-envelope-o'></span> " + text + "</a>";
 				}
-
 				function maskPhone(text) {
 
 					text = text.replace(/\D/g, "");
@@ -599,12 +556,10 @@
 
 					return text
 				}
-
                 function removerCaracteresInvalidos(string)
                 {
                     return string.replace("\\", "").replace("\"", "").replace("“", "").replace("”", "").replace("‘", "").replace("’", "").replace("º", "").replace("–", "");
                 }
-
 				// *** FIM FUNÇÕES PARA EXPORTAR EXCEL
 
 				// *** FUNÇÕES PARA REDIMENSIONAR COLUNA ***
