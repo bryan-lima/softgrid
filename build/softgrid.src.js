@@ -447,52 +447,121 @@
 					table += "</table>";
 
 					return table;
-				}
-				//exportar grid para PDF
+                }
 				scope.exportarPDF = function(){
                     var doc = new jsPDF( { unit:'px', format:'a4', orientation: 'landscape' } );
                     var _linhasPorPagina = scope.sg_linesPerPage; 
-                    var _indexItem = 1;
                     var _indexPagina = 0;
                     var _totalPaginas = scope.data.length / _linhasPorPagina;
                     var _docWidth = doc.internal.pageSize.getWidth();
                     var _docHeight = doc.internal.pageSize.getHeight();
                     var _distanciaX = 10;
+                    var _distanciaY = 14;
+                    var _dadosWidth = _docWidth - 20;
                     scope.obterLarguraColunas();
-                    for(var i = 0; i < scope.data.length; i++){
-                        if(_indexPagina == 0 || _indexItem == _linhasPorPagina){                            
-                            _indexItem = 1;
-                            _indexPagina++;
-                            if(_indexPagina > 1) doc.addPage();
-                            doc.setFontSize(7.5);
-                            doc.text("Página " + _indexPagina + " de " + _totalPaginas, _docWidth - 50, _docHeight - 10);
-                            _distanciaX = 10;
-                            angular.forEach(scope.sg_cols, function(coluna){
-                                console.log(coluna.type);
-                                if(!scope.validarColunaImpressao(coluna)) return;
-                                var _largura = coluna.larguraDinamica * 4
-                                doc.setFontSize(10);  
-                                doc.text(coluna.title, _distanciaX + 5, 10, { maxWidth: _largura + 'px'});
-                                _distanciaX += _largura;
-                            });
-                        }   
-                        _distanciaX = 10;
+                    var _tamanhoTotalColunasTitulo = 0;
+                    var _tamanhoTotalColunasDados = 0;
+                    var _widthFont = 3.4;
+                    var _widthTotal = 0;
+                    var _heightLinha = 12;
+                    angular.forEach(scope.sg_cols, function(coluna){
+                        if(!scope.validarColunaImpressao(coluna)) return;
+                        _tamanhoTotalColunasTitulo += coluna.lengthTitulo * _widthFont;
+                        _tamanhoTotalColunasDados += coluna.lengthDados * _widthFont;
+                    });
+                    if(_tamanhoTotalColunasTitulo <= _dadosWidth){
                         angular.forEach(scope.sg_cols, function(coluna){
                             if(!scope.validarColunaImpressao(coluna)) return;
-                            var _largura = coluna.larguraDinamica * 4
-                            doc.setFontSize(10);  
-                            var _item = angular.isFunction(coluna.item) ? coluna.item(scope.data[i]) : scope.data[i][coluna.item];  
-                            _item = angular.isDefined(_item) ? _item.toString() : 'n/a';                          
-                            doc.text(_item, _distanciaX + 5, 10 + (_indexItem * 10), { maxWidth: _largura + 'px'});
-                            _distanciaX += _largura;
+                            _widthTotal += coluna.larguraDinamica = coluna.lengthTitulo * _widthFont;
                         });
-                        _indexItem++;
+                    }
+                    else if(_tamanhoTotalColunasDados <= _dadosWidth){
+                        angular.forEach(scope.sg_cols, function(coluna){
+                            if(!scope.validarColunaImpressao(coluna)) return;
+                            _widthTotal += coluna.larguraDinamica = coluna.lengthDados * _widthFont;
+                        });
+                    }
+                    else {
+                        angular.forEach(scope.sg_cols, function(coluna){
+                            if(!scope.validarColunaImpressao(coluna)) return;
+                            _widthTotal += coluna.larguraDinamica = 30;
+                        });
+                    }
+                    var _widthRestante = _dadosWidth - _widthTotal;
+                    while(_widthRestante > 0){
+                        var _validador = scope.sg_cols.length;
+                        angular.forEach(scope.sg_cols, function(coluna){ if(!scope.validarColunaImpressao(coluna)) _validador--;});
+                        angular.forEach(scope.sg_cols, function(coluna){
+                            if(!scope.validarColunaImpressao(coluna)) return;
+                            if(coluna.larguraDinamica < (coluna.lengthDados * _widthFont) || coluna.larguraDinamica < (coluna.lengthTitulo * _widthFont)){
+                                coluna.larguraDinamica++;
+                                _widthRestante--;
+                            }              
+                            else{
+                                _validador--;
+                                if(_validador == 0)
+                                    _widthRestante = 0;
+                            }              
+                        });
+                    }
+                    var _maxY = 0;
+                    var _maxLinha = 0;
+                    angular.forEach(scope.sg_cols, function(coluna){
+                        if(!scope.validarColunaImpressao(coluna)) return;
+                        var _largura = coluna.larguraDinamica;
+                        var _splitText = doc.splitTextToSize(coluna.title, _largura); 
+                        if(_splitText.length > _maxLinha) _maxLinha = _splitText.length;
+                    });
+                    angular.forEach(scope.sg_cols, function(coluna){
+                        if(!scope.validarColunaImpressao(coluna)) return;
+                        var _largura = coluna.larguraDinamica;
+                        doc.setFontSize(8);  
+                        var _splitText = doc.splitTextToSize(coluna.title, _largura);
+                        var _y = (_maxLinha * _heightLinha) - (_maxLinha == 1 ? 0 : (_maxLinha * (_heightLinha / 3.5)));    
+                        doc.cell(_distanciaX, 10, _largura, _y, _splitText);
+                        _distanciaX += _largura;
+                        if(_y > _maxY) _maxY = _y;
+                    });
+                    _distanciaY = _maxY;
+                    for(var i = 0; i < scope.data.length; i++){
+                        _distanciaX = 10;
+                        _maxY = 0;
+                        _maxLinha = 0;
+                        angular.forEach(scope.sg_cols, function(coluna){
+                            if(!scope.validarColunaImpressao(coluna)) return;
+                            var _largura = coluna.larguraDinamica;
+                            var _item = angular.isFunction(coluna.item) ? coluna.item(scope.data[i]) : scope.data[i][coluna.item];  
+                            _item = angular.isDefined(_item) && _item != '' ? _item.toString() : '-';  
+                            var _splitText = doc.splitTextToSize(_item, _largura); 
+                            if(_splitText.length > _maxLinha) _maxLinha = _splitText.length;
+                        });
+                        angular.forEach(scope.sg_cols, function(coluna){
+                            if(!scope.validarColunaImpressao(coluna)) return;
+                            var _largura = coluna.larguraDinamica;
+                            doc.setFontSize(7);  
+                            var _item = angular.isFunction(coluna.item) ? coluna.item(scope.data[i]) : scope.data[i][coluna.item];  
+                            _item = angular.isDefined(_item) && _item != '' ? _item.toString() : '-';    
+                            var _splitText = doc.splitTextToSize(_item, _largura);   
+                            var _y = (_maxLinha * _heightLinha) - (_maxLinha == 1 ? 0 : (_maxLinha * (_heightLinha / 3.5)));                   
+                            doc.cell(_distanciaX, 10 + _distanciaY, _largura, _y, _splitText);
+                            _distanciaX += _largura;  
+                            if(_y > _maxY) _maxY = _y;                          
+                        });
+                        _distanciaY += _maxY;
+                        if(_distanciaY >= _docHeight - 20){
+                            _indexPagina++;
+                            doc.addPage();
+                            doc.setFontSize(7.5);
+                            _distanciaX = 10;
+                            _distanciaY = 10;
+                        }
                     }     
                     doc.save((new Date()).toLocaleString() + '.pdf');
                 };
                 scope.obterLarguraColunas = function(){
                     angular.forEach(scope.sg_cols, function(coluna){
-                        coluna.larguraDinamica = coluna.title.length;
+                        coluna.lengthTitulo = coluna.title.length;
+                        coluna.lengthDados = 0;
                         angular.forEach(scope.data, function(linha){
                             var _item;
                             if(angular.isFunction(coluna.item))
@@ -501,12 +570,12 @@
                                 _item = linha[coluna.item];
                             var _length = 0;
                             if(!!_item) _length = _item.toString().length;
-                            if(_length > coluna.larguraDinamica) coluna.larguraDinamica = _length;
+                            if(_length > coluna.lengthDados) coluna.lengthDados = _length;
                         });
                     });
                 };
                 scope.validarColunaImpressao = function(coluna){
-                    return coluna.type != 'action' && coluna.type != 'subgrid' && coluna.type != 'menu' && coluna.type != 'checkbox' && coluna.type != 'select';
+                    return coluna.type != 'action' && coluna.type != 'subgrid' && coluna.type != 'menu' && coluna.type != 'checkbox' && coluna.type != 'select' && coluna.type != 'html';
                 };
 				function _atualizarPaginacao() {
 
