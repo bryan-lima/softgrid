@@ -26,14 +26,14 @@
     "test",
     "tests"
   ],
-  "version": "0.2.3",
-  "_release": "0.2.3",
+  "version": "2.0.0",
+  "_release": "2.0.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.2.3",
-    "commit": "32865fe84877245d71b0f329c441eed87924c3ee"
+    "tag": "v2.0.0",
+    "commit": "eaf1df46ea9891fc223ca045be0d34e75451f363"
   },
   "_source": "https://github.com/bryan-lima/softgrid",
-  "_target": "^0.2.1",
+  "_target": "^2.0.0",
   "_originalSource": "softgrid"
 }
