@@ -1,6 +1,6 @@
 {
   "name": "softgrid",
-  "version": "0.2.0",
+  "version": "2.0.0",
   "description": "Diretiva de grid para Angularjs com Bootstrap e Font Awesome.",
   "main": "softgrid.js",
   "scripts": {
@@ -13,7 +13,10 @@
     "angular",
     "angularjs"
   ],
-  "author": "João Oliveira POP",
+  "authors": [
+    "Bryan Lima",
+    "João Oliveira POP"
+  ],
   "license": "ISC",
   "dependencies": {
     "angular-base64": "^2.0.5",
