@@ -1,6 +1,7 @@
 {
   "name": "softgrid",
   "authors": [
+    "Bryan Lima",
     "Joao Paulo Oliveira"
   ],
   "description": "Grid directive with Angular, Bootstrap and Font Awesome",
@@ -32,7 +33,7 @@
     "tag": "v0.2.3",
     "commit": "32865fe84877245d71b0f329c441eed87924c3ee"
   },
-  "_source": "https://github.com/afpop/softgrid.git",
+  "_source": "https://github.com/bryan-lima/softgrid",
   "_target": "^0.2.1",
   "_originalSource": "softgrid"
 }
